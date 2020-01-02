@@ -33,8 +33,25 @@ echo "DigiKube setup: "
 echo "Project: ${CLOUD_PROJECT}"
 echo "Subnet: ${CLOUD_SUBNET}"
 
-gcloud compute networks create ${CLOUD_SUBNET} \
+#Create the VPC for DigiKube
+#gcloud compute networks create ${CLOUD_SUBNET} \
+#        --project=${CLOUD_PROJECT} \
+#        --subnet-mode=auto
+
+#Create bastion host
+gcloud beta compute instances create ${BASTION_HOST_NAME} \
         --project=${CLOUD_PROJECT} \
-        --subnet-mode=auto
+        --zone=${CLOUD_ZONE} \
+        --machine-type=${BASTION_MACHINE_TYPE} \
+        --subnet=${CLOUD_SUBNET} \
+        --network-tier=${BASTION_NETWORK_TIER} \
+        --preemptible \
+        --scopes=https://www.googleapis.com/auth/cloud-platform \
+        --tags=${BASTION_TAGS} \
+        --image=${BASTION_IMAGE} \
+        --image-project=${BASTION_IMAGE_PROJECT} \
+        --boot-disk-size=${BASTION_BOOT_DISK_SIZE} \
+        --boot-disk-type=${BASTION_BOOT_DISK_TYPE} \
+        --labels=${BASTION_LABELS}
 
 

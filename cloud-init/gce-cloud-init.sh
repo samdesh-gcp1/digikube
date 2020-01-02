@@ -33,8 +33,8 @@ echo "DigiKube setup: "
 echo "Project: ${CLOUD_PROJECT}"
 echo "Subnet: ${CLOUD_SUBNET}"
 
-#gcloud compute networks create ${CLOUD_PROJECT}-vpc \
-#        --project=${CLOUD_PROJECT} \
-#        --subnet-mode=auto
+gcloud compute networks create ${CLOUD_SUBNET} \
+        --project=${CLOUD_PROJECT} \
+        --subnet-mode=auto
 
 

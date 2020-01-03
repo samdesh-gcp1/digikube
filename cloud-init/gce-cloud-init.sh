@@ -41,7 +41,7 @@ echo "Cloud project to be used for DigiKube: ${CLOUD_PROJECT}."
 ###################################################
 echo "Creating the DigiKube environment"
 
-#######################
+###################################################
 #Create the VPC for DigiKube
 export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
 echo "Attempting to create network: ${CLOUD_SUBNET}"
@@ -60,6 +60,11 @@ if [ -z $(gcloud compute networks list --filter=name=${CLOUD_SUBNET} --format="v
 else
 	echo "Reusing the exiting network.  Network name: ${CLOUD_SUBNET}."
 fi
+
+####################################################
+#Create firewall rule to allow  VPC for DigiKube
+gcloud compute firewall-rules create digikube001-vpc-allow-bastion-ssh --project=digikube002 --direction=INGRESS --priority=1000 --network=digikube002-vpc --action=ALLOW --rules=tcp:22 --source-ranges=0.0.0.0/0 --target-tags=bastion-host
+
 
 ########################
 #Create bastion host for DigiKube

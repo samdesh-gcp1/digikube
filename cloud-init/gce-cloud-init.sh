@@ -80,8 +80,7 @@ if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --for
         	--image-project=$BASTION_IMAGE_PROJECT \
         	--boot-disk-size=$BASTION_BOOT_DISK_SIZE \
         	--boot-disk-type=$BASTION_BOOT_DISK_TYPE \
-        	--labels=$BASTION_LABELS \
-		--metadata enable-oslogin=TRUE
+        	--labels=$BASTION_LABELS 
 	
 	if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --format="value(name)") ]; then
 		echo "Unable to create bastion host for DigiKube.  Bastion host name: ${BASTION_HOST_NAME}. Exiting DigiKube initialization."

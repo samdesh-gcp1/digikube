@@ -5,19 +5,6 @@ export CLOUD_TYPE="gce"
 export CLOUD_REGION="us-central1"
 export CLOUD_ZONE="us-central1-c"
 
-export BASTION_HOST_NAME="bastion-host-01"
-export BASTION_MACHINE_TYPE="f1-micro"
-export BASTION_NETWORK_TIER="STANDARD"
-export BASTION_PREEMPTIBLE="Yes"
-export BASTION_TAG_IDENTIFIER="bastion-host"
-export BASTION_TAGS="${BASTION_TAG_IDENTIFIER},http-server,https-server"
-export BASTION_IMAGE="ubuntu-1804-bionic-v20191211"
-export BASTION_IMAGE_PROJECT="ubuntu-os-cloud"
-export BASTION_BOOT_DISK_SIZE="10GB"
-export BASTION_BOOT_DISK_TYPE="pd-standard"
-export BASTION_LABELS="type=bastion-host"
-
-
 echo 
 echo
 echo "############################################"
@@ -63,36 +50,20 @@ else
 fi
 
 ####################################################
-#Create firewall rule to allow ssh to bastion host for DigiKube.
-export BASTION_HOST_FIREWALL_RULE_NAME="${CLOUD_SUBNET}-vpc-allow-bastion-ssh"
-echo "Attempting to create firewallrule for bastion host: ${BASTION_HOST_FIREWALL_RULE_NAME}"
-if [ -z $(gcloud compute firewall-rules list --filter=name=${BASTION_HOST_FIREWALL_RULE_NAME} --format="value(name)") ]; then
-
-	gcloud compute firewall-rules create ${BASTION_HOST_FIREWALL_RULE_NAME} \
-		--project=${CLOUD_PROJECT} \
-		--direction=INGRESS \
-		--priority=1000 \
-		--network=${CLOUD_SUBNET} \
-		--action=ALLOW \
-		--rules=tcp:22 \
-		--source-ranges=0.0.0.0/0 \
-		--target-tags=${BASTION_TAG_IDENTIFIER}
-	
-	if [ -z $(gcloud compute firewall-rules list --filter=name=${BASTION_HOST_FIREWALL_RULE_NAME} --format="value(name)") ]; then
-		echo "Unable to create bastion host firewall rule for DigiKube.  Bastion host firewall rule name: ${BASTION_HOST_FIREWALL_RULE_NAME}. Exiting DigiKube initialization."
-		echo "Run the DigiKube delete scripts to clear partially created resources."
-		exit 1
-	else
-		echo "Created bastion host firewall rule for DigiKube.  Bastion host name: ${BASTION_HOST_FIREWALL_RULE_NAME}."
-	fi	
-		
-else
-	echo "Reusing the exiting bastion host firewall rule.  Bastion host firewall rule: ${BASTION_HOST_FIREWALL_RULE_NAME}."
-fi
-
-####################################################
 #Create bastion host for DigiKube
 echo "Attempting to create bastion host: ${BASTION_HOST_NAME}"
+
+export BASTION_HOST_NAME="bastion-host-01"
+export BASTION_MACHINE_TYPE="f1-micro"
+export BASTION_NETWORK_TIER="STANDARD"
+export BASTION_PREEMPTIBLE="Yes"
+export BASTION_TAG_IDENTIFIER="bastion-host"
+export BASTION_TAGS="${BASTION_TAG_IDENTIFIER},http-server,https-server"
+export BASTION_IMAGE="ubuntu-1804-bionic-v20191211"
+export BASTION_IMAGE_PROJECT="ubuntu-os-cloud"
+export BASTION_BOOT_DISK_SIZE="10GB"
+export BASTION_BOOT_DISK_TYPE="pd-standard"
+export BASTION_LABELS="type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"
 
 if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --format="value(name)") ]; then
 	
@@ -122,3 +93,32 @@ else
 	echo "Reusing the exiting bastion host.  Bastion host name: ${BASTION_HOST_NAME}."
 fi
 
+####################################################
+#Create firewall rule to allow ssh to bastion host for DigiKube.
+
+export BASTION_HOST_FIREWALL_RULE_NAME="${CLOUD_SUBNET}-allow-bastion-ssh"
+
+echo "Attempting to create firewallrule for bastion host: ${BASTION_HOST_FIREWALL_RULE_NAME}"
+if [ -z $(gcloud compute firewall-rules list --filter=name=${BASTION_HOST_FIREWALL_RULE_NAME} --format="value(name)") ]; then
+
+	gcloud compute firewall-rules create ${BASTION_HOST_FIREWALL_RULE_NAME} \
+		--project=${CLOUD_PROJECT} \
+		--direction=INGRESS \
+		--priority=1000 \
+		--network=${CLOUD_SUBNET} \
+		--action=ALLOW \
+		--rules=tcp:22 \
+		--source-ranges=0.0.0.0/0 \
+		--target-tags=${BASTION_TAG_IDENTIFIER}
+	
+	if [ -z $(gcloud compute firewall-rules list --filter=name=${BASTION_HOST_FIREWALL_RULE_NAME} --format="value(name)") ]; then
+		echo "Unable to create bastion host firewall rule for DigiKube.  Bastion host firewall rule name: ${BASTION_HOST_FIREWALL_RULE_NAME}. Exiting DigiKube initialization."
+		echo "Run the DigiKube delete scripts to clear partially created resources."
+		exit 1
+	else
+		echo "Created bastion host firewall rule for DigiKube.  Bastion host name: ${BASTION_HOST_FIREWALL_RULE_NAME}."
+	fi	
+		
+else
+	echo "Reusing the exiting bastion host firewall rule.  Bastion host firewall rule: ${BASTION_HOST_FIREWALL_RULE_NAME}."
+fi

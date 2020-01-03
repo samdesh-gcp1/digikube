@@ -28,8 +28,8 @@ fi
 
 ##########################################################
 #Delete the Bastion Host for DigiKube
-echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME}."
 export BASTION_HOST_NAME="bastion-host-01"
+echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME}."
 export BASTION_HOST_ZONE=$(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(zone)")
 if [ $? -gt 0 ]; then
 	echo "Unable to get the bastion host or its zone details.  Exiting the DigiKube delete."

@@ -2,7 +2,6 @@
 
 export CLOUD_TYPE="gce"
 
-export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
 export CLOUD_REGION="us-central1"
 export CLOUD_ZONE="us-central1-c"
 
@@ -44,6 +43,7 @@ echo "Creating the DigiKube environment"
 
 #######################
 #Create the VPC for DigiKube
+export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
 echo "Attempting to create network: ${CLOUD_SUBNET}"
 
 if [ -z $(gcloud compute networks list --filter=name=${CLOUD_SUBNET} --format="value(name)") ]; then

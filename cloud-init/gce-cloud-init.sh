@@ -64,7 +64,7 @@ export BASTION_IMAGE_PROJECT="ubuntu-os-cloud"
 export BASTION_BOOT_DISK_SIZE="10GB"
 export BASTION_BOOT_DISK_TYPE="pd-standard"
 export BASTION_LABELS="type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"
-export BASTION_INIT_SCRIPT="'$(wget -q -O - https://github.com/samdesh-gcp1/digikube/raw/master/cloud-init/gce-bastion-host-init.sh)'"
+export BASTION_INIT_SCRIPT="$(wget -q -O - https://github.com/samdesh-gcp1/digikube/raw/master/cloud-init/gce-bastion-host-init.sh)"
 # export BASTION_INIT_SCRIPT='#! /bin/bash
 #			# Create a new file in home directory
 #			cd /home/samdesh_gcp1/

@@ -7,7 +7,7 @@ if [ $# -gt 0 ]; then
 	FLOW_DELETE_CHOICE=$1
 	echo "1"
 else
-	FLOW_DELETE_CHOICE=$FLOW_DELETE_CHOICE
+	FLOW_DELETE_CHOICE=$FLOW_DELETE_CHOICE1
 	echo "2"
 fi
 

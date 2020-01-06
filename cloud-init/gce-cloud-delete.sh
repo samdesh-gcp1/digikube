@@ -1,7 +1,11 @@
 #!/bin/sh
 
+echo "0"
+
 FLOW_OPTION_YES="yes"
 FLOW_OPTION_NO="no"
+
+echo "00"
 
 if [ $# -gt 0 ]; then
 	FLOW_DELETE_CHOICE=$1
@@ -10,6 +14,8 @@ else
 	FLOW_DELETE_CHOICE=$FLOW_DELETE_CHOICE1
 	echo "2"
 fi
+
+echo "000"
 
 if [ -z $FLOW_DELETE_CHOICE ]; then
 	echo "No option specified for DigiKube deletion."

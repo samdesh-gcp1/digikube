@@ -1,15 +1,18 @@
 #!/bin/sh
 
+FLOW_OPTION_YES="yes"
+FLOW_OPTION_NO="no"
+
 if [ $# -gt 0 ]; then
 	if [[ "$1" == "all" ]]; then
-		FLOW_DELETE_BASTION_HOST="yes"
-		FLOW_DELETE_BASTION_FIREWALL_RULE="yes"
-		FLOW_DELETE_VPC="yes"
+		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
+		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_YES
+		FLOW_DELETE_VPC=$FLOW_OPTION_YES
 	fi
 	if [[ "$1" == "bastion-host" ]]; then
-		FLOW_DELETE_BASTION_HOST="yes"
-		FLOW_DELETE_BASTION_FIREWALL_RULE="no"
-		FLOW_DELETE_VPC="no"
+		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
+		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_NO
+		FLOW_DELETE_VPC=$FLOW_OPTION_NO
 	fi
 fi
 
@@ -41,7 +44,7 @@ fi
 
 ##########################################################
 #Delete the Bastion Host for DigiKube
-if [[ "$FLOW_DELETE_BASTION_HOST" == "yes" ]]; then
+if [ "$FLOW_DELETE_BASTION_HOST" = "$FLOW_OPTION_YES" ]; then
 	export BASTION_HOST_NAME="bastion-host-01"
 	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME}."
 	export BASTION_HOST_ZONE=$(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(zone)")

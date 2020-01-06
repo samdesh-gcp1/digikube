@@ -1,4 +1,5 @@
 #!/bin/bash
 # Create a new file in home directory
 cd /home/samdesh_gcp1/
-touch test_file.txt
+touch last_run.txt
+date >> last_run.txt

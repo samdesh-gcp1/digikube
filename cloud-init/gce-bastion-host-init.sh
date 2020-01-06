@@ -1,4 +1,4 @@
-#!/bin/sh
-
-cd ~/
-touch test1.txt
+#! /bin/bash
+# Create a new file in home directory
+cd /home/samdesh_gcp1/
+touch test2.txt

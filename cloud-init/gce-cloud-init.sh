@@ -83,7 +83,7 @@ if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --for
         	--labels=$BASTION_LABELS \
 		--metadata startup-script='#! /bin/bash
 			# Create a new file in home directory
-			cd ~/
+			cd /home/samdesh_gcp1/
 			touch test1.txt'
 	
 	if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --format="value(name)") ]; then

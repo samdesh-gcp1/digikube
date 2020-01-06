@@ -5,22 +5,27 @@ FLOW_OPTION_NO="no"
 
 if [ $# -gt 0 ]; then
 	FLOW_DELETE_CHOICE=$1
+	echo "1"
 else
 	FLOW_DELETE_CHOICE=$FLOW_DELETE_CHOICE
+	echo "2"
 fi
 
 if [ -z $FLOW_DELETE_CHOICE ]; then
 	echo "No option specified for DigiKube deletion."
+	echo "3"
 else
 	if [[ "$FLOW_DELETE_CHOICE" == "all" ]]; then
 		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_YES
 		FLOW_DELETE_VPC=$FLOW_OPTION_YES
+		echo "4"
 	fi
 	if [[ "$FLOW_DELETE_CHOICE" == "bastion-host" ]]; then
 		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_NO
 		FLOW_DELETE_VPC=$FLOW_OPTION_NO
+		echo "5"
 	fi
 fi
 

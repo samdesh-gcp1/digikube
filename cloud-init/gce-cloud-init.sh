@@ -87,7 +87,7 @@ if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --for
         	--boot-disk-size=$BASTION_BOOT_DISK_SIZE \
         	--boot-disk-type=$BASTION_BOOT_DISK_TYPE \
         	--labels=$BASTION_LABELS \
-		--metadata='$BASTION_INIT_SCRIPT'
+		--metadata startup-script='$BASTION_INIT_SCRIPT'
 #		--metadata startup-script='#! /bin/bash
 #			# Create a new file in home directory
 #			cd /home/samdesh_gcp1/

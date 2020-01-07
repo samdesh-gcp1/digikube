@@ -15,7 +15,7 @@ function download-file {
          local  __resultvar=$2
          eval $__resultvar="'$dest_file_name'"
       else
-         echo "Error while downloading file."
+         echo "Error while downloading file. Do something"
          eval $__resultvar="''"
          exit 1
       fi

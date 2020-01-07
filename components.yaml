@@ -1,1 +1,26 @@
-
+## Software components
+digikube-core:
+  kubernetes:
+    available: "yes"
+    version: "1.15"
+digikube-tools:
+  kubectl:
+    available: "yes"
+    version: "1.15"
+  kops:
+    available: "yes"
+    version: "1.15.0"
+digikube-client:
+  kubens:
+    available: "yes"
+    version: "1.0"
+  helm:
+    available: "yes"
+    version: "1.0"
+digikube-cluster-tools:
+  k8s-dashboard:
+     available: "yes"
+     version: "1"
+  ingress-controller:
+     available: "yes"
+     version: "1.0"

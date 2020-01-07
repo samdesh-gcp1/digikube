@@ -87,7 +87,7 @@ fi
 
 ###########################################################
 #Delete firewall rule for bastion host
-if [ $FLOW_DELETE_BASTION_FIREWALL_RULE = "$FLOW_OPTION_YES" ]; then
+if [ "$FLOW_DELETE_BASTION_FIREWALL_RULE" = "$FLOW_OPTION_YES" ]; then
 	export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
 	export BASTION_HOST_FIREWALL_RULE_NAME="${CLOUD_SUBNET}-allow-bastion-ssh"
 	echo "Attempting to delete firewall rule for bastion host: ${BASTION_HOST_FIREWALL_RULE_NAME}"
@@ -110,7 +110,7 @@ fi
 
 ###########################################################
 #Delete the network for DigiKube
-if [ $FLOW_DELETE_BASTION_FIREWALL_RULE = "$FLOW_OPTION_YES" ]; then
+if [ "$FLOW_DELETE_BASTION_FIREWALL_RULE" = "$FLOW_OPTION_YES" ]; then
 	echo "Attempting to delete network for Digikube.  Network name: ${CLOUD_SUBNET}."
 	if [ -z $(gcloud compute networks list --filter=name=${CLOUD_SUBNET} --format="value(name)") ]; then
   		echo "No network available with the name ${CLOUD_SUBNET}.  Skipping network deletion."

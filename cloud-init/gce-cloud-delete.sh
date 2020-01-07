@@ -6,11 +6,17 @@ FLOW_OPTION_NO="no"
 if [ $# -gt 0 ]; then
 	FLOW_DELETE_CHOICE=$1
 else
-	FLOW_DELETE_CHOICE=$FLOW_DELETE_CHOICE_ENV_VAR
+	if [ -z $FLOW_DELETE_CHOICE_ENV_VAR ]; then
+		echo "No option specified for DigiKube deletion.  Exiting digikube deletion."
+		exit 1
+	else
+		FLOW_DELETE_CHOICE=$FLOW_DELETE_CHOICE_ENV_VAR
+	fi
 fi
 
 if [ -z $FLOW_DELETE_CHOICE ]; then
-	echo "No option specified for DigiKube deletion."
+	echo "No option specified for DigiKube deletion.  Exiting digikube deletion."
+	exit 1
 else
 	if [[ "$FLOW_DELETE_CHOICE" == "all" ]]; then
 		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
@@ -110,7 +116,7 @@ fi
 
 ###########################################################
 #Delete the network for DigiKube
-if [ "$FLOW_DELETE_BASTION_FIREWALL_RULE" = "$FLOW_OPTION_YES" ]; then
+if [ "$FLOW_DELETE_VPC" = "$FLOW_OPTION_YES" ]; then
 	echo "Attempting to delete network for Digikube.  Network name: ${CLOUD_SUBNET}."
 	if [ -z $(gcloud compute networks list --filter=name=${CLOUD_SUBNET} --format="value(name)") ]; then
   		echo "No network available with the name ${CLOUD_SUBNET}.  Skipping network deletion."

@@ -66,7 +66,7 @@ export BASTION_BOOT_DISK_TYPE="pd-standard"
 export BASTION_LABELS="type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"
 
 #Modify the bastion-init-shell script to get the current user id
-f="$(wget -q -O - https://github.com/samdesh-gcp1/digikube/raw/master/cloud-init/gce-bastion-host-init.sh)"
+f="$(wget -q -O - https://github.com/samdesh-gcp1/digikube/raw/master/cloud-init/gce-bastion-host-init-shell.sh)"
 t="#<placeholder for digikube admin user name>"
 s="export DIGIKUBE_CLOUD_ADMIN=$(whoami)"
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"

@@ -1,5 +1,5 @@
 #!/bin/bash
 # Init script
-cd /home/samdesh_gcp1/
+cd ~/
 touch last_run.txt
 date >> last_run.txt

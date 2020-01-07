@@ -20,4 +20,8 @@ function download-file {
          exit 1
       fi
    fi
+
+
+
+   echo "test"
 }

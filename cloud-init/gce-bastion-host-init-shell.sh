@@ -1,6 +1,8 @@
 #!/bin/bash
 # Init script
 
+#<placeholder for digikube admin user name>
+
 if [ $# -gt 0 ]; then
   DIGIKUBE_CLOUD_ADMIN=$1
 else

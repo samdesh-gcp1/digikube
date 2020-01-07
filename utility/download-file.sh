@@ -5,6 +5,7 @@ function download-file {
 
    if [ $# -lt 2 ]; then
       echo "Insufficient parameters provided."
+      eval $__resultvar="''"
       exit 1
    else
       local source_url=$1   #should check the format
@@ -15,6 +16,7 @@ function download-file {
          eval $__resultvar="'$dest_file_name'"
       else
          echo "Error while downloading file."
+         eval $__resultvar="''"
          exit 1
       fi
    fi

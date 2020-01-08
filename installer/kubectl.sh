@@ -27,7 +27,7 @@ if [[ -z ${KUBECTL_CUR_PATH} ]]; then
     #Kubectl not available.  Download and install
     echo "9"
     
-    download-file $KUBECTL_BINARY_URL kubectl_binary
+    download_file $KUBECTL_BINARY_URL kubectl_binary
     echo "Downloaded kubectl binary at $kubectl_binary"
    
 else

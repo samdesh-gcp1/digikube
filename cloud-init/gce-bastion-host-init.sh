@@ -17,9 +17,10 @@ touch $INIT_LOG
 date >> $INIT_LOG
 
 GIT_REPO_URL="https://github.com/samdesh-gcp1/digikube.git"
-MIAN_INSTALLER=${DIGI_DIR}installer/main.sh
+MAIN_INSTALLER=${DIGI_DIR}installer/main.sh
 
 echo "testtest"
+echo ${MAIN_INSTALLER}
 
 DIGI_DIR=${BASE_DIR}digikube/
 if [[ -d ${DIGI_DIR} ]]; then

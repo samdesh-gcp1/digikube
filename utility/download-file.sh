@@ -12,6 +12,7 @@ function download_file {
       echo $source_url
       local dest_file_name="${dest_file_path}digikube-${RANDOM}"
       echo $dest_file_name
+      echo "wget -q --no-cache -O $dest_file_name - $source_url"
       wget -q --no-cache -O $dest_file_name - $source_url
       if [ $? -eq 0 ]; then
          local  __resultvar=$2

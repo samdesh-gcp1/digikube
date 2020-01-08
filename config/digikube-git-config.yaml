@@ -1,1 +1,5 @@
+git-config:
+        digikube:
+                repository: "https://github.com/samdesh-gcp1/digikube.git"
+                user: "samdesh.gcp1@gmail.com"
 

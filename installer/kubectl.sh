@@ -6,7 +6,9 @@ LOG_DIR=${BASE_DIR}digikube-logs/
 INSTALLER_LOG=${LOG_DIR}digikube-installer.log
 DIGI_DIR=${BASE_DIR}digikube/
 
-KUBECTL_TARGET_VERSION="1.15+"
+KUBECTL_TARGET_VERSION="1.15"
+KUBECTL_BINARY_URL="https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_TARGET_VERSION/bin/linux/amd64/kubectl"
+
 KUBECTL_CUR_PATH=$(which kubectl)
 
 if [[ -z ${KUBECTL_CUR_PATH} ]]; then
@@ -22,5 +24,5 @@ if [[ -z ${KUBECTL_CUR_PATH} ]]; then
     fi
 else
     #Kubectl not available.  Download and install
-    
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 fi

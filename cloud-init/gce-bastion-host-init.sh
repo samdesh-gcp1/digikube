@@ -5,7 +5,7 @@ cd ~/
 touch ~/digikube-init.log
 date >> ~/digikube-init.log
 
-if [[ -d "digikube/" ]]; then
+if [[ -d "~/digikube/" ]]; then
 	echo "Dikiguke source directory exists. Refreshing." >> ~/digikube-init.log
 	cd digikube/
 	git init
@@ -13,7 +13,7 @@ if [[ -d "digikube/" ]]; then
 		echo "Error while refreshing dikiguke source directory. Aborting." >> ~/digikube-init.log
 		exit 1
 	else
-		echo "Refreshed dikiguke source directory." >> digikube-init.log
+		echo "Refreshed dikiguke source directory." >> ~/digikube-init.log
 		git pull
 		if [ $? -gt 0 ]; then
 			echo "Error while pulling dikiguke source directory. Aborting." >> ~/digikube-init.log
@@ -33,7 +33,7 @@ else
 	fi	
 fi
 
-if [[ -f "~/digikube/installer/main.sh" ]]; then
+if [[ -e ~/digikube/installer/main.sh ]]; then
 	echo "Starting digikube main installation." >> ~/digikube-init.log
 else
 	echo "Digikube main installer not found. Aborting." >> ~/digikube-init.log

@@ -5,8 +5,6 @@ cd ~/
 touch ~/digikube-init.log
 date >> ~/digikube-init.log
 
-echo " tets ... "
-
 if [[ -d ~/digikube/ ]]; then
 	echo "Dikiguke source directory exists. Refreshing." >> ~/digikube-init.log
 	cd digikube/
@@ -37,6 +35,13 @@ fi
 
 if [[ -e ~/digikube/installer/main.sh ]]; then
 	echo "Starting digikube main installation." >> ~/digikube-init.log
+	~/digikube/installer/main.sh
+	if [[ $? -gt 0 ]]; then
+		echo "Error during Digikube installation.  Please check installation log for details." >> ~/digikube-init.log
+		exit 1
+	else
+		echo "Completed Digikube installation.  Please check installation log for details." >> ~/digikube-init.log
+	fi
 else
 	echo "Digikube main installer not found. Aborting." >> ~/digikube-init.log
 	exit 1

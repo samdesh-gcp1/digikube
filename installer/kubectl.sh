@@ -15,7 +15,7 @@ DIGI_DIR=${BASE_DIR}digikube/
 echo "2"
 
 KUBECTL_TARGET_VERSION="1.15"
-KUBECTL_BINARY_URL="https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_TARGET_VERSION/bin/linux/amd64/kubectl"
+KUBECTL_BINARY_URL="https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_TARGET_VERSION/bin/linux/amd64/kubectl"
 
 echo "3"
 

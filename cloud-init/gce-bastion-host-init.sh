@@ -5,6 +5,8 @@ cd ~/
 touch ~/digikube-init.log
 date >> ~/digikube-init.log
 
+echo " tets ... "
+
 if [[ -d ~/digikube/ ]]; then
 	echo "Dikiguke source directory exists. Refreshing." >> ~/digikube-init.log
 	cd digikube/

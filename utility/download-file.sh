@@ -13,16 +13,18 @@ function download_file {
       local dest_file_name="${dest_file_path}digikube-${RANDOM}"
       echo $dest_file_name
       echo "wget -q --no-cache -O $dest_file_name - $source_url"
-      wget -O $dest_file_name - $source_url
-      exit_code1=$?
-      echo $exit_code1
-      if [[ $? -ne 0 ]]; then
-        echo "wget failed"
-        exit 1; 
-      fi
-      if [[ $? -eq 0 ]]; then
-         local  __resultvar=$2
-         eval $__resultvar="'$dest_file_name'"
+      wget -q --no-cache -O $dest_file_name - $source_url
+      #exit_code1=$?
+      exit_code1=0
+      if [[ $exit_code1 -eq 0 ]]; then
+         if [[ -f $dest_file_name ]]; then
+                echo "File downloaded: $dest_file_name"
+                local  __resultvar=$2
+                eval $__resultvar="'$dest_file_name'"
+         else
+                echo "Error while downloading file. Do something"
+                exit 1
+         fi
       else
          echo "Error while downloading file. Do something"
          eval $__resultvar="''"
@@ -30,7 +32,4 @@ function download_file {
       fi
    fi
 
-
-
-   echo "test"
 }

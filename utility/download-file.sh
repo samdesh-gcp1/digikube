@@ -14,6 +14,10 @@ function download_file {
       echo $dest_file_name
       echo "wget -q --no-cache -O $dest_file_name - $source_url"
       wget -q --no-cache -O $dest_file_name - $source_url
+      if [[ $? -ne 0 ]]; then
+        echo "wget failed"
+        exit 1; 
+      fi
       if [[ $? -eq 0 ]]; then
          local  __resultvar=$2
          eval $__resultvar="'$dest_file_name'"

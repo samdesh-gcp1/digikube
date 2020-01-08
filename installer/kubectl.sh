@@ -5,14 +5,14 @@ BASE_DIR=~/
 
 echo "1"
 
-. ${BASE_DIR}utility/download-file.sh
-. ${BASE_DIR}utility/parse-yaml.sh
-
-echo "2"
-
 LOG_DIR=${BASE_DIR}digikube-logs/
 INSTALLER_LOG=${LOG_DIR}digikube-installer.log
 DIGI_DIR=${BASE_DIR}digikube/
+
+. ${DIGI_DIR}utility/download-file.sh
+. ${DIGI_DIR}utility/parse-yaml.sh
+
+echo "2"
 
 KUBECTL_TARGET_VERSION="1.15"
 KUBECTL_BINARY_URL="https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_TARGET_VERSION/bin/linux/amd64/kubectl"

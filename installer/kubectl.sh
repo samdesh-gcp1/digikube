@@ -5,8 +5,8 @@ BASE_DIR=~/
 
 echo "1"
 
-. ${BASE_DIR}/utility/download-file.sh
-. ${BASE_DIR}/utility/parse-yaml.sh
+. ${BASE_DIR}utility/download-file.sh
+. ${BASE_DIR}utility/parse-yaml.sh
 
 echo "2"
 

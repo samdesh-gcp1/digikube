@@ -28,8 +28,15 @@ if [[ -z ${KUBECTL_CUR_PATH} ]]; then
     echo "9"
     
     download_file $KUBECTL_BINARY_URL kubectl_binary
-    echo "Downloaded kubectl binary at $kubectl_binary"
-   
+    
+    if [[ -z ${kubectl_binary} ]]; then
+        echo "Not able to get handle on downloaded file."
+    else
+        echo "Downloaded kubectl binary at $kubectl_binary"
+        chmod +x $kubectl_binary
+        $kubectl_binary version
+    fi
+    
 else
     echo "Kubectl binary already available. Location: ${KUBECTL_CUR_PATH}"
 

@@ -14,6 +14,12 @@ if [[ -d "digikube/" ]]; then
 		exit 1
 	else
 		echo "Refreshed dikiguke source directory." >> digikube-init.log
+		if [ $? -gt 0 ]; then
+			echo "Error while pulling dikiguke source directory. Aborting." >> digikube-init.log
+			exit 1
+		else
+			echo "Pulled dikiguke source directory." >> digikube-init.log
+		fi	
 	fi	
 else
 	echo "Digikube source directory not available. Clonning" >> digikube-init.log

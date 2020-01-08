@@ -13,7 +13,14 @@ KUBECTL_CUR_PATH=$(which kubectl)
 
 if [[ -z ${KUBECTL_CUR_PATH} ]]; then
     echo "Kubectl binory already available. Location: ${KUBECTL_CUR_PATH}"
+    
     eval $(parse_yaml <( kubectl version -o yaml ) "KUBECTL_CUR_")
+    f=$KUBECTL_CUR_clientVersion_minor
+    t="+"
+    s=""
+    [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
+    KUBECTL_CUR_clientVersion_minor=$n
+
     KUBECTL_CUR_VERSION=$KUBECTL_CUR_clientVersion_major.$KUBECTL_CUR_clientVersion_minor
     if [[ "$KUBECTL_CUR_VERSION" = "$KUBECTL_TARGET_VERSION" ]]; then
         echo "Kubectl version is ${KUBECTL_CUR_VERSION}.  Skipping kubectl installation."
@@ -24,5 +31,5 @@ if [[ -z ${KUBECTL_CUR_PATH} ]]; then
     fi
 else
     #Kubectl not available.  Download and install
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+    curl -LO $KUBECTL_BINARY_URL
 fi

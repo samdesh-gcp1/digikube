@@ -5,7 +5,7 @@ cd ~/
 touch digikube-init.log
 date >> digikube-init.log
 
-if [[ -f "digikube" ]]; then
+if [[ -d "digikube/" ]]; then
 	echo "Dikiguke source directory exists. Refreshing." >> digikube-init.log
 	cd digikube/
 	git init

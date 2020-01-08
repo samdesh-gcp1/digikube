@@ -5,8 +5,9 @@ BASE_DIR=~/
 
 LOG_DIR=${BASE_DIR}digikube-logs/
 if [[ -d ${LOG_DIR} ]]; then
-
+	echo "Dikiguke log directory exists."
 else
+	echo "Dikiguke log directory not available.  Creating new."
 	mkdir ${LOG_DIR}
 fi
 INIT_LOG=${LOG_DIR}digikube-init.log

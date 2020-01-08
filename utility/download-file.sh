@@ -1,4 +1,4 @@
-function download-file {
+function download_file {
         
    local dest_file_path="/tmp/"
    local dest_file_name=""

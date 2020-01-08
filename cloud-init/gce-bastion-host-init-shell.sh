@@ -17,7 +17,7 @@ fi
 #INIT_SCRIPT_SOURCE="$(wget -q -O - https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/cloud-init/gce-bastion-host-init.sh | bash)"
 #su - $(DIGIKUBE_CLOUD_ADMIN) --preserve-environment -c "$INIT_SCRIPT_SOURCE"
 
-INIT_SCRIPT_SOURCE="wget -q -O /tmp/gce-bastion-host-init.sh - https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/cloud-init/gce-bastion-host-init.sh"
+INIT_SCRIPT_SOURCE="wget -q --no-cache -O /tmp/gce-bastion-host-init.sh - https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/cloud-init/gce-bastion-host-init.sh"
 
 su - $DIGIKUBE_CLOUD_ADMIN --preserve-environment -c "$INIT_SCRIPT_SOURCE"
 

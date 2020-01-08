@@ -26,7 +26,7 @@ else
 	fi	
 fi
 
-if [[ -f "~/digikube/installer/main.sh ]]; then
+if [[ -f "~/digikube/installer/main.sh" ]]; then
 	echo "Starting digikube main installation." >> digikube-init.log
 else
 	echo "Digikube main installer not found. Aborting." >> digikube-init.log

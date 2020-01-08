@@ -14,6 +14,8 @@ function download_file {
       echo $dest_file_name
       echo "wget -q --no-cache -O $dest_file_name - $source_url"
       wget -q --no-cache -O $dest_file_name - $source_url
+      exit_code1=$?
+      echo $exit_code1
       if [[ $? -ne 0 ]]; then
         echo "wget failed"
         exit 1; 

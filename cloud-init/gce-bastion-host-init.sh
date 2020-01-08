@@ -1,6 +1,15 @@
 #!/bin/bash
 # Init script
+
 cd ~/
-touch last_run.txt
-date >> last_run.txt
-git clone 
+touch digikube-init.log
+date >> digikube-init.log
+
+if [[ -f "digikube" ]]; then
+	echo "Dikiguke source directory exists. Refreshing." >> digikube-init.log
+	cd digikube/
+	git init
+else
+	echo "Digikube source directory not available. Clonning" >> digikube-init.log
+	git clone -o digikube-source https://github.com/samdesh-gcp1/digikube.git
+fi

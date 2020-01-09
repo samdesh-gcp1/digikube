@@ -1,10 +1,10 @@
 #!/bin/bash
 # kubectl installer
 
-local __function_name="installer/kubectl.sh"
+__function_name="installer/kubectl.sh"
 
-local base_dir=~/
-local digi_dir=${base_dir}digikube/
+base_dir=~/
+digi_dir=${base_dir}digikube/
 
 . ${digi_dir}utility/general.sh
 . ${digi_dir}utility/log.sh

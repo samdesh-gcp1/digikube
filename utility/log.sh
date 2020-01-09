@@ -19,7 +19,8 @@ echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
 #Information=1
 #Debug=0
 
-	
+echo "test"
+
 function log_it {
     
     local __function_name="utility/log_it"
@@ -28,10 +29,10 @@ function log_it {
     
     if [ $# -lt 5 ]; then
         echo "Error: ${__function_name} : Insufficient arguments provided: $1"
-        exit 0      #Exit without error
+        exit 0      
     fi
 
-    option="${2}"
+    option=${2}
 	if [[ "${option}" = "init" ]]; then
 		if [[ ${logConfig_init_logLevel -lt $3 ]]; then
 			log_msg="$(date) : $1 : $3 : $4 : $5"
@@ -55,3 +56,6 @@ function log_it {
 		fi
 	fi
 }
+
+echo "tets2"
+

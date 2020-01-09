@@ -8,7 +8,7 @@ log_config=${digi_dir}config/log-config.yaml
 init_log=${log_dir}digikube-init.log
 installer_log=${log_dir}digikube-installer.log
 
-. ${digi_dir}utility/general.sh
+#. ${digi_dir}utility/general.sh
 eval $(parse_yaml ${log_config} )
 echo "logConfig_installer_logLevel > ${logConfig_installer_logLevel}"
 echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"

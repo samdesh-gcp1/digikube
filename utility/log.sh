@@ -34,7 +34,7 @@ log_it() {
 	option=${2}
 	if [[ "${option}" = "init" ]]; then
 		echo "This is init log"
-		if [[ ${logConfig_init_logLevel} -lt ${3} ]]; then
+		if [[ ${3} -gt ${logConfig_init_logLevel} ]]; then
 			echo "This is log level ${3}"
 			log_msg="$(date) : $1 : $3 : $4 : $5"
 			echo ${log_msg} >> ${init_log}
@@ -49,7 +49,7 @@ log_it() {
 			echo ${logConfig_installer_logLevel}
 			echo $3
 			echo $3 + ${logConfig_installer_logLevel}
-			if [[ ${logConfig_installer_logLevel} -lt $3 ]]; then
+			if [[ $3 -gt ${logConfig_installer_logLevel} ]]; then
 				echo "This is log level ${3}"
 				log_msg="$(date) : $1 : $3 : $4 : $5"
 				echo ${log_msg} >> ${installer_log}

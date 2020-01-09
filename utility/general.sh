@@ -23,7 +23,6 @@ function download_file {
       __exit_code=0
       if [[ $__exit_code -eq 0 ]]; then
          if [[ -f $dest_file_name ]]; then
-                echo "Info: ${__function_name} : Downloaded file: $dest_file_name from: $source_url."
                 __resultvar=$2
                 eval $__resultvar="'$dest_file_name'"
          else

@@ -12,6 +12,13 @@ touch ${installer_log}
 
 . ${digi_dir}utility/general.sh
 eval $(parse_yaml ${log_config} )
+[[ "${logConfig_installer_logLevel}" = "0" ]] logConfig_installer_logLevel=0
+[[ "${logConfig_installer_logLevel}" = "1" ]] logConfig_installer_logLevel=1
+[[ "${logConfig_installer_logLevel}" = "2" ]] logConfig_installer_logLevel=2
+[[ "${logConfig_installer_logLevel}" = "3" ]] logConfig_installer_logLevel=3
+[[ "${logConfig_installer_logLevel}" = "4" ]] logConfig_installer_logLevel=4
+
+
 echo "logConfig_installer_logLevel > ${logConfig_installer_logLevel}"
 echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
 

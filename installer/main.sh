@@ -1,15 +1,8 @@
 #!/bin/bash
 # Main installer script
 
-BASE_DIR=~/
+local base_dir=~/
+local digi_dir=${base_dir}digikube/
+local kubectl_installer=${digi_dir}installer/kubectl.sh
 
-LOG_DIR=${BASE_DIR}digikube-logs/
-INSTALLER_LOG=${LOG_DIR}digikube-installer.log
-
-touch $INSTALLER_LOG
-date >> $INSTALLER_LOG
-
-DIGI_DIR=${BASE_DIR}digikube/
-KUBECTL_INSTALLER=${DIGI_DIR}installer/kubectl.sh
-
-${KUBECTL_INSTALLER}
+${kubectl_installer}

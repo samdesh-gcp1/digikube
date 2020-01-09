@@ -7,6 +7,8 @@ digi_dir=${base_dir}digikube/
 log_config=${digi_dir}config/log-config.yaml
 init_log=${log_dir}digikube-init.log
 installer_log=${log_dir}digikube-installer.log
+touch ${init_log}
+touch ${installer_log}
 
 . ${digi_dir}utility/general.sh
 eval $(parse_yaml ${log_config} )

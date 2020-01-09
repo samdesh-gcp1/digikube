@@ -5,17 +5,14 @@ function download_file {
 
    if [ $# -lt 2 ]; then
       echo "Insufficient parameters provided."
-      eval $__resultvar="''"
+      eval $__gu_resultvar="''"
       exit 1
    else
       local source_url=$1   #should check the format
-      echo $source_url
       local dest_file_name="${dest_file_path}digikube-${RANDOM}"
-      echo $dest_file_name
-      echo "wget -q --no-cache -O $dest_file_name - $source_url"
       wget -q --no-cache -O $dest_file_name - $source_url
-      #exit_code1=$?
-      exit_code1=0
+      #__gu_exit_code=$?
+      __gu_exit_code=0
       if [[ $exit_code1 -eq 0 ]]; then
          if [[ -f $dest_file_name ]]; then
                 echo "File downloaded: $dest_file_name"
@@ -31,7 +28,6 @@ function download_file {
          exit 1
       fi
    fi
-
 }
 
 function parse_yaml {
@@ -49,4 +45,18 @@ function parse_yaml {
          printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
       }
    }'
+}
+
+function replace_substring {
+
+        if [[ $# -lt 3 ]]; then
+                echo "Insufficient arguments provided.  Exiting."
+                eval $__resultvar="''"
+                exit 1        
+        else
+                f=$1
+                t="+"
+                s=""
+                [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
+        fi
 }

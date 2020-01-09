@@ -1,15 +1,13 @@
 #!/bin/bash
-# Main installer script
+# kubectl installer
 
 local __function_name="installer/kubectl.sh"
 
-BASE_DIR=~/
-LOG_DIR=${BASE_DIR}digikube-logs/
-DIGI_DIR=${BASE_DIR}digikube/
-INSTALLER_LOG=${LOG_DIR}digikube-installer.log
+local base_dir=~/
+local digi_dir=${base_dir}digikube/
 
-. ${DIGI_DIR}utility/general.sh
-. ${DIGI_DIR}utility/log.sh
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
 
 local kubectl_download_version="1.15"
 local kubectl_existing_version=""

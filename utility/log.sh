@@ -25,6 +25,8 @@ log_it() {
 	if [[ $# -lt 5 ]]; then
 		echo "Error: ${__function_name} : Insufficient arguments provided: ${1}"
 		exit 0
+	else
+		echo "its fun"
 	fi
 	
 	

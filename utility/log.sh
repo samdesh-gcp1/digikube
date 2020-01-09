@@ -27,34 +27,25 @@ log_it() {
 		
 	option=${2}
 	if [[ "${option}" = "init" ]]; then
-		echo "This is init log"
 		if [[ ${3} -lt ${logConfig_init_logLevel} ]]; then
 			#Do nothing
 			temp1=1
 		else
-			echo "This is log level ${3}"
 			log_msg="$(date) : $1 : $3 : $4 : $5"
 			echo ${log_msg} >> ${init_log}
 			if [[ "${logConfig_init_logEcho}" = "on" ]]; then
-				echo "Log echoing is enabled"
 				echo ${log_msg}
 			fi
 		fi
 	else
 		if [[ "${option}" = "installer" ]]; then
-			echo "This is installer log"
-			echo ${logConfig_installer_logLevel}
-			echo $3
-			echo $3 + ${logConfig_installer_logLevel}
 			if [[ $3 -lt ${logConfig_installer_logLevel} ]]; then
 				#Do nothing
 				temp1=1
 			else
-				echo "This is log level ${3}"
 				log_msg="$(date) : $1 : $3 : $4 : $5"
 				echo ${log_msg} >> ${installer_log}
 				if [[ "${logConfig_installer_logEcho}" = "on" ]]; then
-					echo "Log echoing is enabled"
 					echo ${log_msg}
 				fi
 			fi

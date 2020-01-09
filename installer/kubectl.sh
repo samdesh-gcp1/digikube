@@ -45,6 +45,7 @@ if [[ -z ${kubectl_existing_path} ]]; then
         fi
         
         eval $(parse_yaml <( $kubectl_binary version -o yaml ) "kubectl_download_")
+        echo $kubectl_download_clientVersion_minor
         kubectl_download_clientVersion_minor="$(replace_substring $kubectl_download_clientVersion_minor '' '+')"
         kubectl_download_version=$kubectl_download_clientVersion_major.$kubectl_download_clientVersion_minor
         

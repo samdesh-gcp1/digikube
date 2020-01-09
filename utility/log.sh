@@ -39,6 +39,7 @@ log_it() {
 #				echo ${log_msg}
 #			fi
 #		fi
+		echo "more fun"
 	else
 #		if [[ "${option}" = "installer" ]]; then
 #			if [[ ${logConfig_installer_logLevel} -lt $3 ]]; then

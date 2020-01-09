@@ -21,7 +21,7 @@ echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
 
 echo "test"
 
-function log_it {
+function log_it{
     
     local __function_name="utility/log_it"
     
@@ -34,7 +34,8 @@ function log_it {
 
     option=${2}
 	if [[ "${option}" = "init" ]]; then
-		if [[ ${logConfig_init_logLevel -lt $3 ]]; then
+		if [[ ${logConfig_init_logLevel -lt ${3} ]]; then
+		
 			log_msg="$(date) : $1 : $3 : $4 : $5"
 			echo ${log_msg} >> ${init_log}
 			if [[ "${logConfig_init_logEcho}" = "on" ]]; then

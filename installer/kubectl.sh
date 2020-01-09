@@ -17,7 +17,7 @@ kubectl_existing_path=$(which kubectl)
 if [[ -z ${kubectl_existing_path} ]]; then
 
     #Kubectl not available.  Download and install
-    download_file $kubectl_download_url $kubectl_binary
+    download_file $kubectl_download_url kubectl_binary
     
     if [[ -z ${kubectl_binary} ]]; then
         log_it "$__function_name" "installer" 3 "0000" "Not able to get handle on downloaded file"

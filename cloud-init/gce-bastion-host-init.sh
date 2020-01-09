@@ -20,9 +20,6 @@ GIT_REPO_URL="https://github.com/samdesh-gcp1/digikube.git"
 DIGI_DIR=${BASE_DIR}digikube/
 MAIN_INSTALLER=${DIGI_DIR}installer/main.sh
 
-echo "testtest"
-echo ${MAIN_INSTALLER}
-
 if [[ -d ${DIGI_DIR} ]]; then
 	echo "Dikiguke source directory exists. Refreshing." >> ${INIT_LOG}
 	cd ${DIGI_DIR}

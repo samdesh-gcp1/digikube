@@ -9,10 +9,10 @@ digi_dir=${base_dir}digikube/
 . ${digi_dir}utility/general.sh
 . ${digi_dir}utility/log.sh
 
-local kubectl_download_version="1.15"
-local kubectl_existing_version=""
-local kubectl_download_url="https://storage.googleapis.com/kubernetes-release/release/v$kubectl_download_version.0/bin/linux/amd64/kubectl"
-local kubectl_existing_path=$(which kubectl)
+kubectl_download_version="1.15"
+kubectl_existing_version=""
+kubectl_download_url="https://storage.googleapis.com/kubernetes-release/release/v$kubectl_download_version.0/bin/linux/amd64/kubectl"
+kubectl_existing_path=$(which kubectl)
 
 if [[ -z ${kubectl_existing_path} ]]; then
 
@@ -20,9 +20,9 @@ if [[ -z ${kubectl_existing_path} ]]; then
     download_file $kubectl_download_url kubectl_binary
     
     if [[ -z ${kubectl_binary} ]]; then
-        log_it( $__function_name, "installer", 3, "0000", "Not able to get handle on downloaded file")
+        log_it "$__function_name" "installer" 3 "0000" "Not able to get handle on downloaded file"
     else
-        log_it( $__function_name, "installer", 1, "0000", "Downloaded kubectl binary at $kubectl_binary")
+        log_it "$__function_name" "installer" 1 "0000" "Downloaded kubectl binary at $kubectl_binary"
         chmod +x $kubectl_binary
         eval $(parse_yaml <( $kubectl_binary version -o yaml ) "local kubectl_download_")
         kubectl_download_clientVersion_minor=replace_substring($kubectl_download_clientVersion_minor, "+", "")

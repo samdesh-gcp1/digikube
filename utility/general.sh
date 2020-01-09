@@ -77,6 +77,10 @@ function replace_substring {
                 f=$1
                 t=$2
                 s=$3
+                echo $f
+                echo $t
+                echo $s
+                
                 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
                 eval $__resultvar="'$n'"
         fi

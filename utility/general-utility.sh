@@ -48,15 +48,15 @@ function parse_yaml {
 }
 
 function replace_substring {
-
         if [[ $# -lt 3 ]]; then
-                echo "Insufficient arguments provided.  Exiting."
+                echo "Error: Insufficient arguments provided."
                 eval $__resultvar="''"
-                exit 1        
+                exit 1 
         else
                 f=$1
-                t="+"
-                s=""
+                t=$2
+                s=$3
                 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
+                
         fi
 }

@@ -1,7 +1,7 @@
 log-config:
     init:
-        log-level: info
-        log-echo: on
+        log-level: "info"
+        log-echo: "on"
     installer:
-        log-level: info
-        log-echo: on
+        log-level: "info"
+        log-echo: "on"

@@ -6,8 +6,7 @@ LOG_DIR=${BASE_DIR}digikube-logs/
 INSTALLER_LOG=${LOG_DIR}digikube-installer.log
 DIGI_DIR=${BASE_DIR}digikube/
 
-. ${DIGI_DIR}utility/download-file.sh
-. ${DIGI_DIR}utility/parse-yaml.sh
+. ${DIGI_DIR}utility/general-utility.sh
 
 KUBECTL_TARGET_VERSION="1.15"
 KUBECTL_BINARY_URL="https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_TARGET_VERSION.0/bin/linux/amd64/kubectl"

@@ -1,4 +1,4 @@
-log-Config:
+logConfig:
   init:
     logLevel: "3"
     logEcho: "on"

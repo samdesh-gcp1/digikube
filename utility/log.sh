@@ -53,6 +53,7 @@ log_it() {
 #			echo "Error: ${__function_name} : Unkwonk log type: ${option}"
 #			exit 1
 #		fi
+		echo "even more fun"
 	fi
 
 	

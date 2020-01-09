@@ -60,8 +60,10 @@ function parse_yaml {
 
 function replace_substring {
 
+         echo "Thets"
+         
         local __function_name="replace_substring"
-        local __resultvar=""
+        #local __resultvar=""
                         
         if [[ $# -lt 3 ]]; then
                 echo "Error: ${__function_name} : Insufficient arguments provided."
@@ -71,9 +73,9 @@ function replace_substring {
                 f=$1
                 t=$2
                 s=$3
-                echo $f
-                echo $t
-                echo $s
+                echo ${f}
+                echo ${t}
+                echo ${s}
                 
                 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
                 #eval $__resultvar="'$n'"

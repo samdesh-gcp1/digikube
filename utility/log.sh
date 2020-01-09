@@ -17,7 +17,7 @@ eval $(parse_yaml ${log_config} )
 #[[ "${logConfig_installer_logLevel}" = "2" ]] logConfig_installer_logLevel=2
 #[[ "${logConfig_installer_logLevel}" = "3" ]] logConfig_installer_logLevel=3
 #[[ "${logConfig_installer_logLevel}" = "4" ]] logConfig_installer_logLevel=4
-logConfig_installer_logLevel=$(expr ${logConfig_installer_logLevel})
+#logConfig_installer_logLevel= ${logConfig_installer_logLevel} + 0 | bc
 
 echo "logConfig_installer_logLevel > ${logConfig_installer_logLevel}"
 echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
@@ -46,6 +46,9 @@ log_it() {
 	else
 		if [[ "${option}" = "installer" ]]; then
 			echo "This is installer log"
+			echo ${logConfig_installer_logLevel}
+			echo $3
+			echo $3 + ${logConfig_installer_logLevel}
 			if [[ ${logConfig_installer_logLevel} -lt $3 ]]; then
 				echo "This is log level ${3}"
 				log_msg="$(date) : $1 : $3 : $4 : $5"

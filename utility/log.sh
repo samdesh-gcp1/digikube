@@ -34,7 +34,7 @@ function log_it {
     option="${2}"
     case ${option} in 
 	
-	    "init")         if [[ ${logConfig_init_logLevel -lt $3 ]]; then
+	    "init")			if [[ ${logConfig_init_logLevel -lt $3 ]]; then
 							log_msg="$(date) : $1 : $3 : $4 : $5"
 							echo ${log_msg} >> ${init_log}
 							if [[ "${logConfig_init_logEcho}" = "on" ]]; then
@@ -54,7 +54,7 @@ function log_it {
 	
 	    *)	            echo "Error: ($__function_name): Unkwonk log type: ${option}"
 		                exit 1
-		                ;;
+		                
     esac
-      
+	
 }

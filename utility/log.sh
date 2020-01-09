@@ -15,53 +15,42 @@ eval $(parse_yaml ${log_config} )
 echo "logConfig_installer_logLevel > ${logConfig_installer_logLevel}"
 echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
 
-echo "test"
-
 log_it() {
 
 	local __function_name="utility/log_it"
-	echo "inside ${__function_name}"
-
-
 
 	if [[ $# -lt 5 ]]; then
 		echo "Error: ${__function_name} : Insufficient arguments provided: ${1}"
-		exit 0
-	else
-		echo "its fun"
+		exit 0	
 	fi
-	
-	
+		
 	option=${2}
 	if [[ "${option}" = "init" ]]; then
+		echo "This is init log"
 		if [[ ${logConfig_init_logLevel} -lt ${3} ]]; then
+			echo "This is log level ${3}"
 			log_msg="$(date) : $1 : $3 : $4 : $5"
 			echo ${log_msg} >> ${init_log}
 			if [[ "${logConfig_init_logEcho}" = "on" ]]; then
+				echo "Log echoing is enabled"
 				echo ${log_msg}
 			fi
-			echo "111111"
 		fi
-		echo "more fun"
 	else
 		if [[ "${option}" = "installer" ]]; then
+			echo "This is installer log"
 			if [[ ${logConfig_installer_logLevel} -lt $3 ]]; then
+				echo "This is log level ${3}"
 				log_msg="$(date) : $1 : $3 : $4 : $5"
 				echo ${log_msg} >> ${installer_log}
 				if [[ "${logConfig_installer_logEcho}" = "on" ]]; then
+					echo "Log echoing is enabled"
 					echo ${log_msg}
-	fi
+				fi
 			fi
 		else
 			echo "Error: ${__function_name} : Unkwonk log type: ${option}"
 			exit 1
 		fi
-		echo "even more fun"
 	fi
-
-	
-	
 }
-
-echo "tets2"
-

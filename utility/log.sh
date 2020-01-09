@@ -32,19 +32,16 @@ function log_it {
     fi
 
     option="${2}"
-    case ${option} in 
-	
-	    "init")
-			if [[ ${logConfig_init_logLevel -lt $3 ]]; then
-				log_msg="$(date) : $1 : $3 : $4 : $5"
-				echo ${log_msg} >> ${init_log}
-				if [[ "${logConfig_init_logEcho}" = "on" ]]; then
-					echo ${log_msg}
-				fi
+	if [[ "${option}" = "init" ]]; then
+		if [[ ${logConfig_init_logLevel -lt $3 ]]; then
+			log_msg="$(date) : $1 : $3 : $4 : $5"
+			echo ${log_msg} >> ${init_log}
+			if [[ "${logConfig_init_logEcho}" = "on" ]]; then
+				echo ${log_msg}
 			fi
-            ;;
-						
-  	    "installer")
+		fi
+	else
+		if [[ "${option}" = "installer" ]]; then
 			if [[ ${logConfig_installer_logLevel} -lt $3 ]]; then
 				log_msg="$(date) : $1 : $3 : $4 : $5"
 				echo ${log_msg} >> ${installer_log}
@@ -52,10 +49,9 @@ function log_it {
 					echo ${log_msg}
 				fi
 			fi
-            ;;
-	
-	    *)
+    	else
 			echo "Error: ${__function_name} : Unkwonk log type: ${option}"
 		    exit 1            
-    esac
+		fi
+	fi
 }

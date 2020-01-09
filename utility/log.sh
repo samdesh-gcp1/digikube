@@ -21,7 +21,7 @@ echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
 
 echo "test"
 
-function log_it{
+function log_it() {
     
     local __function_name="utility/log_it"
     

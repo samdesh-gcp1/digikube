@@ -1,12 +1,12 @@
 #!/bin/bash
 # Log handling
 
-local base_dir=~/
-local log_dir=${base_dir}digikube-logs/
-local digi_dir=${base_dir}digikube/
-local log_config=${digi_dir}config/log-config.yaml
-local init_log=${log_dir}digikube-init.log
-local installer_log=${log_dir}digikube-installer.log
+base_dir=~/
+log_dir=${base_dir}digikube-logs/
+digi_dir=${base_dir}digikube/
+log_config=${digi_dir}config/log-config.yaml
+init_log=${log_dir}digikube-init.log
+installer_log=${log_dir}digikube-installer.log
 
 . ${digi_dir}utility/general.sh
 eval $(parse_yaml $log_config )

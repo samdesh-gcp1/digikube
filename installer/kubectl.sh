@@ -1,47 +1,55 @@
 #!/bin/bash
 # Main installer script
 
+local __function_name="installer/kubectl.sh"
+
 BASE_DIR=~/
 LOG_DIR=${BASE_DIR}digikube-logs/
-INSTALLER_LOG=${LOG_DIR}digikube-installer.log
 DIGI_DIR=${BASE_DIR}digikube/
+INSTALLER_LOG=${LOG_DIR}digikube-installer.log
 
-. ${DIGI_DIR}utility/general-utility.sh
+. ${DIGI_DIR}utility/general.sh
+. ${DIGI_DIR}utility/log.sh
 
-KUBECTL_TARGET_VERSION="1.15"
-KUBECTL_BINARY_URL="https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_TARGET_VERSION.0/bin/linux/amd64/kubectl"
+local kubectl_download_version="1.15"
+local kubectl_existing_version=""
+local kubectl_download_url="https://storage.googleapis.com/kubernetes-release/release/v$kubectl_download_version.0/bin/linux/amd64/kubectl"
+local kubectl_existing_path=$(which kubectl)
 
-KUBECTL_CUR_PATH=$(which kubectl)
+if [[ -z ${kubectl_existing_path} ]]; then
 
-if [[ -z ${KUBECTL_CUR_PATH} ]]; then
     #Kubectl not available.  Download and install
-    download_file $KUBECTL_BINARY_URL kubectl_binary
+    download_file $kubectl_download_url kubectl_binary
     
     if [[ -z ${kubectl_binary} ]]; then
-        echo "Not able to get handle on downloaded file."
+        log_it( $__function_name, "installer", "ERR", 0, "Not able to get handle on downloaded file")
     else
-        echo "Downloaded kubectl binary at $kubectl_binary"
+        log_it( $__function_name, "installer","INFO", 0, "Downloaded kubectl binary at $kubectl_binary")
         chmod +x $kubectl_binary
-        $kubectl_binary version
+        eval $(parse_yaml <( $kubectl_binary version -o yaml ) "local kubectl_download_")
+        kubectl_download_clientVersion_minor=replace_substring($kubectl_download_clientVersion_minor, "+", "")
+        kubectl_download_version=$kubectl_download_clientVersion_major.$kubectl_download_clientVersion_minor
+        log_it( $__function_name, "installer","INFO", 0, "Downloaded kubectl version is $kubectl_download_version")
     fi
-    
-else
-    echo "Kubectl binary already available. Location: ${KUBECTL_CUR_PATH}"
-    eval $(parse_yaml <( kubectl version -o yaml ) "KUBECTL_CUR_")
-    f=$KUBECTL_CUR_clientVersion_minor
-    t="+"
-    s=""
-    [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
-    KUBECTL_CUR_clientVersion_minor=$n
 
-    KUBECTL_CUR_VERSION=$KUBECTL_CUR_clientVersion_major.$KUBECTL_CUR_clientVersion_minor
-    if [[ "$KUBECTL_CUR_VERSION" = "$KUBECTL_TARGET_VERSION" ]]; then
-        echo "Kubectl version is ${KUBECTL_CUR_VERSION}.  Skipping kubectl installation."
-        echo "7"
-        exit 0
+else
+
+    log_it( $__function_name, "installer","INFO", 0, "Kubectl binary already available at path: ${kubectl_existing_path}")
+    eval $(parse_yaml <( kubectl version -o yaml ) "local kubectl_existing_")
+    kubectl_existing_clientVersion_minor=replace_substring($kubectl_existing_clientVersion_minor, "+", "")
+    
+    #f=$KUBECTL_CUR_clientVersion_minor
+    #t="+"
+    #s=""
+    #[ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
+    #KUBECTL_CUR_clientVersion_minor=$n
+
+    kubectl_existing_version=$kubectl_existing_clientVersion_major.$kubectl_existing_clientVersion_minor
+    
+    if [[ "$kubectl_existing_version" = "$kubectl_download_version" ]]; then
+        log_it( $__function_name, "installer","INFO", 0, "Pre-existing kubectl binary version is same as expected target version: ${kubectl_download_version}. Using the pre-existing kubectl binary.")
     else
-        echo "Kubectl version is ${KUBECTL_CUR_VERSION}.  Required version is ${KUBECTL_TARGET_VERSION}.  Aborting kubectl installation.  Please remove the old version and rerun the installation."
-        echo "8"
+        log_it( $__function_name, "installer","ERR", 0, "Pre-existing kubectl binary version is: ${kubectl_existing_version}.  Target version of kubectl is: ${kubectl_download_version}. Aborting kubectl installation.  Remove existing kubectl binary and rerun the installation.")
         exit 1
     fi 
 fi

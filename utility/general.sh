@@ -83,6 +83,6 @@ function replace_substring {
                 
                 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
                 #eval $__resultvar="'$n'"
-                return "$n"
+                return $n
         fi
 }

@@ -36,20 +36,22 @@ if [[ -z ${kubectl_existing_path} ]]; then
         log_it "${__function_name}" "installer" 3 "0000" "Not able to get handle on downloaded kubectl binary"
         exit 1
     else
-        log_it "${__function_name}" "installer" 1 "0000" "Downloaded kubectl binary at: ${kubectl_binary}"
+        log_it "${__function_name}" "installer" 0 "0000" "Downloaded kubectl binary at: ${kubectl_binary}"
         
         chmod +x ${kubectl_binary}
         if [[ $? -gt 0 ]]; then
             log_it "${__function_name}" "installer" 3 "0000" "Error while changing the file perimissions for the downloaded kubectl binary"
             exit 1
+        else
+            log_it "${__function_name}" "installer" 0 "0000" "Changed the access permission of kubectl binary"
         fi
         
         eval $(parse_yaml <( $kubectl_binary version -o yaml ) "kubectl_download_")
         echo $kubectl_download_clientVersion_minor
-        kubectl_download_clientVersion_minor="$(replace_substring $kubectl_download_clientVersion_minor '' '+')"
+        kubectl_download_clientVersion_minor="$(replace_substring $kubectl_download_clientVersion_minor '+' ' ')"
         kubectl_download_version=$kubectl_download_clientVersion_major.$kubectl_download_clientVersion_minor
         
-        log_it "${__function_name}" "installer" 1 "0000" "Downloaded kubectl version is: $kubectl_download_version"
+        log_it "${__function_name}" "installer" 0 "0000" "Downloaded kubectl version is: $kubectl_download_version"
         
     fi
 
@@ -57,7 +59,7 @@ else
 
     log_it "${__function_name}" "installer" 1 "0000" "Kubectl binary already available at path: ${kubectl_existing_path}"
     eval $(parse_yaml <( kubectl version -o yaml ) "kubectl_existing_")
-    kubectl_existing_clientVersion_minor="$(replace_substring $kubectl_existing_clientVersion_minor '' '+')"
+    kubectl_existing_clientVersion_minor="$(replace_substring $kubectl_existing_clientVersion_minor '+' ' ')"
     
     #f=$KUBECTL_CUR_clientVersion_minor
     #t="+"

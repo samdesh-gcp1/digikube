@@ -30,6 +30,7 @@ log_it() {
 		echo "This is init log"
 		if [[ ${3} -lt ${logConfig_init_logLevel} ]]; then
 			#Do nothing
+			temp1=1
 		else
 			echo "This is log level ${3}"
 			log_msg="$(date) : $1 : $3 : $4 : $5"
@@ -47,6 +48,7 @@ log_it() {
 			echo $3 + ${logConfig_installer_logLevel}
 			if [[ $3 -lt ${logConfig_installer_logLevel} ]]; then
 				#Do nothing
+				temp1=1
 			else
 				echo "This is log level ${3}"
 				log_msg="$(date) : $1 : $3 : $4 : $5"

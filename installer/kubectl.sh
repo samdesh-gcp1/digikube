@@ -45,7 +45,7 @@ if [[ -z ${kubectl_existing_path} ]]; then
         fi
         
         eval $(parse_yaml <( $kubectl_binary version -o yaml ) "kubectl_download_")
-        kubectl_download_clientVersion_minor="$(replace_substring $kubectl_download_clientVersion_minor '+' '')"
+        kubectl_download_clientVersion_minor="$(replace_substring $kubectl_download_clientVersion_minor '' '+')"
         kubectl_download_version=$kubectl_download_clientVersion_major.$kubectl_download_clientVersion_minor
         
         log_it "${__function_name}" "installer" 1 "0000" "Downloaded kubectl version is: $kubectl_download_version"
@@ -56,7 +56,7 @@ else
 
     log_it "${__function_name}" "installer" 1 "0000" "Kubectl binary already available at path: ${kubectl_existing_path}"
     eval $(parse_yaml <( kubectl version -o yaml ) "kubectl_existing_")
-    kubectl_existing_clientVersion_minor="$(replace_substring $kubectl_existing_clientVersion_minor "+" "")"
+    kubectl_existing_clientVersion_minor="$(replace_substring $kubectl_existing_clientVersion_minor '' '+')"
     
     #f=$KUBECTL_CUR_clientVersion_minor
     #t="+"

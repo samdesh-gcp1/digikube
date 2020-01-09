@@ -22,19 +22,19 @@ if [[ -z ${kubectl_existing_path} ]]; then
     download_file $kubectl_download_url kubectl_binary
     
     if [[ -z ${kubectl_binary} ]]; then
-        log_it( $__function_name, "installer", "ERR", 0, "Not able to get handle on downloaded file")
+        log_it( $__function_name, "installer", 3, "0000", "Not able to get handle on downloaded file")
     else
-        log_it( $__function_name, "installer","INFO", 0, "Downloaded kubectl binary at $kubectl_binary")
+        log_it( $__function_name, "installer", 1, "0000", "Downloaded kubectl binary at $kubectl_binary")
         chmod +x $kubectl_binary
         eval $(parse_yaml <( $kubectl_binary version -o yaml ) "local kubectl_download_")
         kubectl_download_clientVersion_minor=replace_substring($kubectl_download_clientVersion_minor, "+", "")
         kubectl_download_version=$kubectl_download_clientVersion_major.$kubectl_download_clientVersion_minor
-        log_it( $__function_name, "installer","INFO", 0, "Downloaded kubectl version is $kubectl_download_version")
+        log_it( $__function_name, "installer", 1, "0000", "Downloaded kubectl version is $kubectl_download_version")
     fi
 
 else
 
-    log_it( $__function_name, "installer","INFO", 0, "Kubectl binary already available at path: ${kubectl_existing_path}")
+    log_it( $__function_name, "installer", 1, "0000", "Kubectl binary already available at path: ${kubectl_existing_path}")
     eval $(parse_yaml <( kubectl version -o yaml ) "local kubectl_existing_")
     kubectl_existing_clientVersion_minor=replace_substring($kubectl_existing_clientVersion_minor, "+", "")
     
@@ -47,9 +47,9 @@ else
     kubectl_existing_version=$kubectl_existing_clientVersion_major.$kubectl_existing_clientVersion_minor
     
     if [[ "$kubectl_existing_version" = "$kubectl_download_version" ]]; then
-        log_it( $__function_name, "installer","INFO", 0, "Pre-existing kubectl binary version is same as expected target version: ${kubectl_download_version}. Using the pre-existing kubectl binary.")
+        log_it( $__function_name, "installer", 1, 0, "Pre-existing kubectl binary version is same as expected target version: ${kubectl_download_version}. Using the pre-existing kubectl binary.")
     else
-        log_it( $__function_name, "installer","ERR", 0, "Pre-existing kubectl binary version is: ${kubectl_existing_version}.  Target version of kubectl is: ${kubectl_download_version}. Aborting kubectl installation.  Remove existing kubectl binary and rerun the installation.")
+        log_it( $__function_name, "installer", 3, 0, "Pre-existing kubectl binary version is: ${kubectl_existing_version}.  Target version of kubectl is: ${kubectl_download_version}. Aborting kubectl installation.  Remove existing kubectl binary and rerun the installation.")
         exit 1
     fi 
 fi

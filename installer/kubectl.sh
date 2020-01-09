@@ -25,7 +25,7 @@ if [[ -z ${kubectl_existing_path} ]]; then
         log_it "$__function_name" "installer" 1 "0000" "Downloaded kubectl binary at $kubectl_binary"
         chmod +x $kubectl_binary
         eval $(parse_yaml <( $kubectl_binary version -o yaml ) "kubectl_download_")
-        kubectl_download_clientVersion_minor=replace_substring $kubectl_download_clientVersion_minor "+" ""
+        kubectl_download_clientVersion_minor=$(replace_substring $kubectl_download_clientVersion_minor "+" "")
         kubectl_download_version=$kubectl_download_clientVersion_major.$kubectl_download_clientVersion_minor
         log_it $__function_name "installer" 1 "0000" "Downloaded kubectl version is $kubectl_download_version"
     fi

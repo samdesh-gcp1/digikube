@@ -10,6 +10,8 @@ installer_log=${log_dir}digikube-installer.log
 
 . ${digi_dir}utility/general.sh
 eval $(parse_yaml $log_config )
+echo "log-config_installer_log-level > $log-config_installer_log-level"
+echo "log-config_installer_log-echo > $log-config_installer_log-echo"
 
 #Critical=4
 #Error=3

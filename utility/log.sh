@@ -47,9 +47,7 @@ function log_it {
 							fi
 						fi
                         ;;
-						
-		__log=${installer_log}
-                        ;;
+	
 	    *)	            echo "Error: ($__function_name): Unkwonk log type: ${option}"
 		                exit 1
 		                ;;

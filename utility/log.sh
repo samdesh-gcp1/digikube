@@ -12,12 +12,6 @@ touch ${installer_log}
 
 . ${digi_dir}utility/general.sh
 eval $(parse_yaml ${log_config} )
-#[[ "${logConfig_installer_logLevel}" = "0" ]] logConfig_installer_logLevel=0
-#[[ "${logConfig_installer_logLevel}" = "1" ]] logConfig_installer_logLevel=1
-#[[ "${logConfig_installer_logLevel}" = "2" ]] logConfig_installer_logLevel=2
-#[[ "${logConfig_installer_logLevel}" = "3" ]] logConfig_installer_logLevel=3
-#[[ "${logConfig_installer_logLevel}" = "4" ]] logConfig_installer_logLevel=4
-#logConfig_installer_logLevel= ${logConfig_installer_logLevel} + 0 | bc
 
 echo "logConfig_installer_logLevel > ${logConfig_installer_logLevel}"
 echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
@@ -34,7 +28,9 @@ log_it() {
 	option=${2}
 	if [[ "${option}" = "init" ]]; then
 		echo "This is init log"
-		if [[ ${3} -gt ${logConfig_init_logLevel} ]]; then
+		if [[ ${3} -lt ${logConfig_init_logLevel} ]]; then
+			#Do nothing
+		else
 			echo "This is log level ${3}"
 			log_msg="$(date) : $1 : $3 : $4 : $5"
 			echo ${log_msg} >> ${init_log}
@@ -49,7 +45,9 @@ log_it() {
 			echo ${logConfig_installer_logLevel}
 			echo $3
 			echo $3 + ${logConfig_installer_logLevel}
-			if [[ $3 -gt ${logConfig_installer_logLevel} ]]; then
+			if [[ $3 -lt ${logConfig_installer_logLevel} ]]; then
+				#Do nothing
+			else
 				echo "This is log level ${3}"
 				log_msg="$(date) : $1 : $3 : $4 : $5"
 				echo ${log_msg} >> ${installer_log}

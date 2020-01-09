@@ -21,7 +21,7 @@ echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
 
 echo "test"
 
-function log_it() {
+log_it() {
     
     local __function_name="utility/log_it"
     
@@ -56,6 +56,7 @@ function log_it() {
 		    exit 1            
 		fi
 	fi
+	
 }
 
 echo "tets2"

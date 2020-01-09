@@ -21,7 +21,9 @@ eval $(parse_yaml $log_config )
 function log_it {
     
     local __function_name="utility/log_it"
-        
+    
+    echo "inside $__function_name"
+    
     if [ $# -lt 5 ]; then
         echo "Error: ($__function_name): Insufficient arguments provided: $1"
         exit 0      #Exit without error

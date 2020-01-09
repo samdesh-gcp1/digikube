@@ -1,6 +1,7 @@
-init:
-  logLevel: "3"
-  logEcho: "on"
-installer:
-  logLevel: "3"
-  logEcho: "on"
+log-Config:
+  init:
+    logLevel: "3"
+    logEcho: "on"
+  installer:
+    logLevel: "3"
+    logEcho: "on"

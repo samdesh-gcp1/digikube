@@ -70,7 +70,7 @@ function replace_substring {
         local n=""
         
         if [[ $# -lt 3 ]]; then
-                echo "Error: ($function_name): Insufficient arguments provided."
+                echo "Error: ${__function_name} : Insufficient arguments provided."
                 eval $__resultvar="''"
                 exit 1 
         else
@@ -82,6 +82,7 @@ function replace_substring {
                 echo $s
                 
                 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
-                eval $__resultvar="'$n'"
+                #eval $__resultvar="'$n'"
+                return $n
         fi
 }

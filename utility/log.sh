@@ -34,7 +34,7 @@ log_it() {
 			log_level=2
 			level_msg="INFO"
 			;;
-		"WORN")
+		"WARN")
 			log_level=4
 			level_msg="WARN"
 			;;

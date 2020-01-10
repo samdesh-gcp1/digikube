@@ -90,7 +90,7 @@ if [[ -f ${kubectl_existing_path} ]]; then
         if [[ "${kubectl_inpath_version}" = "${kubectl_download_version}" ]]; then
             log_it "${__function_name}" "installer" 0 "0000" "kubectl binary in path has version: $kubectl_download_version"
         else
-            log_it "${__function_name}" "installer" 0 "0000" "Incorrect version of kubectl binary in path.  Expected version: ${kubectl_download_version} Actual version: ${kubectl_inpath_version}"
+            log_it "${__function_name}" "installer" 3 "0000" "Incorrect version of kubectl binary in path.  Expected version: ${kubectl_download_version} Actual version: ${kubectl_inpath_version}"
         fi
     fi
 else

@@ -18,7 +18,7 @@ echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
 
 log_it() {
 
-	local __function_name="utility/log_it"
+	local __function_name="utility/log_it                "
 
 	if [[ $# -lt 5 ]]; then
 		echo "Error: ${__function_name} : Insufficient arguments provided: ${1}"

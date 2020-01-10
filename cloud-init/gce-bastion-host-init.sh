@@ -10,8 +10,8 @@ else
 	echo "Dikiguke log directory not available.  Creating new."
 	mkdir ${LOG_DIR}
 fi
-INIT_LOG=${LOG_DIR}digikube-init.log
-INSTALLER_LOG=${LOG_DIR}digikube-installer.log
+INIT_LOG=${LOG_DIR}init.log
+INSTALLER_LOG=${LOG_DIR}installer.log
 
 touch $INIT_LOG
 date >> $INIT_LOG

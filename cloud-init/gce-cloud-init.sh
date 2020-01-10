@@ -61,7 +61,7 @@ export BUCKET_LOCATION="${CLOUD_REGION}"
 export BUCKET_URL="gs://${CLOUD_BUCKET}"
 
 #Check if bucket already exists
-bucket_list=gsutil ls ${BUCKET_URL}
+bucket_list=$(gsutil ls ${BUCKET_URL})
 if [[ $? -gt 0 ]]; then
 	echo "INFO: You do not have any bucket with this name: ${CLOUD_BUCKET}.  Creating new bucket"
 	gsutil mb -p ${CLOUD_PROJECT} -c ${BUCKET_CLASS} -l ${BUCKET_LOCATION} ${BUCKET_URL}

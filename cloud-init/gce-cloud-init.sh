@@ -57,18 +57,17 @@ export CLOUD_BUCKET="${DIGIKUBE_CLOUD_ADMIN}-${CLOUD_PROJECT}-bucket"
 echo "Attempting to create storage bucket: ${CLOUD_BUCKET}"
 
 export BUCKET_CLASS="STANDARD"
-export BUCKET_LOCATION="us-central1"
-export BUCKET_URL="gs://${CLOUD_BUCKET}
+export BUCKET_LOCATION="${CLOUD_REGION}"
+export BUCKET_URL="gs://${CLOUD_BUCKET}"
 
 #Check if bucket already exists
 bucket_list=gsutil ls ${BUCKET_URL}
 if [[ $? -gt 0 ]]; then
-
-
-gsutil mb -p ${CLOUD_PROJECT} -c ${BUCKET_CLASS} -l ${BUCKET_LOCATION} ${CLOUD_BUCKET}
-
-
-
+	echo "INFO: You do not have any bucket with this name: ${CLOUD_BUCKET}.  Creating new bucket"
+	gsutil mb -p ${CLOUD_PROJECT} -c ${BUCKET_CLASS} -l ${BUCKET_LOCATION} ${BUCKET_URL}
+else
+	echo "INFO: A bucket with this name: ${CLOUD_BUCKET} already exists.  Reusing the existing bucket"
+fi
 
 ####################################################
 #Create bastion host for DigiKube

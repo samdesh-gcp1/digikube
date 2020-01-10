@@ -24,22 +24,42 @@ log_it() {
 		echo "Error: ${__function_name} : Insufficient arguments provided: ${1}"
 		exit 0	
 	fi
-		
-	option=${2}
-	if [[ "${option}" = "init" ]]; then
-		if [[ ${3} -lt ${logConfig_init_logLevel} ]]; then
-			#Do nothing
-			temp1=1
-		else
-			log_msg="$(date) : $1 : $3 : $4 : $5"
-			echo ${log_msg} >> ${init_log}
-			if [[ "${logConfig_init_logEcho}" = "on" ]]; then
-				echo ${log_msg}
+
+	case ${3} in 
+		"DEBUG")	
+			log_level=0
+			;;
+		"INFO")
+			log_level=2
+			;;
+		"WORN")
+			log_level=4
+			;;
+		"ERR")
+			log_level=6
+			;;
+		"FATAL")
+			log_level=8
+			;;
+		*)
+			log_level=10
+	esac
+	
+	case ${2} in
+		"init")
+			if [[ ${log_level} -lt ${logConfig_init_logLevel} ]]; then
+				#Do nothing
+				temp1=1
+			else
+				log_msg="$(date) : $1 : $3 : $4 : $5"
+				echo ${log_msg} >> ${init_log}
+				if [[ "${logConfig_init_logEcho}" = "on" ]]; then
+					echo ${log_msg}
+				fi
 			fi
-		fi
-	else
-		if [[ "${option}" = "installer" ]]; then
-			if [[ $3 -lt ${logConfig_installer_logLevel} ]]; then
+			;;
+		"installer")
+			if [[ ${log_level} -lt ${logConfig_installer_logLevel} ]]; then
 				#Do nothing
 				temp1=1
 			else
@@ -49,9 +69,8 @@ log_it() {
 					echo ${log_msg}
 				fi
 			fi
-		else
-			echo "Error: ${__function_name} : Unkwonk log type: ${option}"
-			exit 1
-		fi
-	fi
+			;;
+		*)
+			echo "$(date) : ${__function_name} : ERR : 0000 : Unkwonk log type: ${2}"
+	esac
 }

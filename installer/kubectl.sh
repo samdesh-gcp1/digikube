@@ -29,6 +29,27 @@ fi
 
 if [[ -f ${kubectl_existing_path} ]]; then
 
+   log_it "${__function_name}" "installer" 1 "0000" "Kubectl binary already available at path: ${kubectl_existing_path}"
+    eval $(parse_yaml <( kubectl version -o yaml ) "kubectl_existing_")
+    kubectl_existing_clientVersion_minor="$(replace_substring $kubectl_existing_clientVersion_minor '+' ' ')"
+    
+    #f=$KUBECTL_CUR_clientVersion_minor
+    #t="+"
+    #s=""
+    #[ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
+    #KUBECTL_CUR_clientVersion_minor=$n
+
+    kubectl_existing_version=$kubectl_existing_clientVersion_major.$kubectl_existing_clientVersion_minor
+    
+    if [[ "$kubectl_existing_version" = "$kubectl_download_version" ]]; then
+        log_it "${__function_name}" "installer" 1 "0000" "Pre-existing kubectl binary version is same as expected target version: ${kubectl_download_version}. Using the pre-existing kubectl binary."
+    else
+        log_it "${__function_name}" "installer" 3 "0000" "Pre-existing kubectl binary version is: ${kubectl_existing_version}.  Target version of kubectl is: ${kubectl_download_version}. Aborting kubectl installation.  Remove existing kubectl binary and rerun the installation."
+        exit 1
+    fi 
+    
+else
+
     #Kubectl not available.  Download and install
     download_file $kubectl_download_url kubectl_binary
     if [[ $? -gt 0 ]]; then
@@ -93,24 +114,5 @@ if [[ -f ${kubectl_existing_path} ]]; then
             log_it "${__function_name}" "installer" 3 "0000" "Incorrect version of kubectl binary in path.  Expected version: ${kubectl_download_version} Actual version: ${kubectl_inpath_version}"
         fi
     fi
-else
 
-    log_it "${__function_name}" "installer" 1 "0000" "Kubectl binary already available at path: ${kubectl_existing_path}"
-    eval $(parse_yaml <( kubectl version -o yaml ) "kubectl_existing_")
-    kubectl_existing_clientVersion_minor="$(replace_substring $kubectl_existing_clientVersion_minor '+' ' ')"
-    
-    #f=$KUBECTL_CUR_clientVersion_minor
-    #t="+"
-    #s=""
-    #[ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
-    #KUBECTL_CUR_clientVersion_minor=$n
-
-    kubectl_existing_version=$kubectl_existing_clientVersion_major.$kubectl_existing_clientVersion_minor
-    
-    if [[ "$kubectl_existing_version" = "$kubectl_download_version" ]]; then
-        log_it "${__function_name}" "installer" 1 "0000" "Pre-existing kubectl binary version is same as expected target version: ${kubectl_download_version}. Using the pre-existing kubectl binary."
-    else
-        log_it "${__function_name}" "installer" 3 "0000" "Pre-existing kubectl binary version is: ${kubectl_existing_version}.  Target version of kubectl is: ${kubectl_download_version}. Aborting kubectl installation.  Remove existing kubectl binary and rerun the installation."
-        exit 1
-    fi 
 fi

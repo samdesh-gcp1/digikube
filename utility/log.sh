@@ -5,8 +5,8 @@ base_dir=~/
 log_dir=${base_dir}digikube-logs/
 digi_dir=${base_dir}digikube/
 log_config=${digi_dir}config/log-config.yaml
-init_log=${log_dir}digikube-init.log
-installer_log=${log_dir}digikube-installer.log
+init_log=${log_dir}init.log
+installer_log=${log_dir}installer.log
 touch ${init_log}
 touch ${installer_log}
 

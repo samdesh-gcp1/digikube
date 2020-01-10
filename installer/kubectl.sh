@@ -40,6 +40,7 @@ if [[ -f ${kubectl_existing_path} ]]; then
     #KUBECTL_CUR_clientVersion_minor=$n
 
     kubectl_existing_version=$kubectl_existing_clientVersion_major.$kubectl_existing_clientVersion_minor
+    echo $kubectl_existing_version
     
     if [[ "$kubectl_existing_version" = "$kubectl_download_version" ]]; then
         log_it "${__function_name}" "installer" 1 "0000" "Pre-existing kubectl binary version is same as expected target version: ${kubectl_download_version}. Using the pre-existing kubectl binary."

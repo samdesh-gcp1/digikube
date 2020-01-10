@@ -60,7 +60,7 @@ else
             log_it "${__function_name}" "installer" "DEBUG" "1260" "Changed the access permission of kops binary"
         fi
         
-        kops_download_version=$(kops_binary version | cut -d " " -f 2)
+        kops_download_version=$($kops_binary version | cut -d " " -f 2)
         echo $?
         log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded kops version is: $kops_download_version"
         

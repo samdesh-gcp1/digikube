@@ -110,7 +110,7 @@ else
         kubectl_inpath_version=$kubectl_inpath_clientVersion_major.$kubectl_inpath_clientVersion_minor
         if [[ "${kubectl_inpath_version}" = "${kubectl_download_version}" ]]; then
             log_it "${__function_name}" "installer" 0 "0000" "kubectl binary in path has version: $kubectl_download_version"
-            log_it "${__function_name}" "installer" 0 "0000" "Successfully installed kubectl version: $kubectl_download_version"
+            log_it "${__function_name}" "installer" 1 "0000" "Successfully installed kubectl version: $kubectl_download_version"
         else
             log_it "${__function_name}" "installer" 3 "0000" "Incorrect version of kubectl binary in path.  Expected version: ${kubectl_download_version} Actual version: ${kubectl_inpath_version}"
         fi

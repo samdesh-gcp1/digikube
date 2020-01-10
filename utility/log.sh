@@ -18,7 +18,7 @@ echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
 
 log_it() {
 
-	local __function_name="utility/log_it                "
+	local __function_name="utility/log_it"
 
 	if [[ $# -lt 5 ]]; then
 		echo "Error: ${__function_name} : Insufficient arguments provided: ${1}"
@@ -28,23 +28,23 @@ log_it() {
 	case ${3} in 
 		"DEBUG")	
 			log_level=0
-			level_msg="DEBUG  "
+			level_msg="DEBUG"
 			;;
 		"INFO")
 			log_level=2
-			level_msg="INFO   "
+			level_msg="INFO"
 			;;
 		"WORN")
 			log_level=4
-			level_msg="WARNING"
+			level_msg="WARN"
 			;;
 		"ERR")
 			log_level=6
-			level_msg="ERROR  "
+			level_msg="ERROR"
 			;;
 		"FATAL")
 			log_level=8
-			level_msg="FATAL  "
+			level_msg="FATAL"
 			;;
 		*)
 			log_level=10

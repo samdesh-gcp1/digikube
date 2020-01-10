@@ -6,3 +6,4 @@ component:
     kubectl:
         version: "1.15"
         url: "https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl"
+        local-path: "/usr/local/bin/kubectl"

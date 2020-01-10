@@ -60,7 +60,7 @@ else
     
     if [[ -f ${kubectl_binary} ]]; then
 
-        log_it "${__function_name}" "installer" "DEBIG" "1150" "Downloaded kubectl binary at: ${kubectl_binary}"
+        log_it "${__function_name}" "installer" "DEBUG" "1150" "Downloaded kubectl binary at: ${kubectl_binary}"
         
         chmod +x ${kubectl_binary}
         if [[ $? -gt 0 ]]; then

@@ -86,7 +86,7 @@ else
                 exit 1
             fi
         else
-            log_it "${__function_name}" "installer" 3 "0000" "Error while moving kubectl binary to ${kubectl_local_path}"
+            log_it "${__function_name}" "installer" 3 "0001" "Error while moving kubectl binary to ${kubectl_local_path}"
             exit 1
         fi
         

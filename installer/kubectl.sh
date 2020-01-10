@@ -76,7 +76,7 @@ else
         
         log_it "${__function_name}" "installer" 0 "0000" "Downloaded kubectl version is: $kubectl_download_version"
         
-        kubectl_local_path=${__config_component_kubectl_local-path}
+        kubectl_local_path=${__config_component_kubectl_localPath}
         sudo mv ${kubectl_binary} ${kubectl_local_path}
         if [[ $? -gt 0 ]]; then
             if [[ -f "${kubectl_local_path}" ]]; then

@@ -78,6 +78,8 @@ else
         
         kubectl_local_path=${__config_component_kubectl_localPath}
         sudo mv ${kubectl_binary} ${kubectl_local_path}
+        _exit_code=$?
+        echo "Exit code ${_exit_code}"
         if [[ $? -gt 0 ]]; then
             if [[ -f "${kubectl_local_path}" ]]; then
                 log_it "${__function_name}" "installer" 0 "0000" "Moved kubectl binary to ${kubectl_local_path}"

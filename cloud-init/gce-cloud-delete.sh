@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export DIGIKUBE_CLOUD_ADMIN=$(whoami)
+
 FLOW_OPTION_YES="yes"
 FLOW_OPTION_NO="no"
 
@@ -18,15 +20,23 @@ if [ -z $FLOW_DELETE_CHOICE ]; then
 	echo "No option specified for DigiKube deletion.  Exiting digikube deletion."
 	exit 1
 else
+	if [[ "$FLOW_DELETE_CHOICE" == "all-with-bucket" ]]; then
+		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
+		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_YES
+		FLOW_DELETE_VPC=$FLOW_OPTION_YES
+		FLOW_DELETE_BUCKET=$FLOW_OPTION_YES
+	fi
 	if [[ "$FLOW_DELETE_CHOICE" == "all" ]]; then
 		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_YES
 		FLOW_DELETE_VPC=$FLOW_OPTION_YES
+		FLOW_DELETE_BUCKET=$FLOW_OPTION_NO
 	fi
 	if [[ "$FLOW_DELETE_CHOICE" == "bastion-host" ]]; then
 		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_NO
 		FLOW_DELETE_VPC=$FLOW_OPTION_NO
+		FLOW_DELETE_BUCKET=$FLOW_OPTION_NO
 	fi
 fi
 
@@ -91,10 +101,11 @@ else
 	echo "Skipping bastion-host deletion."
 fi
 
+export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
+
 ###########################################################
 #Delete firewall rule for bastion host
 if [ "$FLOW_DELETE_BASTION_FIREWALL_RULE" = "$FLOW_OPTION_YES" ]; then
-	export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
 	export BASTION_HOST_FIREWALL_RULE_NAME="${CLOUD_SUBNET}-allow-bastion-ssh"
 	echo "Attempting to delete firewall rule for bastion host: ${BASTION_HOST_FIREWALL_RULE_NAME}"
 	if [ -z $(gcloud compute firewall-rules list --filter=name=${BASTION_HOST_FIREWALL_RULE_NAME} --format="value(name)") ]; then
@@ -133,4 +144,31 @@ if [ "$FLOW_DELETE_VPC" = "$FLOW_OPTION_YES" ]; then
 	fi
 else
 	echo "Skipping vpc deletion."
+fi
+
+###########################################################
+#Delete the storage bucket for DigiKube
+if [ "$FLOW_DELETE_BUCKET" = "$FLOW_OPTION_YES" ]; then
+	
+	CLOUD_BUCKET="${DIGIKUBE_CLOUD_ADMIN}-${CLOUD_PROJECT}-bucket"
+	BUCKET_URL="gs://${CLOUD_BUCKET}"
+	echo "Attempting to delete bucket for Digikube.  Bucket name: ${CLOUD_BUCKET}."
+	
+	#Check if bucket already exists
+	bucket_list=$(gsutil ls ${BUCKET_URL})
+	if [[ $? -gt 0 ]]; then
+		echo "INFO: You do not have any bucket with this name: ${CLOUD_BUCKET}.  Skipping bucket deletion."
+	else
+		gsutil rm -r ${BUCKET_URL}
+		if [ $? -gt 0 ]; then
+    			#Unknown error while deleting the bucket.
+	    		echo "Unable to delete bucket for DigiKube.  Exiting the DigiKube delete."
+    			echo "Manually review and delete DigiKube cloud resources."
+	    		exit 1
+  		else
+    			echo "Deleted the bucket ${CLOUD_BUCKET}."
+  		fi
+	fi
+else
+	echo "Skipping bucket deletion."
 fi

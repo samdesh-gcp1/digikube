@@ -92,17 +92,17 @@ s="export DIGIKUBE_CLOUD_ADMIN=$(whoami)"
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
 export BASTION_INIT_SCRIPT=$n
 
-echo $f
-echo $t
-echo $s
-echo $n
+#echo $f
+#echo $t
+#echo $s
+#echo $n
 
 # export BASTION_INIT_SCRIPT='#! /bin/bash
 #			# Create a new file in home directory
 #			cd /home/samdesh_gcp1/
 #			touch test1.txt'
 
-echo $BASTION_INIT_SCRIPT
+#echo $BASTION_INIT_SCRIPT
 
 if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --format="value(name)") ]; then
 	

@@ -81,15 +81,15 @@ else
         _exit_code=$?
         echo "Exit code ${_exit_code}"
         if [[ $? -gt 0 ]]; then
+            log_it "${__function_name}" "installer" 3 "0001" "Error while moving kubectl binary to ${kubectl_local_path}"
+            exit 1
+        else        
             if [[ -f "${kubectl_local_path}" ]]; then
                 log_it "${__function_name}" "installer" 0 "0000" "Moved kubectl binary to ${kubectl_local_path}"
             else
                 log_it "${__function_name}" "installer" 3 "0000" "Error while moving kubectl binary to ${kubectl_local_path}"
                 exit 1
             fi
-        else
-            log_it "${__function_name}" "installer" 3 "0001" "Error while moving kubectl binary to ${kubectl_local_path}"
-            exit 1
         fi
         
         #Check if kubectl binary is in path

@@ -1,3 +1,23 @@
+cloud:
+  provider: "gce"
+    adminUser: "samdesh_gcp1"
+    region: "us-central1"
+    zone: "us-central1-c"
+    project: "digikube002"
+      overrideAllowed: "yes"
+  bastionHost:
+    namePrefix: "bastion-host"
+    machineType: "f1-micro"
+    networkTier: "STANDARD"
+    preemptible: "Yes"
+    tagIdentifier: "bastion-host"
+    tags: "http-server,https-server"
+    image: "ubuntu-1804-bionic-v20191211"
+    imageProject: "ubuntu-os-cloud"
+    bootDiskSize: "10GB"
+    bootDiskType: "pd-standard"
+    labels: "type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"
+
 gitConfig:
   digikube:
     repository: "https://github.com/samdesh-gcp1/digikube.git"
@@ -12,3 +32,5 @@ component:
     version: "1.15.0"
     url: "https://github.com/kubernetes/kops/releases/download/1.15.0/kops-linux-amd64"
     localPath: "/usr/local/bin/kops"
+cluster:
+  

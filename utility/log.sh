@@ -28,21 +28,27 @@ log_it() {
 	case ${3} in 
 		"DEBUG")	
 			log_level=0
+			level_msg="DEBUG  "
 			;;
 		"INFO")
 			log_level=2
+			level_msg="INFO   "
 			;;
 		"WORN")
 			log_level=4
+			level_msg="WARNING"
 			;;
 		"ERR")
 			log_level=6
+			level_msg="ERROR  "
 			;;
 		"FATAL")
 			log_level=8
+			level_msg="FATAL  "
 			;;
 		*)
 			log_level=10
+			level_msg="UNKNOWN"
 	esac
 	
 	case ${2} in
@@ -51,7 +57,7 @@ log_it() {
 				#Do nothing
 				temp1=1
 			else
-				log_msg="$(date) : $1 : $3 : $4 : $5"
+				log_msg="$(date) : $1 : ${level_msg} : $4 : $5"
 				echo ${log_msg} >> ${init_log}
 				if [[ "${logConfig_init_logEcho}" = "on" ]]; then
 					echo ${log_msg}
@@ -63,7 +69,7 @@ log_it() {
 				#Do nothing
 				temp1=1
 			else
-				log_msg="$(date) : $1 : $3 : $4 : $5"
+				log_msg="$(date) : $1 : ${level_msg} : $4 : $5"
 				echo ${log_msg} >> ${installer_log}
 				if [[ "${logConfig_installer_logEcho}" = "on" ]]; then
 					echo ${log_msg}
@@ -71,6 +77,6 @@ log_it() {
 			fi
 			;;
 		*)
-			echo "$(date) : ${__function_name} : ERR : 0000 : Unkwonk log type: ${2}"
+			echo "$(date) : ${__function_name} : ERROR   : 0000 : Unkwonk log type: ${2}"
 	esac
 }

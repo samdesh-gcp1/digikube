@@ -61,7 +61,7 @@ else
         fi
         
         kops_download_version=$(kops_binary version | cut -d " " -f 2)
-               
+        echo $?
         log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded kops version is: $kops_download_version"
         
         kops_local_path=${__config_component_kops_localPath}

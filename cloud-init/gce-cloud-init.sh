@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export DIGIKUBE_CLOUD_ADMIN=$(whoami)
+
 export CLOUD_TYPE="gce"
 
 export CLOUD_REGION="us-central1"
@@ -48,6 +50,25 @@ if [ -z $(gcloud compute networks list --filter=name=${CLOUD_SUBNET} --format="v
 else
 	echo "Reusing the exiting network.  Network name: ${CLOUD_SUBNET}."
 fi
+
+####################################################
+#Create bucket
+export CLOUD_BUCKET="${DIGIKUBE_CLOUD_ADMIN}-${CLOUD_PROJECT}-bucket"
+echo "Attempting to create storage bucket: ${CLOUD_BUCKET}"
+
+export BUCKET_CLASS="STANDARD"
+export BUCKET_LOCATION="us-central1"
+export BUCKET_URL="gs://${CLOUD_BUCKET}
+
+#Check if bucket already exists
+bucket_list=gsutil ls ${BUCKET_URL}
+if [[ $? -gt 0 ]]; then
+
+
+gsutil mb -p ${CLOUD_PROJECT} -c ${BUCKET_CLASS} -l ${BUCKET_LOCATION} ${CLOUD_BUCKET}
+
+
+
 
 ####################################################
 #Create bastion host for DigiKube

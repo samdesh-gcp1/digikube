@@ -7,3 +7,8 @@ component:
     version: "1.15"
     url: "https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl"
     localPath: "/usr/local/bin/kubectl"
+    component:
+  kops:
+    version: "1.15.0"
+    url: "https://github.com/kubernetes/kops/releases/download/1.15.0/kops-linux-amd64"
+    localPath: "/usr/local/bin/kops"

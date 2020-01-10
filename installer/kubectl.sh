@@ -10,7 +10,7 @@ digi_dir=${base_dir}digikube/
 . ${digi_dir}utility/log.sh
 
 digikube_config=${digi_dir}config/digikube-config.yaml
-eval $(parse_yaml ${digikube_config} "__config" )
+eval $(parse_yaml ${digikube_config} "__config_" )
 
 log_it "${__function_name}" "installer" 1 "0000" "Started the kubectl installation process"
 

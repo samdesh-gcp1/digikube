@@ -106,7 +106,7 @@ else
             exit 1
         fi
         
-        eval $(parse_yaml <( $kubectl_binary version -o yaml ) "kubectl_inpath_")
+        eval $(parse_yaml <( kubectl version -o yaml ) "kubectl_inpath_")
         kubectl_inpath_version=$kubectl_inpath_clientVersion_major.$kubectl_inpath_clientVersion_minor
         if [[ "${kubectl_inpath_version}" = "${kubectl_download_version}" ]]; then
             log_it "${__function_name}" "installer" 0 "0000" "kubectl binary in path has version: $kubectl_download_version"

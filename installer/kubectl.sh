@@ -58,9 +58,7 @@ else
     fi
     
     if [[ -f ${kubectl_binary} ]]; then
-        log_it "${__function_name}" "installer" 3 "0000" "Not able to get handle on downloaded kubectl binary"
-        exit 1
-    else
+
         log_it "${__function_name}" "installer" 0 "0000" "Downloaded kubectl binary at: ${kubectl_binary}"
         
         chmod +x ${kubectl_binary}
@@ -113,6 +111,12 @@ else
         else
             log_it "${__function_name}" "installer" 3 "0000" "Incorrect version of kubectl binary in path.  Expected version: ${kubectl_download_version} Actual version: ${kubectl_inpath_version}"
         fi
+    
+    else
+    
+        log_it "${__function_name}" "installer" 3 "0000" "Not able to get handle on downloaded kubectl binary"
+        exit 1
+        
     fi
 
 fi

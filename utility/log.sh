@@ -13,7 +13,7 @@ touch ${installer_log}
 touch ${cluster_log}
 
 . ${digi_dir}utility/general.sh
-eval $(parse_yaml ${log_config} "")
+eval $(parse_yaml "${log_config}" "")
 echo $?
 
 log_it() {

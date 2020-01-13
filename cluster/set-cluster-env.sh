@@ -19,12 +19,13 @@ if [[ $? -gt 0 ]]; then
 else
     export KOPS_FEATURE_FLAGS=$(get-config-value "cluster.kops.featureFlags")
     export KOPS_CLOUD=$(get-config-value "cloud.provider")
-    export KOPS_PROJECT=$(get-config-value "cloud.provider.project")
-    export KOPS_VPC=digikube-vpc
-export KOPS_ENV=dev1
-export KOPS_CLUSTER_NAME=${KOPS_PROJECT}-${KOPS_ENV}.k8s.local
-export KOPS_STATE_STORE=gs://${KOPS_PROJECT}-bucket/
-export KOPS_REGION=us-central1
-export KOPS_MASTER_ZONES=us-central1-c
-export KOPS_WORKER_ZONES=us-central1-c
-
+    export KOPS_PROJECT=$(get-config-value "cloud.project.name")
+    export KOPS_VPC=$(get-config-value "cloud.project.vpc")
+    export KOPS_ENV=$(get-config-value "cluster.kops.env")
+    export KOPS_CLUSTER_NAME=${KOPS_PROJECT}-${KOPS_ENV}.k8s.local
+    export KOPS_STATE_STORE="gs://$(get-config-value 'cloud.bucket.name')"
+    export KOPS_REGION=$(get-config-value "cloud.project.region")
+    export KOPS_MASTER_ZONES=$(get-config-value "cloud.project.zone")
+    export KOPS_WORKER_ZONES=$(get-config-value "cloud.project.zone")
+    log_it "${__function_name}" "cluster" "INFO" "2210" "Successfully set the cluster environment"
+fi

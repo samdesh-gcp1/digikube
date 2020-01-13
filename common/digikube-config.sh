@@ -67,9 +67,9 @@ function get-config-value {
     echo $config_name
     if [[ -z ${config_name} ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Invalid config $1"
-        return "ERROR"
+        echo ""
     else
-        return "${config_name}"
+        echo "${config_name}"
     fi
 }
 

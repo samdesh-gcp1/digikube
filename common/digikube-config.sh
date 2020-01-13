@@ -38,7 +38,7 @@ function validate-digikube-config {
   fi
 
 #Cloud project
-  if [[ "${__config_cloud_project_name}" = "$(get-cloud-project 'gce'") ]]; then
+  if [[ "${__config_cloud_project_name}" = "$(get-cloud-project 'gce')" ]]; then
       'do nothing
       temp1="1"
   else
@@ -63,9 +63,9 @@ function get-config-value {
     config_name="__config_${config_name}"
     if [[ -z ${config_name} ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Invalid config $1"
-        return 'ERROR'
+        return "ERROR"
     else
-        return '${config_name}'
+        return "${config_name}"
     fi
 }
 

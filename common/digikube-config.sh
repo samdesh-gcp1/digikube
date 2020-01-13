@@ -60,12 +60,13 @@ function get-config-value {
     __function_name="common/validate-digikube-config"
     local config_name=$(replace_substring "${1}" "." "_")
     config_name="__config_${config_name}"
+      echo "${config_name}"
     if [[ -z ${config_name} ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Invalid config $1"
         echo ""
     else
         local config_value=$(eval echo "\$${config_name}")
-        echo "${config_name}"
+      
         echo "\$${config_name}"
         echo ${config_value}
     fi

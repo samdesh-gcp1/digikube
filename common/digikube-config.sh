@@ -59,7 +59,8 @@ function get-config-value {
 
     __function_name="common/validate-digikube-config"
 
-    private config_name="__config_$(replace_substring $1 '.' '_')"
+    private config_name=$(replace_substring "${1}" "." "_")
+    config_name="__config_${config_name}"
     if [[ -z ${config_name} ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Invalid config $1"
         return 'ERROR'

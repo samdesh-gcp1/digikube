@@ -60,7 +60,7 @@ function parse_yaml_temp {
 }
 
 function parse_yaml {
-      eval $(parse_yaml_temp ${digikube_config} "__config_" )
+      eval $(parse_yaml_temp $1 $2)
 }
 
 function replace_substring {

@@ -1,7 +1,10 @@
 logConfig:
   init:
-    logLevel: "1"
-    logEcho: "on"
+    logLevel: "3"
+    logEcho: "off"
   installer:
+    logLevel: "3"
+    logEcho: "off"
+  cluster:
     logLevel: "0"
     logEcho: "on"

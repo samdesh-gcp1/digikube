@@ -49,6 +49,8 @@ function validate-digikube-config {
 #VPC
   export __config_cloud_project_vpc="${__config_cloud_project_name}-vpc"
 
+#Bucket
+  export __config_cloud_bucket_name="${__config_cloud_adminUser}-${__config_cloud_project_name}-${__config_cloud_bucket_nameSuffix}"
 
 }
 

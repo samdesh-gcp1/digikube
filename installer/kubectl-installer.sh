@@ -14,9 +14,10 @@ digi_dir=${base_dir}digikube/
 #parse_yaml "${digikube_config}" "__config_"
 
 log_it "${__function_name}" "installer" "INFO" "1110" "Started the kubectl installation process"
-
+echo "1"
 #kubectl_download_version=${__config_component_kubectl_version}
 kubectl_download_version=$(get-config-value "component.kubectl.version")
+echo "2"
 log_it "${__function_name}" "installer" "DEBUG" "1115" "Target version of kubectl to be installed is: $kubectl_download_version"
 
 kubectl_existing_version=""

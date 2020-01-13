@@ -70,9 +70,13 @@ function replace_substring {
                 exit 1 
         else
                 f=$1
+                echo $f
                 t=$2
+                echo $t
                 s=$3
+                echo $s
                 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
+                echo $n
                 return "$n"
         fi
 }

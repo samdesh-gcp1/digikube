@@ -5,6 +5,9 @@ cloud:
     zone: "us-central1-c"
     project: "digikube002"
       overrideAllowed: "yes"
+  bucket:
+    nameSuffix: "-bucket"
+    class: "STANDARD"
   bastionHost:
     namePrefix: "bastion-host"
     machineType: "f1-micro"
@@ -17,7 +20,6 @@ cloud:
     bootDiskSize: "10GB"
     bootDiskType: "pd-standard"
     labels: "type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"
-
 gitConfig:
   digikube:
     repository: "https://github.com/samdesh-gcp1/digikube.git"
@@ -33,4 +35,6 @@ component:
     url: "https://github.com/kubernetes/kops/releases/download/1.15.0/kops-linux-amd64"
     localPath: "/usr/local/bin/kops"
 cluster:
-  
+  kops:
+    featureFlags: "AlphaAllowGCE"
+    env: "dev1"

@@ -1,12 +1,15 @@
 cloud:
   provider: "gce"
-    adminUser: "samdesh_gcp1"
+  adminUser: "samdesh_gcp1"
+  project:
+    name: "digikube002"
+      overrideAllowed: "no"  
     region: "us-central1"
     zone: "us-central1-c"
-    project: "digikube002"
-      overrideAllowed: "yes"
+    vpc: "<dynamic>"
   bucket:
     nameSuffix: "-bucket"
+    name: "<dynamic>"
     class: "STANDARD"
   bastionHost:
     namePrefix: "bastion-host"
@@ -38,3 +41,4 @@ cluster:
   kops:
     featureFlags: "AlphaAllowGCE"
     env: "dev1"
+    clusterName: "<dynamic>"

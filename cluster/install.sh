@@ -12,7 +12,7 @@ digi_dir=${base_dir}digikube/
 digikube_config=${digi_dir}config/digikube-config.yaml
 eval $(parse_yaml ${digikube_config} "__config_" )
 
-log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster installation process"
+log_it "${__function_name}" "cluster" "INFO" "2110" "Started the cluster installation process"
 
 kubectl_download_version=${__config_component_kubectl_version}
 log_it "${__function_name}" "installer" "DEBUG" "1115" "Target version of kubectl to be installed is: $kubectl_download_version"

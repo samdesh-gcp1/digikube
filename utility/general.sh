@@ -87,7 +87,7 @@ function replace_substring {
          
         if [[ $# -lt 3 ]]; then
                 echo "Error: ${__function_name} : Insufficient arguments provided."
-                return ""
+                echo ""
                 exit 1 
         else
                 f=$1
@@ -97,7 +97,6 @@ function replace_substring {
                 s=$3
                 echo $s
                 n=${f//$t/$s}
-                echo $n
-                return "$n"
+                echo "$n"
         fi
 }

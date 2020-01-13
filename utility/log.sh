@@ -7,14 +7,13 @@ digi_dir=${base_dir}digikube/
 log_config=${digi_dir}config/log-config.yaml
 init_log=${log_dir}init.log
 installer_log=${log_dir}installer.log
+cluster_log=${log_dir}cluster.log
 touch ${init_log}
 touch ${installer_log}
+touch ${cluster_log}
 
 . ${digi_dir}utility/general.sh
 eval $(parse_yaml ${log_config} )
-
-echo "logConfig_installer_logLevel > ${logConfig_installer_logLevel}"
-echo "logConfig_installer_logEcho > ${logConfig_installer_logEcho}"
 
 log_it() {
 
@@ -76,6 +75,19 @@ log_it() {
 				fi
 			fi
 			;;
+		"cluster")
+			if [[ ${log_level} -lt ${logConfig_cluster_logLevel} ]]; then
+				#Do nothing
+				temp1=1
+			else
+				log_msg="$(date) : $1 : ${level_msg} : $4 : $5"
+				echo ${log_msg} >> ${cluster_log}
+				if [[ "${logConfig_cluster_logEcho}" = "on" ]]; then
+					echo ${log_msg}
+				fi
+			fi
+			;;	
+			
 		*)
 			echo "$(date) : ${__function_name} : ERROR   : 0000 : Unkwonk log type: ${2}"
 	esac

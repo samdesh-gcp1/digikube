@@ -64,7 +64,7 @@ function get-config-value {
         log_it "${__function_name}" "installer" "ERR" "2110" "Invalid config $1"
         return 'ERROR'
     else
-        return "${config_name}"
+        return '${config_name}'
     fi
 }
 

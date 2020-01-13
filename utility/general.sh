@@ -57,36 +57,22 @@ function parse_yaml_temp {
 }
 
 function parse_yaml {
-      echo $1
-      echo $2
       eval $(parse_yaml_temp "$1" "$2")
 }
 
 function replace_substring {
-
-         #echo "Thets"
-         
+   
         local __function_name="replace_substring"
-        #local __resultvar=""
-        
-         #echo "Thets222222"
          
         if [[ $# -lt 3 ]]; then
-                #echo "Thets233333"
-                #echo "Error: ${__function_name} : Insufficient arguments provided."
+                echo "Error: ${__function_name} : Insufficient arguments provided."
                 return ""
                 exit 1 
         else
-                 #echo "Thets2444444"
                 f=$1
                 t=$2
                 s=$3
-                #echo "${f}"
-                #echo "${t}"
-                #echo "${s}"
-                
                 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
-                #eval $__resultvar="'$n'"
                 return $n
         fi
 }

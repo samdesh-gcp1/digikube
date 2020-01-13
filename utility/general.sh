@@ -73,6 +73,6 @@ function replace_substring {
                 t=$2
                 s=$3
                 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
-                return $n
+                return "$n"
         fi
 }

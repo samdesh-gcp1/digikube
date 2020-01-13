@@ -62,9 +62,9 @@ function get-config-value {
     private config_name="__config_$(replace_substring $1 '.' '_')"
     if [[ -z ${config_name} ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Invalid config $1"
-        return ""
+        return 'ERROR'
     else
-        return ${config_name}
+        return "${config_name}"
     fi
 }
 

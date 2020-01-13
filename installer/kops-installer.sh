@@ -10,7 +10,7 @@ digi_dir=${base_dir}digikube/
 . ${digi_dir}utility/log.sh
 
 digikube_config=${digi_dir}config/digikube-config.yaml
-eval $(parse_yaml ${digikube_config} "__config_" )
+parse_yaml ${digikube_config} "__config_"
 
 log_it "${__function_name}" "installer" "INFO" "1210" "Started the kops installation process"
 
@@ -30,8 +30,7 @@ if [[ -f ${kops_existing_path} ]]; then
 
     log_it "${__function_name}" "installer" "INFO" "1230" "Kops binary already available at path: ${kops_existing_path}"
     kops_existing_version=$(kops version | cut -d " " -f 2)
-    echo $kops_existing_version
-    
+        
     if [[ "$kops_existing_version" = "$kops_download_version" ]]; then
         log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing kops binary version is same as expected target version: ${kops_download_version}. Using the pre-existing kops binary."
     else
@@ -61,7 +60,6 @@ else
         fi
         
         kops_download_version=$($kops_binary version | cut -d " " -f 2)
-        echo $?
         log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded kops version is: $kops_download_version"
         
         kops_local_path=${__config_component_kops_localPath}
@@ -86,7 +84,6 @@ else
             exit 1
         fi
         if [[ "${kops_new_path}" = "${kops_local_path}" ]]; then
-            temp1=""
             log_it "${__function_name}" "installer" "DEBUG" "1282" "kops binary is in path"
         else 
             log_it "${__function_name}" "installer" "ERR" "1284" "Different kops binary is available in path."

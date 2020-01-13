@@ -65,6 +65,7 @@ function get-config-value {
         echo ""
     else
         local config_value=$(eval echo "\$${config_name}")
+        echo "\$${config_name}"
         echo ${config_value}
     fi
 }

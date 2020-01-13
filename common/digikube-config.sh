@@ -39,7 +39,7 @@ function validate-digikube-config {
 
 #Cloud project
   if [[ "${__config_cloud_project_name}" = "$(get-cloud-project 'gce')" ]]; then
-      'do nothing
+      #do nothing
       temp1="1"
   else
       log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"

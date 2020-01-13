@@ -17,6 +17,7 @@ log_it "${__function_name}" "cluster" "INFO" "2110" "Started the cluster install
 kubectl_download_version=${__config_component_kubectl_version}
 log_it "${__function_name}" "installer" "DEBUG" "1115" "Target version of kubectl to be installed is: $kubectl_download_version"
 
+. ${digi_dir}cluster/set-env.sh
 
 export KOPS_FEATURE_FLAGS=AlphaAllowGCE
 export KOPS_CLOUD=gce
@@ -31,7 +32,7 @@ export KOPS_WORKER_ZONES=us-central1-c
 
 . ./set-kops-env.sh
   
-echo "Kubernetes cluster will be created with the following details.  Do you wish to continue? (y / N)"
+echo "Kubernetes cluster will be created with the following details."
 
 echo "KOPS FEATURE FLAGS        : " ${KOPS_FEATURE_FLAGS}
 echo "Cloud Engine              : " ${KOPS_CLOUD}

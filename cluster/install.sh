@@ -9,29 +9,25 @@ digi_dir=${base_dir}digikube/
 . ${digi_dir}utility/general.sh
 . ${digi_dir}utility/log.sh
 
-digikube_config=${digi_dir}config/digikube-config.yaml
-eval $(parse_yaml ${digikube_config} "__config_" )
-
 log_it "${__function_name}" "cluster" "INFO" "2110" "Started the cluster installation process"
 
-kubectl_download_version=${__config_component_kubectl_version}
-log_it "${__function_name}" "installer" "DEBUG" "1115" "Target version of kubectl to be installed is: $kubectl_download_version"
+. ${digi_dir}cluster/set-cluster-env.sh
+if [[ $? -gt 0 ]]; then
+    log_it "${__function_name}" "installer" "ERR" "2110" "Error while setting cluster environment"
+    exit 1
+fi
 
-. ${digi_dir}cluster/set-env.sh
-
-export KOPS_FEATURE_FLAGS=AlphaAllowGCE
-export KOPS_CLOUD=gce
-export KOPS_PROJECT=`gcloud config get-value project`
-export KOPS_VPC=digikube-vpc
-export KOPS_ENV=dev1
-export KOPS_CLUSTER_NAME=${KOPS_PROJECT}-${KOPS_ENV}.k8s.local
-export KOPS_STATE_STORE=gs://${KOPS_PROJECT}-bucket/
-export KOPS_REGION=us-central1
-export KOPS_MASTER_ZONES=us-central1-c
-export KOPS_WORKER_ZONES=us-central1-c
-
-. ./set-kops-env.sh
-  
+log_it "${__function_name}" "installer" "DEBUG" "2110" "KOPS_FEATURE_FLAGS = ${KOPS_FEATURE_FLAGS}"
+log_it "${__function_name}" "installer" "DEBUG" "2110" "KOPS_CLOUD = ${KOPS_CLOUD}"
+#export KOPS_PROJECT=`gcloud config get-value project`
+#export KOPS_VPC=digikube-vpc
+#export KOPS_ENV=dev1
+#export KOPS_CLUSTER_NAME=${KOPS_PROJECT}-${KOPS_ENV}.k8s.local
+#export KOPS_STATE_STORE=gs://${KOPS_PROJECT}-bucket/
+#export KOPS_REGION=us-central1
+#export KOPS_MASTER_ZONES=us-central1-c
+#export KOPS_WORKER_ZONES=us-central1-c
+ 
 echo "Kubernetes cluster will be created with the following details."
 
 echo "KOPS FEATURE FLAGS        : " ${KOPS_FEATURE_FLAGS}

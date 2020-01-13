@@ -31,7 +31,8 @@ fi
 if [[ -f ${kubectl_existing_path} ]]; then
 
    log_it "${__function_name}" "installer" "INFO" "1130" "Kubectl binary already available at path: ${kubectl_existing_path}"
-    eval $(parse_yaml <( kubectl version -o yaml ) "kubectl_existing_")
+    #eval $(parse_yaml <( kubectl version -o yaml ) "kubectl_existing_")
+    parse_yaml <( kubectl version -o yaml ) "kubectl_existing_"
     #kubectl_existing_clientVersion_minor="$(replace_substring $kubectl_existing_clientVersion_minor '+' ' ')"
     
     #f=$KUBECTL_CUR_clientVersion_minor
@@ -71,7 +72,8 @@ else
             log_it "${__function_name}" "installer" "DEBUG" "1160" "Changed the access permission of kubectl binary"
         fi
         
-        eval $(parse_yaml <( $kubectl_binary version -o yaml ) "kubectl_download_")
+        #eval $(parse_yaml <( $kubectl_binary version -o yaml ) "kubectl_download_")
+        parse_yaml <( $kubectl_binary version -o yaml ) "kubectl_download_"
         #kubectl_download_clientVersion_minor="$(replace_substring '$kubectl_download_clientVersion_minor' '+' '')"
         #There might be difference in kubectl version command between different installations/versions.  Need to explore.
         kubectl_download_version=$kubectl_download_clientVersion_major.$kubectl_download_clientVersion_minor
@@ -107,7 +109,8 @@ else
             exit 1
         fi
         
-        eval $(parse_yaml <( kubectl version -o yaml ) "kubectl_inpath_")
+        #eval $(parse_yaml <( kubectl version -o yaml ) "kubectl_inpath_")
+        parse_yaml <( kubectl version -o yaml ) "kubectl_inpath_"
         kubectl_inpath_version=$kubectl_inpath_clientVersion_major.$kubectl_inpath_clientVersion_minor
         if [[ "${kubectl_inpath_version}" = "${kubectl_download_version}" ]]; then
             log_it "${__function_name}" "installer" "DEBUG" "1186" "kubectl binary in path has version: $kubectl_download_version"

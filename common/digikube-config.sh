@@ -25,8 +25,20 @@ function validate-digikube-config {
 
   __function_name="common/validate-digikube-config"
 
+#Cloud provider
+  if [[ "${__config_cloud.provider}" = "gce") ]]; then
+      local cloud_project=$(get-cloud-project 'gce')
+      if [[ $? -gt 0 ]]; then
+          log_it "${__function_name}" "installer" "ERR" "2110" "Current cloud execution environment is not same as the one specified in config.  Exiting."
+          exit 1
+      fi
+  else
+      log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
+      exit 1
+  fi
+
 #Cloud project
-  if [[ "${__config_cloud.provider.project}" = "$(get-cloud-project 'gce'") ]]; then
+  if [[ "${__config_cloud_project_name}" = "$(get-cloud-project 'gce'") ]]; then
       'do nothing
       temp1="1"
   else
@@ -34,7 +46,9 @@ function validate-digikube-config {
       exit 1
   fi
   
-#Add others
+#VPC
+  export __config_cloud_project_vpc="${__config_cloud_project_name}-vpc"
+
 
 }
 
@@ -49,8 +63,8 @@ function get-config-value {
         return ""
     else
         return ${config_name}
-    fi 
+    fi
 }
 
 #Export the configuration as global
-export-digikube-config
+#export-digikube-config

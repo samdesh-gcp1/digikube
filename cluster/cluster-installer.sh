@@ -3,8 +3,6 @@
 
 __function_name="cluster/install.sh"
 
-echo "AAAAAAAAAA"
-
 base_dir=~/
 digi_dir=${base_dir}digikube/
 
@@ -42,7 +40,7 @@ echo "KOPS State Store          : " ${KOPS_STATE_STORE}
 echo "Cloud Zones for Masters   : " ${KOPS_MASTER_ZONES}
 echo "Cloud Zones for Workers   : " ${KOPS_WORKER_ZONES}
 
-kops_preemptible create cluster                  \
+kops create cluster                  \
     --name=${KOPS_CLUSTER_NAME}      \
     --cloud=${KOPS_CLOUD}            \
     --project=${KOPS_PROJECT}        \

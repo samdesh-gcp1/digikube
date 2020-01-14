@@ -49,7 +49,7 @@ function validate-cluster {
     #Function to validate the cluster.
     __function_name="cluster/digiops.validate-cluster"
     
-    get-cluster-config()
+    get-cluster-config
     if [[ $? -gt 0 ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
         exit 1
@@ -99,7 +99,7 @@ function update-cluster {
     
     log_it "${__function_name}" "installer" "INFO" "2110" "Updating cluster configurations"
     
-    get-cluster-config()
+    get-cluster-config
     if [[ $? -gt 0 ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
         exit 1
@@ -143,7 +143,7 @@ function create-cluster {
 
     log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster installation process"
 
-    get-cluster-config()
+    get-cluster-config
     if [[ $? -gt 0 ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
         exit 1
@@ -185,7 +185,7 @@ function create-cluster {
         else
             log_it "${__function_name}" "installer" "INFO" "2110" "Cluster created successfully.  Waiting for initialization"
       
-            validate-cluster()
+            validate-cluster
             __kops_exit_status=$?
             if [[ __kops_exit_status -gt 0 ]]; then
                 exit 1
@@ -194,7 +194,7 @@ function create-cluster {
     
     else
         log_it "${__function_name}" "installer" "INFO" "2110" "Reusing existing cluster."
-        update-cluster()
+        update-cluster
         __kops_exit_status=$?
         if [[ __kops_exit_status -gt 0 ]]; then
             exit 1
@@ -210,7 +210,7 @@ function delete-cluster {
 
     log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster deletion process"
 
-    get-cluster-config()
+    get-cluster-config
     if [[ $? -gt 0 ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
         exit 1
@@ -249,7 +249,7 @@ function stop-cluster {
 
     log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster shutdown process"
 
-    get-cluster-config()
+    get-cluster-config
     if [[ $? -gt 0 ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
         exit 1
@@ -296,7 +296,7 @@ function start-cluster {
 
     log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster start process"
 
-    get-cluster-config()
+    get-cluster-config
     if [[ $? -gt 0 ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
         exit 1
@@ -319,7 +319,7 @@ function start-cluster {
     kops replace -f=${ig_base_master_config} --state=${kops_state_store}
     kops replace -f=${ig_base_node_config} --state=${kops_state_store}
 
-    update-cluster()
+    update-cluster
     
 }
 

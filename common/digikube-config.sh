@@ -74,4 +74,4 @@ function get-config-value {
 }
 
 #Export the configuration as global
-#export-digikube-config
+export-digikube-config

@@ -102,7 +102,7 @@ while [ ${__kops_exit_status} -gt 0 ]
 do
     kops validate cluster --state=${KOPS_STATE_STORE}
     __kops_exit_status=$?
-    __loop_count=${__loop_count} + 1
+    __loop_count=${__loop_count}+1
     if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
         break
     fi

@@ -293,36 +293,32 @@ function start-cluster {
 
     #Function to create cluster.
     __function_name="cluster/digiops.start-cluster"
-
-    log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster start process"
-
-    get-cluster-config
-    if [[ $? -gt 0 ]]; then
-        log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
-        exit 1
-    fi
-
-    #First check if cluster available with the same name
-    kops get cluster                     \
-        --name=${kops_cluster_name}      \
-        --state=${kops_state_store}
-
-    __kops_exit_status=$?
-    if [[ ${__kops_exit_status} -gt 0 ]]; then
-        log_it "${__function_name}" "installer" "ERR" "2110" "No cluster available for start"
-        exit 1
-    fi
-    
-    ig_base_master_config="${digi_dir}config/ig-base-master-config-template.yaml"
-    ig_base_node_config="${digi_dir}config/ig-base-node-config-template.yaml"
-    
-    kops replace -f="${ig_base_master_config}" --state=${kops_state_store}
-    kops replace -f="${ig_base_node_config}" --state=${kops_state_store}
-
-    update-cluster
+#
+#    log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster start process"#
+#
+#    get-cluster-config
+#    if [[ $? -gt 0 ]]; then
+#        log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
+#        exit 1
+#    fi
+#
+#    #First check if cluster available with the same name
+#    kops get cluster                     \
+#        --name=${kops_cluster_name}      \
+#        --state=${kops_state_store}
+#
+#    __kops_exit_status=$?
+#    if [[ ${__kops_exit_status} -gt 0 ]]; then
+#        log_it "${__function_name}" "installer" "ERR" "2110" "No cluster available for start"
+#        exit 1
+#    fi
+#    
+#    ig_base_master_config="${digi_dir}config/ig-base-master-config-template.yaml"
+#    ig_base_node_config="${digi_dir}config/ig-base-node-config-template.yaml"
+#    
+#    kops replace -f="${ig_base_master_config}" --state=${kops_state_store}
+#    kops replace -f="${ig_base_node_config}" --state=${kops_state_store}
+#
+#    update-cluster
     
 }
-
-#Scale-up Cluster
-
-#Scale-down Cluster

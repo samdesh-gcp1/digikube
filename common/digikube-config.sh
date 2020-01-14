@@ -37,6 +37,15 @@ function validate-digikube-config {
       exit 1
   fi
 
+#Cloud admin user
+  if [[ "${__config_cloud_adminUser}" = "$(who am i)" ]]; then
+      #do nothing
+      temp1="1"
+  else
+      log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
+      exit 1
+  fi
+  
 #Cloud project
   if [[ "${__config_cloud_project_name}" = "$(get-cloud-project 'gce')" ]]; then
       #do nothing

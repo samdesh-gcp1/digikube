@@ -158,49 +158,49 @@ function create-cluster {
 
     __kops_exit_status=$?
     if [[ ${__kops_exit_status} -gt 0 ]]; then
-# 
-#        #create cluster
-#        kops create cluster                     \
-#            --name=${kops_cluster_name}         \
-#            --cloud=${kops_cloud}               \
-#            --project=${kops_project}           \
-#            --master-zones=${kops_master_zones} \
-#            --zones=${kops_worker_zones}        \
-#            --cloud-labels=${kops_env_type}     \
-#            --master-count=1                    \
-#            --master-size=g1-small              \
-#            --master-volume-size=10             \
-#            --node-count=2                      \
-#            --node-size=g1-small                \
-#            --node-volume-size=10               \
-#            --associate-public-ip=false         \
-#            --api-loadbalancer-type=public      \
-#            --authorization=RBAC                \
-#            --etcd-storage-type=pd-standard     \
-#            --state=${kops_state_store          \
-#            --yes
+ 
+        #create cluster
+        kops create cluster                     \
+            --name=${kops_cluster_name}         \
+            --cloud=${kops_cloud}               \
+            --project=${kops_project}           \
+            --master-zones=${kops_master_zones} \
+            --zones=${kops_worker_zones}        \
+            --cloud-labels=${kops_env_type}     \
+            --master-count=1                    \
+            --master-size=g1-small              \
+            --master-volume-size=10             \
+            --node-count=2                      \
+            --node-size=g1-small                \
+            --node-volume-size=10               \
+            --associate-public-ip=false         \
+            --api-loadbalancer-type=public      \
+            --authorization=RBAC                \
+            --etcd-storage-type=pd-standard     \
+            --state=${kops_state_store          \
+            --yes
 
-#        __kops_exit_status=$?
-#        if [[ ${__kops_exit_status} -gt 0 ]]; then
-#            log_it "${__function_name}" "installer" "ERR" "2110" "Error while creating kops cluster"
-#            exit 1
-#        else
+        __kops_exit_status=$?
+        if [[ ${__kops_exit_status} -gt 0 ]]; then
+            log_it "${__function_name}" "installer" "ERR" "2110" "Error while creating kops cluster"
+            exit 1
+        else
             log_it "${__function_name}" "installer" "INFO" "2110" "Cluster created successfully.  Waiting for initialization"
-#      
-#            validate-cluster
-#            __kops_exit_status=$?
-#            if [[ __kops_exit_status -gt 0 ]]; then
-#                exit 1
-#            fi
-#        fi
-#    
+      
+            validate-cluster
+            __kops_exit_status=$?
+            if [[ __kops_exit_status -gt 0 ]]; then
+                exit 1
+            fi
+        fi
+    
     else
         log_it "${__function_name}" "installer" "INFO" "2110" "Reusing existing cluster."
-#        update-cluster
-#        __kops_exit_status=$?
-#        if [[ __kops_exit_status -gt 0 ]]; then
-#            exit 1
-#        fi
+        update-cluster
+        __kops_exit_status=$?
+        if [[ __kops_exit_status -gt 0 ]]; then
+            exit 1
+        fi
     fi    
    
 }

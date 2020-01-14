@@ -26,7 +26,7 @@ function validate-digikube-config {
   __function_name="common/validate-digikube-config"
 
 #Cloud provider
-  if [[ "${__config_cloud.provider}" = "gce" ]]; then
+  if [[ "${__config_cloud_provider}" = "gce" ]]; then
       local cloud_project=$(get-cloud-project 'gce')
       if [[ $? -gt 0 ]]; then
           log_it "${__function_name}" "installer" "ERR" "2110" "Current cloud execution environment is not same as the one specified in config.  Exiting."

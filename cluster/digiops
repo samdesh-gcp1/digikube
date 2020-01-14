@@ -97,42 +97,42 @@ function update-cluster {
     #Function to update cluster.
     __function_name="cluster/digiops.update-cluster"
     
-    log_it "${__function_name}" "installer" "INFO" "2110" "Updating cluster configurations"
+#    log_it "${__function_name}" "installer" "INFO" "2110" "Updating cluster configurations"
     
-    get-cluster-config
-    if [[ $? -gt 0 ]]; then
-        log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
-        exit 1
-    fi
-    
-    #First check if cluster available with the same name
-    kops get cluster                     \
-        --name=${kops_cluster_name}      \
-        --state=${kops_state_store}
-
-    __kops_exit_status=$?
-    if [[ ${__kops_exit_status} -gt 0 ]]; then
-        log_it "${__function_name}" "installer" "ERR" "2110" "No cluster available for updation"
-        exit 1
-    fi
-    
-    #TODO: Need to get updated cluster configurations and apply
-    kops update cluster                   \
-        --state=${kops_state_store}
-        
-    __kops_exit_status=$?
-    if [[ ${__kops_exit_status} -gt 0 ]]; then 
-        log_it "${__function_name}" "installer" "ERR" "2110" "Error while updating cluster"
-        exit 1
-    else
-        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster updated successfully.  Waiting for initialization"
-    fi
-    
-    validate-cluster
-    __kops_exit_status=$?
-    if [[ ${__kops_exit_status} -gt 0 ]]; then 
-        exit 1
-    fi
+#    get-cluster-config
+#    if [[ $? -gt 0 ]]; then
+#        log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
+#        exit 1
+#    fi
+#    
+#    #First check if cluster available with the same name
+#    kops get cluster                     \
+#        --name=${kops_cluster_name}      \
+#        --state=${kops_state_store}
+#
+#    __kops_exit_status=$?
+#    if [[ ${__kops_exit_status} -gt 0 ]]; then
+#        log_it "${__function_name}" "installer" "ERR" "2110" "No cluster available for updation"
+#        exit 1
+#    fi
+#    
+#    #TODO: Need to get updated cluster configurations and apply
+#    kops update cluster                   \
+#        --state=${kops_state_store}
+#        
+#    __kops_exit_status=$?
+#    if [[ ${__kops_exit_status} -gt 0 ]]; then 
+#        log_it "${__function_name}" "installer" "ERR" "2110" "Error while updating cluster"
+#        exit 1
+#    else
+#        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster updated successfully.  Waiting for initialization"
+#    fi
+#    
+#    validate-cluster
+#    __kops_exit_status=$?
+#    if [[ ${__kops_exit_status} -gt 0 ]]; then 
+#        exit 1
+#    fi
     
 }
 

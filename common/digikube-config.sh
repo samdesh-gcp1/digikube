@@ -65,7 +65,7 @@ function get-config-value {
         log_it "${__function_name}" "installer" "ERR" "2110" "Invalid config $1"
     #    echo "ERR"
     #else
-    #    local config_value="${!config_name)"
+        local config_value="${!config_name)"
     #    log_it "${__function_name}" "installer" "DEBUG" "2110" "Config value : ${config_value}"
     #    echo "${config_value}"
     fi

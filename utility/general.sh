@@ -65,19 +65,19 @@ function replace_substring1 {
         local __function_name="replace_substring"
          
         if [[ $# -lt 3 ]]; then
-                echo "Error: ${__function_name} : Insufficient arguments provided."
-                return ""
+                #echo "Error: ${__function_name} : Insufficient arguments provided."
+                echo ""
                 exit 1 
         else
                 f=$1
-                echo $f
+                #echo $f
                 t=$2
-                echo $t
+                #echo $t
                 s=$3
-                echo $s
+                #echo $s
                 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
                 echo $n
-                return "$n"
+                #return "$n"
         fi
 }
 
@@ -91,11 +91,11 @@ function replace_substring {
                 exit 1 
         else
                 f=$1
-                echo $f
+                #echo $f
                 t=$2
-                echo $t
+                #echo $t
                 s=$3
-                echo $s
+                #echo $s
                 n=${f//$t/$s}
                 echo "$n"
         fi

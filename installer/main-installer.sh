@@ -15,4 +15,4 @@ ${kops_installer}
 #${cluster_installer}
 
 . ${digi_ops_executer}
-cluster-install()
+create-cluster

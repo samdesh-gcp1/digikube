@@ -67,7 +67,7 @@ function get-config-value {
     else
         local config_value="${!config_name)"
         log_it "${__function_name}" "installer" "DEBUG" "2110" "Config value : ${config_value}"
-        echo ${config_value}
+        echo "${config_value}"
     fi
     
 }

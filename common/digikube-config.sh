@@ -63,12 +63,11 @@ function get-config-value {
     log_it "${__function_name}" "installer" "DEBUG" "2110" "Config name : ${config_name}"
     if [[ -z ${config_name} ]]; then
         log_it "${__function_name}" "installer" "ERR" "2110" "Invalid config $1"
-    #    echo "ERR"
+        echo ""
     #else
-         echo "${config_name)"
-    #    local config_value="${!config_name)"
-    #    log_it "${__function_name}" "installer" "DEBUG" "2110" "Config value : ${config_value}"
-    #    echo "${config_value}"
+        local config_value="${!config_name}"
+        log_it "${__function_name}" "installer" "DEBUG" "2110" "Config value : ${config_value}"
+        echo "${config_value}"
     fi
     echo "111"
 }

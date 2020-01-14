@@ -60,30 +60,30 @@ kops create cluster                  \
     --state=${KOPS_STATE_STORE}      \
     --yes
 
-local kops_exit_status=$?
-if [[ ${kops_exit_status} -gt 0 ]]; then
+__kops_exit_status=$?
+if [[ ${__kops_exit_status} -gt 0 ]]; then
     log_it "${__function_name}" "installer" "ERR" "2110" "Error while creating kops cluster"
     exit 1
 else
     
     log_it "${__function_name}" "installer" "INFO" "2110" "Cluster created successfully.  Waiting for initialization"
-    kops_exit_status=1
-    local loop_count=0
-    local max_loop_count=30
-    local loop_sleep_duration=10 
+    __kops_exit_status=1
+    __loop_count=0
+    __max_loop_count=30
+    __loop_sleep_duration=10 
 
-    while [ $x -gt 0 ]
+    while [ ${__kops_exit_status} -gt 0 ]
     do
         kops validate cluster --state=${KOPS_STATE_STORE}
-        kops_exit_status=$?
-        loop_count=$loop_count + 1
-        if [[ ${loop_count} -gt ${max_loop_count} ]]; then
-            break
+        __kops_exit_status=$?
+        __loop_count=${__loop_count} + 1
+        if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
+             break
         fi
-        sleep ${loop_sleep_duration}
+        sleep ${__loop_sleep_duration}
     done
     
-    if [[ ${loop_count} -gt ${max_loop_count} ]]; then
+    if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
         #This is timeout condition
         log_it "${__function_name}" "installer" "ERR" "2110" "Timeout while validating cluster setup"
         exit 1

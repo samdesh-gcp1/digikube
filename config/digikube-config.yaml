@@ -8,7 +8,7 @@ cloud:
     zone: "us-central1-c"
     vpc: "<dynamic>"
   bucket:
-    nameSuffix: "-bucket"
+    nameSuffix: "bucket"
     name: "<dynamic>"
     class: "STANDARD"
   bastionHost:

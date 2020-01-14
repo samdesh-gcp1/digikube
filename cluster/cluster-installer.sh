@@ -40,55 +40,80 @@ echo "KOPS State Store          : " ${KOPS_STATE_STORE}
 echo "Cloud Zones for Masters   : " ${KOPS_MASTER_ZONES}
 echo "Cloud Zones for Workers   : " ${KOPS_WORKER_ZONES}
 
-kops create cluster                  \
+#First check if cluster available with the same name
+kops get cluster                     \
     --name=${KOPS_CLUSTER_NAME}      \
-    --cloud=${KOPS_CLOUD}            \
-    --project=${KOPS_PROJECT}        \
-    --master-zones=${KOPS_MASTER_ZONES} \
-    --zones=${KOPS_WORKER_ZONES}     \
-    --cloud-labels=${KOPS_ENV_TYPE}  \
-    --master-count=1                 \
-    --master-size=g1-small           \
-    --master-volume-size=10          \
-    --node-count=2                   \
-    --node-size=g1-small             \
-    --node-volume-size=10            \
-    --associate-public-ip=false      \
-    --api-loadbalancer-type=public   \
-    --authorization=RBAC             \
-    --etcd-storage-type=pd-standard  \
-    --state=${KOPS_STATE_STORE}      \
-    --yes
+    --state=${KOPS_STATE_STORE}
 
 __kops_exit_status=$?
 if [[ ${__kops_exit_status} -gt 0 ]]; then
-    log_it "${__function_name}" "installer" "ERR" "2110" "Error while creating kops cluster"
-    exit 1
-else
-    
-    log_it "${__function_name}" "installer" "INFO" "2110" "Cluster created successfully.  Waiting for initialization"
-    __kops_exit_status=1
-    __loop_count=0
-    __max_loop_count=30
-    __loop_sleep_duration=10 
+ 
+    #create cluster
+    kops create cluster                  \
+        --name=${KOPS_CLUSTER_NAME}      \
+        --cloud=${KOPS_CLOUD}            \
+        --project=${KOPS_PROJECT}        \
+        --master-zones=${KOPS_MASTER_ZONES} \
+        --zones=${KOPS_WORKER_ZONES}     \
+        --cloud-labels=${KOPS_ENV_TYPE}  \
+        --master-count=1                 \
+        --master-size=g1-small           \
+        --master-volume-size=10          \
+        --node-count=2                   \
+        --node-size=g1-small             \
+        --node-volume-size=10            \
+        --associate-public-ip=false      \
+        --api-loadbalancer-type=public   \
+        --authorization=RBAC             \
+        --etcd-storage-type=pd-standard  \
+        --state=${KOPS_STATE_STORE}      \
+        --yes
 
-    while [ ${__kops_exit_status} -gt 0 ]
-    do
-        kops validate cluster --state=${KOPS_STATE_STORE}
-        __kops_exit_status=$?
-        __loop_count=${__loop_count} + 1
-        if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
-             break
-        fi
-        sleep ${__loop_sleep_duration}
-    done
-    
-    if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
-        #This is timeout condition
-        log_it "${__function_name}" "installer" "ERR" "2110" "Timeout while validating cluster setup"
+    __kops_exit_status=$?
+    if [[ ${__kops_exit_status} -gt 0 ]]; then
+        log_it "${__function_name}" "installer" "ERR" "2110" "Error while creating kops cluster"
         exit 1
     else
-        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster initialized successfully"
-        log_it "${__function_name}" "installer" "DEBUG" "2110" "Cluster details : $(kops validate cluster --state=${KOPS_STATE_STORE})"
+        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster created successfully.  Waiting for initialization"
     fi
+    
+else
+    
+    log_it "${__function_name}" "installer" "INFO" "2110" "Reusing existing cluster. Updating configurations"
+    
+    kops update cluster                   \
+        --state=${KOPS_STATE_STORE}
+        
+     __kops_exit_status=$?
+    if [[ ${__kops_exit_status} -gt 0 ]]; then 
+        log_it "${__function_name}" "installer" "ERR" "2110" "Error while updating existing cluster"
+        exit 1
+    else
+        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster updated successfully.  Waiting for initialization"
+    fi
+fi    
+
+__kops_exit_status=1
+__loop_count=0
+__max_loop_count=30
+__loop_sleep_duration=10 
+
+while [ ${__kops_exit_status} -gt 0 ]
+do
+    kops validate cluster --state=${KOPS_STATE_STORE}
+    __kops_exit_status=$?
+    __loop_count=${__loop_count} + 1
+    if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
+        break
+    fi
+    sleep ${__loop_sleep_duration}
+done
+    
+if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
+    #This is timeout condition
+    log_it "${__function_name}" "installer" "ERR" "2110" "Timeout while validating cluster setup"
+    exit 1
+else
+    log_it "${__function_name}" "installer" "INFO" "2110" "Cluster initialized successfully"
+    log_it "${__function_name}" "installer" "DEBUG" "2110" "Cluster details : $(kops validate cluster --state=${KOPS_STATE_STORE})"
 fi

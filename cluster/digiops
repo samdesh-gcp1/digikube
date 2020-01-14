@@ -272,7 +272,7 @@ function stop-cluster {
     kops replace -f=${ig_zero_master_config} --state=${kops_state_store}
     kops replace -f=${ig_zero_node_config} --state=${kops_state_store}
 
-    update-cluster()
+    update-cluster
 
     resources_nameE=${kops_cluster_name}
     resource_name=${resource_name//[_.]/-}

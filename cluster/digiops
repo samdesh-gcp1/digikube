@@ -149,13 +149,13 @@ function create-cluster {
         exit 1
     fi
 
-#    #First check if cluster available with the same name
-#    kops get cluster                     \
-#        --name=${kops_cluster_name}      \
-#        --state=${kops_state_store}
-#
-#    __kops_exit_status=$?
-#    if [[ ${__kops_exit_status} -gt 0 ]]; then
+    #First check if cluster available with the same name
+    kops get cluster                     \
+        --name=${kops_cluster_name}      \
+        --state=${kops_state_store}
+
+    __kops_exit_status=$?
+    if [[ ${__kops_exit_status} -gt 0 ]]; then
 # 
 #        #create cluster
 #        kops create cluster                     \
@@ -183,7 +183,7 @@ function create-cluster {
 #            log_it "${__function_name}" "installer" "ERR" "2110" "Error while creating kops cluster"
 #            exit 1
 #        else
-#            log_it "${__function_name}" "installer" "INFO" "2110" "Cluster created successfully.  Waiting for initialization"
+            log_it "${__function_name}" "installer" "INFO" "2110" "Cluster created successfully.  Waiting for initialization"
 #      
 #            validate-cluster
 #            __kops_exit_status=$?
@@ -192,14 +192,14 @@ function create-cluster {
 #            fi
 #        fi
 #    
-#    else
-#        log_it "${__function_name}" "installer" "INFO" "2110" "Reusing existing cluster."
+    else
+        log_it "${__function_name}" "installer" "INFO" "2110" "Reusing existing cluster."
 #        update-cluster
 #        __kops_exit_status=$?
 #        if [[ __kops_exit_status -gt 0 ]]; then
 #            exit 1
 #        fi
-#    fi    
+    fi    
    
 }
 

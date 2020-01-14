@@ -38,7 +38,7 @@ function validate-digikube-config {
   fi
 
 #Cloud admin user
-  if [[ "${__config_cloud_adminUser}" = "$(who am i)" ]]; then
+  if [[ "${__config_cloud_adminUser}" = "$(whoami)" ]]; then
       #do nothing
       temp1="1"
   else

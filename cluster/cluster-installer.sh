@@ -3,7 +3,7 @@
 
 __function_name="cluster/install.sh"
 
-rcho "AAAAAAAAAA"
+echo "AAAAAAAAAA"
 
 base_dir=~/
 digi_dir=${base_dir}digikube/

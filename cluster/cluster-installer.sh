@@ -59,3 +59,36 @@ kops create cluster                  \
     --etcd-storage-type=pd-standard  \
     --state=${KOPS_STATE_STORE}      \
     --yes
+
+local kops_exit_status=$?
+if [[ ${kops_exit_status} -gt 0 ]]; then
+    log_it "${__function_name}" "installer" "ERR" "2110" "Error while creating kops cluster"
+    exit 1
+else
+    
+    log_it "${__function_name}" "installer" "INFO" "2110" "Cluster created successfully.  Waiting for initialization"
+    kops_exit_status=1
+    local loop_count=0
+    local max_loop_count=30
+    local loop_sleep_duration=10 
+
+    while [ $x -gt 0 ]
+    do
+        kops validate cluster --state=${KOPS_STATE_STORE}
+        kops_exit_status=$?
+        loop_count=$loop_count + 1
+        if [[ ${loop_count} -gt ${max_loop_count} ]]; then
+            break
+        fi
+        sleep ${loop_sleep_duration}
+    done
+    
+    if [[ ${loop_count} -gt ${max_loop_count} ]]; then
+        #This is timeout condition
+        log_it "${__function_name}" "installer" "ERR" "2110" "Timeout while validating cluster setup"
+        exit 1
+    else
+        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster initialized successfully"
+        log_it "${__function_name}" "installer" "DEBUG" "2110" "Cluster details : $(kops validate cluster --state=${KOPS_STATE_STORE})"
+    fi
+fi

@@ -177,8 +177,8 @@ function create-cluster {
             --api-loadbalancer-type=public      \
             --authorization=RBAC                \
             --etcd-storage-type=pd-standard     \
-            --state=${kops_state_store          \
-            --yes
+            --state=${kops_state_store}         
+            # --yes
 
         __kops_exit_status=$?
         if [[ ${__kops_exit_status} -gt 0 ]]; then
@@ -196,11 +196,11 @@ function create-cluster {
     
     else
         log_it "${__function_name}" "installer" "INFO" "2110" "Reusing existing cluster."
-        update-cluster
-        __kops_exit_status=$?
-        if [[ __kops_exit_status -gt 0 ]]; then
-            exit 1
-        fi
+#        update-cluster
+#        __kops_exit_status=$?
+#        if [[ __kops_exit_status -gt 0 ]]; then
+#            exit 1
+#        fi
     fi    
    
 }

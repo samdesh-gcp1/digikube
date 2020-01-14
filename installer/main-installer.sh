@@ -3,7 +3,7 @@
 
 base_dir=~/
 digi_dir=${base_dir}digikube/
-digi_ops_executer=${digi_dir}cluster/digiops.sh
+digi_ops_executer=${digi_dir}cluster/digiops
 
 kubectl_installer=${digi_dir}installer/kubectl-installer.sh
 ${kubectl_installer}

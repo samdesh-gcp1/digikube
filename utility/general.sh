@@ -86,7 +86,7 @@ function replace_substring {
         local __function_name="replace_substring"
          
         if [[ $# -lt 3 ]]; then
-                echo "Error: ${__function_name} : Insufficient arguments provided."
+                #echo "Error: ${__function_name} : Insufficient arguments provided."
                 echo ""
                 exit 1 
         else

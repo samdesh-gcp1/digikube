@@ -208,37 +208,37 @@ function delete-cluster {
     #Function to create cluster.
     __function_name="cluster/digiops.delete-cluster"
 
-    log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster deletion process"
-
-    get-cluster-config
-    if [[ $? -gt 0 ]]; then
-        log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
-        exit 1
-    fi
-
-    #First check if cluster available with the same name
-    kops get cluster                     \
-        --name=${kops_cluster_name}      \
-        --state=${kops_state_store}
-
-    __kops_exit_status=$?
-    if [[ ${__kops_exit_status} -gt 0 ]]; then
-        log_it "${__function_name}" "installer" "ERR" "2110" "No cluster available for deletion"
-        exit 1
-    fi
-    
-    kops delete cluster                 \
-        --name=${kops_cluster_name}     \
-        --state=${kops_state_store}     \
-        --yes
-    
-    __kops_exit_status=$?
-    if [[ ${__kops_exit_status} -gt 0 ]]; then
-        log_it "${__function_name}" "installer" "ERR" "2110" "Error while deleting cluster"
-        exit 1
-    else
-        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster deleted"
-    fi
+#    log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster deletion process"
+#
+#    get-cluster-config
+#    if [[ $? -gt 0 ]]; then
+#        log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
+#        exit 1
+#    fi
+#
+#    #First check if cluster available with the same name
+#    kops get cluster                     \
+#        --name=${kops_cluster_name}      \
+#        --state=${kops_state_store}
+#
+#    __kops_exit_status=$?
+#    if [[ ${__kops_exit_status} -gt 0 ]]; then
+#        log_it "${__function_name}" "installer" "ERR" "2110" "No cluster available for deletion"
+#        exit 1
+#    fi
+#    
+#    kops delete cluster                 \
+#        --name=${kops_cluster_name}     \
+#        --state=${kops_state_store}     \
+#        --yes
+#    
+#    __kops_exit_status=$?
+#    if [[ ${__kops_exit_status} -gt 0 ]]; then
+#        log_it "${__function_name}" "installer" "ERR" "2110" "Error while deleting cluster"
+#        exit 1
+#    else
+#        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster deleted"
+#    fi
     
 }
 

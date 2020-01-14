@@ -17,6 +17,8 @@ function get-cluster-config {
     export KOPS_FEATURE_FLAGS=$(get-config-value "cluster.kops.featureFlags")
     export KOPS_STATE_STORE="gs://$(get-config-value 'cloud.bucket.name')"
     
+    kops_feature_flags=${KOPS_FEATURE_FLAGS}
+    kops_state_store=${KOPS_STATE_STORE}
     kops_cloud=$(get-config-value "cloud.provider")
     kops_project=$(get-config-value "cloud.project.name")
     kops_vpc=$(get-config-value "cloud.project.vpc")

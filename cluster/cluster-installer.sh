@@ -3,13 +3,15 @@
 
 __function_name="cluster/install.sh"
 
+rcho "AAAAAAAAAA"
+
 base_dir=~/
 digi_dir=${base_dir}digikube/
 
 . ${digi_dir}utility/general.sh
 . ${digi_dir}utility/log.sh
 
-log_it "${__function_name}" "cluster" "INFO" "2110" "Started the cluster installation process"
+log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster installation process"
 
 . ${digi_dir}cluster/set-cluster-env.sh
 if [[ $? -gt 0 ]]; then

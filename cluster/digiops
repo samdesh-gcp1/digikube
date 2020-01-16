@@ -120,7 +120,8 @@ function update-cluster {
     
     #TODO: Need to get updated cluster configurations and apply
     kops update cluster                   \
-        --state=${kops_state_store}
+        --state=${kops_state_store}	  \
+	--yes
         
     __kops_exit_status=$?
     if [[ ${__kops_exit_status} -gt 0 ]]; then 

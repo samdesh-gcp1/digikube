@@ -5,16 +5,16 @@ metadata:
     kops.k8s.io/cluster: ${kops_cluster_name}
   name: nodes
 spec:
-  associatePublicIp: false
-  image: cos-cloud/cos-stable-65-10323-99-0
-  machineType: g1-small
-  maxSize: 0
-  minSize: 0
+  associatePublicIp: ${kops_associate_public_ip}
+  image: ${kops_node_image}
+  machineType: ${kops_node_size}
+  maxSize: ${kops_node_count_max}
+  minSize: ${kops_node_count_min}
   nodeLabels:
     kops.k8s.io/instancegroup: nodes
   role: Node
-  rootVolumeSize: 10
+  rootVolumeSize: ${kops_node_volume_size}
   subnets:
-  - us-central1
+  - ${kops_region}
   zones:
   - ${kops_worker_zones}

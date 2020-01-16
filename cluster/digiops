@@ -249,37 +249,37 @@ function stop-cluster {
     #Function to create cluster.
     __function_name="cluster/digiops.stop-cluster"
 
-#    log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster shutdown process"
-#
-#    get-cluster-config
-#    if [[ $? -gt 0 ]]; then
-#        log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
-#        exit 1
-#    fi
-#
-#    #First check if cluster available with the same name
-#    kops get cluster                     \
-#        --name=${kops_cluster_name}      \
-#        --state=${kops_state_store}
-#
-#    __kops_exit_status=$?
-#    if [[ ${__kops_exit_status} -gt 0 ]]; then
-#        log_it "${__function_name}" "installer" "ERR" "2110" "No cluster available for shutdown"
-#        exit 1
-#    fi
-#    
+    log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster shutdown process"
+
+    get-cluster-config
+    if [[ $? -gt 0 ]]; then
+        log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
+        exit 1
+    fi
+
+    #First check if cluster available with the same name
+    kops get cluster                     \
+        --name=${kops_cluster_name}      \
+        --state=${kops_state_store}
+
+    __kops_exit_status=$?
+    if [[ ${__kops_exit_status} -gt 0 ]]; then
+        log_it "${__function_name}" "installer" "ERR" "2110" "No cluster available for shutdown"
+        exit 1
+    fi
+    
 #    ig_zero_master_config="${digi_dir}config/ig-zero-master-config-template.yaml"
 #    ig_zero_node_config="${digi_dir}config/ig-zero-node-config-template.yaml"
-#    
+    
 #    kops replace -f=${ig_zero_master_config} --state=${kops_state_store}
 #    kops replace -f=${ig_zero_node_config} --state=${kops_state_store}
-#
+
 #    update-cluster
-#
+
 #    resources_nameE=${kops_cluster_name}
 #    resource_name=${resource_name//[_.]/-}
 #    resource_name=api-${resource_name}
-#
+
 #    echo "Waiting for 120 seconds for cluster to shutdown"
 #    sleep 120
 #    echo "Deleting additional cloud resources"

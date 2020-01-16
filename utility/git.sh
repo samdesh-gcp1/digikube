@@ -1,22 +1,36 @@
 
-function mark-x {  chmod +x "$1" }
+function mark-x {
+   local file_name="${1}"
+   chmod +x "${file_name}"
+}
 
-function commit { git commit -m "$1" }
+function commit {
+   local comment="${1}"
+   git commit -m "${comment}"
+}
 
-function checkout { git checkout }
+function checkout {
+   git checkout
+}
 
-function push { git push }
+function push {
+   git push
+}
 
 function identity {
    git config --global user.email "samdesh.gcp1@gmail.com"
    git config --global user.name "samdesh_gcp1"
 }
 
-if [[ "$1" = "mark-x-commit" ]]; then
+__operation="${1}"
+__file_name="${2}"
+__comment="${3}"
+
+if [[ "${__operation}" = "mark-x-commit" ]]; then
    cd ~/digikube/
    checkout
-   mark-x "$2"
+   mark-x "${__file_name}"
    identity
-   commit "$3"
+   commit "${__comment}"
    push
 fi

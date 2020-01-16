@@ -351,7 +351,7 @@ function start-cluster {
     #Function to create cluster.
     __function_name="cluster/digiops.start-cluster"
 
-    log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster start process"#
+    log_it "${__function_name}" "installer" "INFO" "2110" "Started the cluster start process"
 
     get-cluster-config
     if [[ $? -gt 0 ]]; then

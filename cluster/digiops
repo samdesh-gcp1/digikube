@@ -410,6 +410,9 @@ if [[ $# -gt 0 ]]; then
 		"stop-cluster")
 				stop-cluster
 				;;
+		"start-cluster")
+				start-cluster
+				;;
         *)
     esac
 

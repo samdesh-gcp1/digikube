@@ -2,7 +2,7 @@ cloud:
   provider: "gce"
   adminUser: "samdesh_gcp1"
   project:
-    name: "digikube002"
+    name: "digikube003"
       overrideAllowed: "no"  
     region: "us-central1"
     zone: "us-central1-c"

@@ -70,7 +70,7 @@ function validate-cluster {
     
     __kops_exit_status=1
     __loop_count=0
-    __max_loop_count=5
+    __max_loop_count=60
     __loop_sleep_duration=5 
     
     while [ ${__kops_exit_status} -gt 0 ]

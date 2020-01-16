@@ -34,9 +34,9 @@ function get-cluster-config {
         fi
     else
         if [[ -z ${kops_cluster_suffix} ]]; then
-            kops_cluster_name=${kops_cluster_prefix}.${kops_env}.${kops_project}.k8s.local
+            kops_cluster_name=${kops_cluster_prefix}.${kops_project}.${kops_env}.k8s.local
         else
-            kops_cluster_name=${kops_cluster_prefix}.${kops_env}.${kops_project}.${kops_cluster_suffix}
+            kops_cluster_name=${kops_cluster_prefix}.${kops_project}.${kops_env}.${kops_cluster_suffix}
         fi
     fi
   

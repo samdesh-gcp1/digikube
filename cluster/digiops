@@ -271,8 +271,10 @@ function stop-cluster {
     ig_zero_master_config="${digi_dir}config/templates/ig-zero-master-config-template.yaml"
     ig_zero_node_config="${digi_dir}config/templates/ig-zero-node-config-template.yaml"
     
-    kops replace -f=${ig_zero_master_config} --state=${kops_state_store}
-    kops replace -f=${ig_zero_node_config} --state=${kops_state_store}
+    #kops replace -f=${ig_zero_master_config} --state=${kops_state_store}
+    $(cat ${ig_zero_master_config} | envsubst) | kops replace -f - --state=${kops_state_store}
+    #kops replace -f=${ig_zero_node_config} --state=${kops_state_store}
+    $(cat ${ig_zero_node_config} | envsubst) | kops replace -f - --state=${kops_state_store}
 
     update-cluster
 

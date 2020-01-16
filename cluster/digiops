@@ -36,14 +36,25 @@ function get-cluster-config {
         if [[ -z ${kops_cluster_suffix} ]]; then
             kops_cluster_name=${kops_cluster_prefix}.${kops_env}.${kops_project}.k8s.local
         else
-            kops_cluster_name=${kops_cluster_prefix}.${kops_env}.${kops_cluster_suffix}
+            kops_cluster_name=${kops_cluster_prefix}.${kops_env}.${kops_project}.${kops_cluster_suffix}
         fi
     fi
   
     kops_region=$(get-config-value "cloud.project.region")
     kops_master_zones=$(get-config-value "cloud.project.zone")
     kops_worker_zones=$(get-config-value "cloud.project.zone")
-
+    kops_master_count_min=$(get-config-value "cluster.kops.master.countMin")
+    kops_master_count_max=$(get-config-value "cluster.kops.master.countMax")
+    kops_master_size=$(get-config-value "cluster.kops.master.size")
+    kops_master_volume_size=$(get-config-value "cluster.kops.master.volumeSize")
+    kops_master_image=$(get-config-value "cluster.kops.master.image")
+    kops_node_count_min=$(get-config-value "cluster.kops.node.countMin")
+    kops_node_count_max=$(get-config-value "cluster.kops.node.countMax")
+    kops_node_size=$(get-config-value "cluster.kops.node.size")
+    kops_node_volume_size=$(get-config-value "cluster.kops.node.volumeSize")
+    kops_node_image=$(get-config-value "cluster.kops.node.image")
+    kops_associate_public_ip=$(get-config-value "cluster.kops.associatePublicIp")
+    
 }
 
 function validate-cluster {
@@ -179,24 +190,24 @@ function create-cluster {
     if [[ ${__kops_exit_status} -gt 0 ]]; then
  
         #create cluster
-        kops create cluster                     \
-            --name=${kops_cluster_name}         \
-            --cloud=${kops_cloud}               \
-            --project=${kops_project}           \
-            --master-zones=${kops_master_zones} \
-            --zones=${kops_worker_zones}        \
-            --cloud-labels=${kops_env_type}     \
-            --master-count=1                    \
-            --master-size=g1-small              \
-            --master-volume-size=10             \
-            --node-count=2                      \
-            --node-size=g1-small                \
-            --node-volume-size=10               \
-            --associate-public-ip=false         \
-            --api-loadbalancer-type=public      \
-            --authorization=RBAC                \
-            --etcd-storage-type=pd-standard     \
-            --state=${kops_state_store}         \
+        kops create cluster                     		\
+            --name=${kops_cluster_name}         		\
+            --cloud=${kops_cloud}               		\
+            --project=${kops_project}           		\
+            --master-zones=${kops_master_zones} 		\
+            --zones=${kops_worker_zones}        		\
+            --cloud-labels=${kops_env_type}     		\
+            --master-count=${kops_master_count_min}           	\
+            --master-size=${kops_master_size}   		\
+            --master-volume-size=${kops_master_volume_size}   	\
+            --node-count=${kops_node_count_min}               	\
+            --node-size=${kops_node_size}       		\
+            --node-volume-size=${kops_node_volume_size}       	\
+            --associate-public-ip=${kops_associate_public_ip} 	\
+            --api-loadbalancer-type=public      		\
+            --authorization=RBAC                		\
+            --etcd-storage-type=pd-standard     		\
+            --state=${kops_state_store}         		\
             --yes
 
         __kops_exit_status=$?
@@ -287,15 +298,30 @@ function stop-cluster {
         exit 1
     fi
     
-    ig_zero_master_config="${digi_dir}config/templates/ig-zero-master-config-template.yaml"
-    ig_zero_node_config="${digi_dir}config/templates/ig-zero-node-config-template.yaml"
+    ig_master_config="${digi_dir}config/templates/ig-master-config-template.yaml"
+    ig_node_config="${digi_dir}config/templates/ig-node-config-template.yaml"
     
-    #kops replace -f=${ig_zero_master_config} --state=${kops_state_store}
+    #Need to export env var due to envsubst
     export kops_cluster_name=${kops_cluster_name}
+    export kops_associate_public_ip=${kops_associate_public_ip}
+    export kops_region=${kops_region}
+    
+    export kops_master_image=${kops_master_image}
+    export kops_master_size=${kops_master_size}
+    export kops_master_count_max=0
+    export kops_master_count_min=0
     export kops_master_zones=${kops_master_zones}
+    export kops_master_volume_size=${kops_master_volume_size}
+    export kops_master_zones=${kops_master_zones}
+    
+    export kops_node_image=${kops_node_image}
+    export kops_node_size=${kops_node_size}
+    export kops_node_count_max=0
+    export kops_node_count_min=0
+    export kops_node_volume_size=${kops_node_volume_size}
+    export kops_worker_zones=${kops_worker_zones}
+        
     cat ${ig_zero_master_config} | envsubst | kops replace -f - --state=${kops_state_store}
-    #kops replace -f=${ig_zero_node_config} --state=${kops_state_store}
-    export kops_worker_zones=${kops_worker_zones}	
     cat ${ig_zero_node_config} | envsubst | kops replace -f - --state=${kops_state_store}
 
     update-cluster

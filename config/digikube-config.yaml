@@ -41,8 +41,8 @@ cluster:
     featureFlags: "AlphaAllowGCE"
     env: "dev1"
     name: "<dynamic>"
-      prefix: 
-      suffix: 
+      prefix: "c1" 
+      suffix: "kube.local"
     master:
       countMin: 1
       countMax: 1

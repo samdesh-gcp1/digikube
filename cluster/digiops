@@ -326,6 +326,8 @@ function stop-cluster {
 
     update-cluster
 
+    get-cluster-config
+
     resources_name=${kops_cluster_name}
     echo ${resource_name}
     resource_name=${resource_name//[_.]/-}

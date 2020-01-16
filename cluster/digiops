@@ -277,8 +277,11 @@ function stop-cluster {
     update-cluster
 
     resources_name=${kops_cluster_name}
+    echo ${resource_name}
     resource_name=${resource_name//[_.]/-}
+    echo ${resource_name}
     resource_name=api-${resource_name}
+    echo ${resource_name}
 
     echo "Waiting for 120 seconds for cluster to shutdown"
     sleep 120

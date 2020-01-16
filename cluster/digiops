@@ -330,7 +330,7 @@ function stop-cluster {
 
     res_name=${tempClusterName}
     echo ${res_name}
-    resource_name=${res_name//[_.]/-}
+    res_name=${res_name//[_.]/-}
     echo ${res_name}
     res_name=api-${res_name}
     echo ${res_name}

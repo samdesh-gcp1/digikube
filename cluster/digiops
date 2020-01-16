@@ -68,28 +68,46 @@ function validate-cluster {
         exit 1
     fi
     
-    __kops_exit_status=1
-    __loop_count=0
-    __max_loop_count=60
-    __loop_sleep_duration=5 
-    
-    while [ ${__kops_exit_status} -gt 0 ]
-    do
-        kops validate cluster --state=${kops_state_store}
-        __kops_exit_status=$?
-        __loop_count=${__loop_count}+1
-        if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
-            break
-        fi
-        sleep ${__loop_sleep_duration}
-    done
-    
-    if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
-        #This is timeout condition
-        log_it "${__function_name}" "installer" "ERR" "2110" "Timeout while validating cluster"
+    __clusterNodeCount=$(kops get ig nodes --state=${kops_state_store} -o yaml | awk '/maxSize:/ {print $2}')
+     __kops_exit_status=$?
+    if [[ ${__kops_exit_status} -gt 0 ]]; then
+        log_it "${__function_name}" "installer" "ERR" "2110" "Error while checking the current status of the cluster"
         exit 1
+    fi
+    
+    if [[ -z ${__clusterNodeCount} ]]; then
+    	log_it "${__function_name}" "installer" "ERR" "2111" "Error while checking the current status of the cluster"
+        exit 1
+    fi
+    
+    if [[ ${__clusterNodeCount} -eq 0 ]]; then
+    	log_it "${__function_name}" "installer" "WARN" "2112" "Current status of the cluster is shutdown."
     else
-        log_it "${__function_name}" "installer" "DEBUG" "2110" "Cluster validated"
+    	
+    	__kops_exit_status=1
+    	__loop_count=0
+    	__max_loop_count=60
+    	__loop_sleep_duration=5 
+    
+	while [ ${__kops_exit_status} -gt 0 ]
+    	do
+        	kops validate cluster --state=${kops_state_store}
+        	__kops_exit_status=$?
+        	__loop_count=${__loop_count}+1
+        	if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
+            	break
+        	fi
+        	sleep ${__loop_sleep_duration}
+    	done
+    
+    	if [[ ${__loop_count} -gt ${__max_loop_count} ]]; then
+	        #This is timeout condition
+	        log_it "${__function_name}" "installer" "ERR" "2110" "Timeout while validating cluster"
+	        exit 1
+    	else
+	        log_it "${__function_name}" "installer" "DEBUG" "2110" "Cluster validated"
+    	fi
+    
     fi
 
 }
@@ -128,7 +146,7 @@ function update-cluster {
         log_it "${__function_name}" "installer" "ERR" "2110" "Error while updating cluster"
         exit 1
     else
-        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster updated successfully.  Waiting for initialization"
+        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster updated successfully."
     fi
     
     validate-cluster

@@ -118,23 +118,23 @@ function update-cluster {
         exit 1
     fi
     
-#    #TODO: Need to get updated cluster configurations and apply
-#    kops update cluster                   \
-#        --state=${kops_state_store}
-#        
-#    __kops_exit_status=$?
-#    if [[ ${__kops_exit_status} -gt 0 ]]; then 
-#        log_it "${__function_name}" "installer" "ERR" "2110" "Error while updating cluster"
-#        exit 1
-#    else
-#        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster updated successfully.  Waiting for initialization"
-#    fi
-#    
-#    validate-cluster
-#    __kops_exit_status=$?
-#    if [[ ${__kops_exit_status} -gt 0 ]]; then 
-#        exit 1
-#    fi
+    #TODO: Need to get updated cluster configurations and apply
+    kops update cluster                   \
+        --state=${kops_state_store}
+        
+    __kops_exit_status=$?
+    if [[ ${__kops_exit_status} -gt 0 ]]; then 
+        log_it "${__function_name}" "installer" "ERR" "2110" "Error while updating cluster"
+        exit 1
+    else
+        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster updated successfully.  Waiting for initialization"
+    fi
+    
+    validate-cluster
+    __kops_exit_status=$?
+    if [[ ${__kops_exit_status} -gt 0 ]]; then 
+        exit 1
+    fi
     
 }
 

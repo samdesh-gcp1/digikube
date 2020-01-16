@@ -321,8 +321,8 @@ function stop-cluster {
     export kops_node_volume_size=${kops_node_volume_size}
     export kops_worker_zones=${kops_worker_zones}
         
-    cat ${ig_zero_master_config} | envsubst | kops replace -f - --state=${kops_state_store}
-    cat ${ig_zero_node_config} | envsubst | kops replace -f - --state=${kops_state_store}
+    cat ${ig_master_config} | envsubst | kops replace -f - --state=${kops_state_store}
+    cat ${ig_node_config} | envsubst | kops replace -f - --state=${kops_state_store}
 
     update-cluster
 
@@ -391,8 +391,8 @@ function start-cluster {
     export kops_node_volume_size=${kops_node_volume_size}
     export kops_worker_zones=${kops_worker_zones}
     
-    cat ${ig_zero_master_config} | envsubst | kops replace -f - --state=${kops_state_store}
-    cat ${ig_zero_node_config} | envsubst | kops replace -f - --state=${kops_state_store}
+    cat ${ig_master_config} | envsubst | kops replace -f - --state=${kops_state_store}
+    cat ${ig_node_config} | envsubst | kops replace -f - --state=${kops_state_store}
 
     update-cluster
  

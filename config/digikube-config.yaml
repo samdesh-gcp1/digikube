@@ -42,7 +42,7 @@ cluster:
     env: "dev1"
     name: "<dynamic>"
       prefix: "c1" 
-      suffix: "kube.local"
+      suffix: "k8s.local"
     master:
       countMin: 1
       countMax: 1

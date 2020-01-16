@@ -286,7 +286,9 @@ function stop-cluster {
         log_it "${__function_name}" "installer" "ERR" "2110" "Error while getting cluster configuration details"
         exit 1
     fi
-
+    
+    tempClusterName=${kops_cluster_name}
+    
     #First check if cluster available with the same name
     kops get cluster                     \
         --name=${kops_cluster_name}      \
@@ -326,23 +328,21 @@ function stop-cluster {
 
     update-cluster
 
-    get-cluster-config
-
-    resources_name=${kops_cluster_name}
-    echo ${resource_name}
-    resource_name=${resource_name//[_.]/-}
-    echo ${resource_name}
-    resource_name=api-${resource_name}
-    echo ${resource_name}
+    res_name=${tempClusterName}
+    echo ${res_name}
+    resource_name=${res_name//[_.]/-}
+    echo ${res_name}
+    res_name=api-${res_name}
+    echo ${res_name}
 
     echo "Waiting for 120 seconds for cluster to shutdown"
     sleep 120
     echo "Deleting additional cloud resources"
-    gcloud compute forwarding-rules delete ${resource_name} --region=${kops_region} --quiet
+    gcloud compute forwarding-rules delete ${res_name} --region=${kops_region} --quiet
     sleep 30
-    gcloud compute addresses  delete ${resource_name} --region=${kops_region} --quiet
+    gcloud compute addresses  delete ${res_name} --region=${kops_region} --quiet
     sleep 30
-    gcloud compute target-pools delete ${resource_name} --region=${kops_region} --quiet
+    gcloud compute target-pools delete ${res_name} --region=${kops_region} --quiet
 
 }
 

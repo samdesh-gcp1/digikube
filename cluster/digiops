@@ -229,18 +229,18 @@ function delete-cluster {
         exit 1
     fi
     
-#    kops delete cluster                 \
-#        --name=${kops_cluster_name}     \
-#        --state=${kops_state_store}     \
-#        --yes
-#    
-#    __kops_exit_status=$?
-#    if [[ ${__kops_exit_status} -gt 0 ]]; then
-#        log_it "${__function_name}" "installer" "ERR" "2110" "Error while deleting cluster"
-#        exit 1
-#    else
-#        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster deleted"
-#    fi
+    kops delete cluster                 \
+        --name=${kops_cluster_name}     \
+        --state=${kops_state_store}     \
+        --yes
+    
+    __kops_exit_status=$?
+    if [[ ${__kops_exit_status} -gt 0 ]]; then
+        log_it "${__function_name}" "installer" "ERR" "2110" "Error while deleting cluster"
+        exit 1
+    else
+        log_it "${__function_name}" "installer" "INFO" "2110" "Cluster deleted"
+    fi
     
 }
 

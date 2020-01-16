@@ -6,7 +6,7 @@ function mark-x {
 
 function commit {
    local comment="${1}"
-   git commit -m "${comment}"
+   git commit -a -m "${comment}"
 }
 
 function checkout {

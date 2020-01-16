@@ -3,7 +3,7 @@ kind: InstanceGroup
 metadata:
   labels:
     kops.k8s.io/cluster: ${kops_cluster_name}
-  name: ${kops_master_zones}
+  name: master-${kops_master_zones}
 spec:
   associatePublicIp: false
   image: cos-cloud/cos-stable-65-10323-99-0

@@ -330,8 +330,11 @@ if [[ $# -gt 0 ]]; then
     action_option=${1}
     case ${action_option} in 
 		"delete-cluster")
-                            delete-cluster
-                            ;;
+                		delete-cluster
+                            	;;
+		"stop-cluster")
+				stop-cluster
+				;;
         *)
     esac
 

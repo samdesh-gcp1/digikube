@@ -1,0 +1,58 @@
+cloud:
+  provider: "gce"
+  adminUser: "samdesh_gcp1"
+  project:
+    name: "digikube003"
+      overrideAllowed: "no"  
+    region: "us-central1"
+    zone: "us-central1-c"
+    vpc: "<dynamic>"
+  bucket:
+    nameSuffix: "bucket"
+    name: "<dynamic>"
+    class: "STANDARD"
+  bastionHost:
+    namePrefix: "bastion-host"
+    machineType: "f1-micro"
+    networkTier: "STANDARD"
+    preemptible: "Yes"
+    tagIdentifier: "bastion-host"
+    tags: "http-server,https-server"
+    image: "ubuntu-1804-bionic-v20191211"
+    imageProject: "ubuntu-os-cloud"
+    bootDiskSize: "10GB"
+    bootDiskType: "pd-standard"
+    labels: "type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"
+gitConfig:
+  digikube:
+    repository: "https://github.com/samdesh-gcp1/digikube.git"
+    user: "samdesh.gcp1@gmail.com"
+component:
+  kubectl:
+    version: "1.15"
+    url: "https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl"
+    localPath: "/usr/local/bin/kubectl"
+  kops:
+    version: "1.15.0"
+    url: "https://github.com/kubernetes/kops/releases/download/1.15.0/kops-linux-amd64"
+    localPath: "/usr/local/bin/kops"
+cluster:
+  kops:
+    featureFlags: "AlphaAllowGCE"
+    env: "dev1"
+    name: "<dynamic>"
+      prefix: "c1" 
+      suffix: "k8s.local"
+    master:
+      countMin: 1
+      countMax: 1
+      size: "g1-small"
+      volumeSize: 10
+      image: "cos-cloud/cos-stable-65-10323-99-0"
+    node:
+      countMin: 2
+      countMax: 2
+      size: "g1-small"
+      volumeSize: 10
+      image: "cos-cloud/cos-stable-65-10323-99-0"
+    associatePublicIp: "false"  

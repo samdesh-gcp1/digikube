@@ -34,7 +34,7 @@ component:
     localPath: "/usr/local/bin/kubectl"
   kops:
     version: "1.17.0"
-    url: "gs://digikube-bucket/digikube-package/kops-bin/"
+    url: "gs://digikube-bucket/digikube-package/kops-bin/kopsp"
     localPath: "/usr/local/bin/kops"
 cluster:
   kops:

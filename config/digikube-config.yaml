@@ -33,8 +33,8 @@ component:
     url: "https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl"
     localPath: "/usr/local/bin/kubectl"
   kops:
-    version: "1.15.0"
-    url: "https://github.com/kubernetes/kops/releases/download/1.15.0/kops-linux-amd64"
+    version: "1.17.0"
+    url: "gs://digikube-bucket/digikube-package/kops-bin/"
     localPath: "/usr/local/bin/kops"
 cluster:
   kops:

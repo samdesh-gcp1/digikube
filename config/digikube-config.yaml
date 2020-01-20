@@ -49,8 +49,8 @@ cluster:
       prefix: "c1" 
       suffix: "k8s.local"
     master:
-      countMin: 1
-      countMax: 1
+      countMin: 3
+      countMax: 3
       size: "g1-small"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"

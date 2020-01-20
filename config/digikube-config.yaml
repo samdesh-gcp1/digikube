@@ -36,10 +36,10 @@ component:
     version: "1.17.0"
     localPath: "/usr/local/bin/kops"
     kopsp:
-      url: "https://github.com/samdesh-gcp1/digikube/tree/master/bin/kopsp.tar.gz"
+      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/kopsp.tar.gz"
       localPath: "/usr/local/bin/kopsp"
     kopsn:
-      url: "https://github.com/samdesh-gcp1/digikube/tree/master/bin/kops.tar.gz"
+      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/kops.tar.gz"
       localPath: "/usr/local/bin/kopsn"
 cluster:
   kops:

@@ -51,6 +51,19 @@ else
 
         log_it "${__function_name}" "installer" "DEBUG" "1250" "Downloaded kops binary at: ${kops_binary}"
         
+        file ${kops_binary} | grep gzip
+        if [[ $? -gt 0 ]]; then
+            log_it "${__function_name}" "installer" "INFO" "1255" "kops binary is compressed file.  Need to unzip."
+            kops_binary_compressed=${kops_binary}
+            unzip_file ${kops_binary_compressed} ${kops_binary}
+            if [[ $? -gt 0 ]]; then
+                log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping kops binary"
+                exit 1
+            else
+                log_it "${__function_name}" "installer" "DEBUG" "1260" "Unzipped kops binary"
+            fi
+        fi
+        
         chmod +x ${kops_binary}
         if [[ $? -gt 0 ]]; then
             log_it "${__function_name}" "installer" "ERR" "1255" "Error while changing the file perimissions for the downloaded kops binary"

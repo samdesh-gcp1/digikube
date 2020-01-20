@@ -18,7 +18,7 @@ kops_download_version=${__config_component_kops_version}
 log_it "${__function_name}" "installer" "DEBUG" "1215" "Target version of kops-p to be installed is: $kops_download_version"
 
 kops_existing_version=""
-kops_download_url=${__config_component_kopsp_url}
+kops_download_url=${__config_component_kops_kopsp_url}
 log_it "${__function_name}" "installer" "DEBUG" "1220" "Kops-p download site is: $kops_download_url"
 
 kops_existing_path=$(which kopsp)
@@ -75,7 +75,7 @@ else
         kops_download_version=$($kops_binary version | cut -d " " -f 2)
         log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded kops-p version is: $kops_download_version"
         
-        kops_local_path=${__config_component_kopsp_localPath}
+        kops_local_path=${__config_component_kops_kopsp_localPath}
         sudo mv ${kops_binary} ${kops_local_path}
         _exit_code=$?
         if [[ $? -gt 0 ]]; then
@@ -103,7 +103,7 @@ else
             exit 1
         fi
         
-        kops_inpath_version=$(kops version | cut -d " " -f 2)
+        kops_inpath_version=$(kopsp version | cut -d " " -f 2)
         if [[ "${kops_inpath_version}" = "${kops_download_version}" ]]; then
             log_it "${__function_name}" "installer" "DEBUG" "1286" "kops-p binary in path has version: $kops_download_version"
             log_it "${__function_name}" "installer" "INFO" "1288" "Successfully installed kops-p version: $kops_download_version"

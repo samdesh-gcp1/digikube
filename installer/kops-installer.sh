@@ -68,6 +68,14 @@ else
     else        
       if [[ -f "${kops_local_path}" ]]; then
         log_it "${__function_name}" "installer" "DEBUG" "1274" "Moved kops shell to ${kops_local_path}"
+        
+        chmod +x ${kops_local_path}
+        if [[ $? -gt 0 ]]; then
+            log_it "${__function_name}" "installer" "ERR" "1255" "Error while changing the file perimissions for the kops shell"
+            exit 1
+        else
+            log_it "${__function_name}" "installer" "DEBUG" "1260" "Changed the access permission of kops shell"
+        fi
       else
         log_it "${__function_name}" "installer" "ERR" "1278" "Error while moving kops shell to ${kops_local_path}"
         exit 1

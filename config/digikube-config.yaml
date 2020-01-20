@@ -51,14 +51,14 @@ cluster:
     master:
       countMin: 3
       countMax: 3
-      zones: "us-central1-a,us-central1-b,us-central1-c"
+      zone: "us-central1-a,us-central1-b,us-central1-c"
       size: "g1-small"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"
     node:
       countMin: 3
       countMax: 3
-      zones: "us-central1-a,us-central1-b,us-central1-c"
+      zone: "us-central1-a,us-central1-b,us-central1-c"
       size: "g1-small"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"

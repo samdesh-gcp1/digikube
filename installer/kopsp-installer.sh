@@ -53,7 +53,7 @@ else
         
         file ${kops_binary} | grep gzip
         if [[ $? -gt 0 ]]; then
-            var1="'
+            var1=""
         else
             log_it "${__function_name}" "installer" "INFO" "1255" "kops-p binary is compressed file.  Need to unzip."
             kops_binary_compressed=${kops_binary}

@@ -34,8 +34,13 @@ component:
     localPath: "/usr/local/bin/kubectl"
   kops:
     version: "1.17.0"
-    url: "https://github.com/samdesh-gcp1/digikube/tree/master/bin/kopsp.tar.gz"
     localPath: "/usr/local/bin/kops"
+    kopsp:
+      url: "https://github.com/samdesh-gcp1/digikube/tree/master/bin/kopsp.tar.gz"
+      localPath: "/usr/local/bin/kopsp"
+    kopsn:
+      url: "https://github.com/samdesh-gcp1/digikube/tree/master/bin/kops.tar.gz"
+      localPath: "/usr/local/bin/kopsn"
 cluster:
   kops:
     featureFlags: "AlphaAllowGCE"

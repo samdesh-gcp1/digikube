@@ -31,9 +31,8 @@ fi
 kops_download_version=${__config_component_kops_version}
 log_it "${__function_name}" "installer" "DEBUG" "1215" "Target version of kops to be installed is: $kops_download_version"
 
-#kops_existing_version=""
-#kops_download_url=${__config_component_kopsn_url}
-#log_it "${__function_name}" "installer" "DEBUG" "1220" "Kops-n download site is: $kops_download_url"
+kops_existing_version=""
+kops_shell_file=${digi_dir}installer/kops
 
 kops_existing_path=$(which kops)
 if [[ $? -gt 0 ]]; then
@@ -44,10 +43,12 @@ if [[ -f ${kops_existing_path} ]]; then
 
     file ${kops_existing_path} | grep ASCII
     if [[ $? -gt 0 ]]; then
+        log_it "${__function_name}" "installer" "WARN" "1225" "Probably kops shell already available at path: ${kops_existing_path}.  Removing."
         sudo rm ${kops_existing_path}
     else
         file ${kops_existing_path} | grep symbolic
         if [[ $? -gt 0 ]]; then
+            log_it "${__function_name}" "installer" "WARN" "1225" "Probably softlink to kops binary already available at path: ${kops_existing_path}.  Removing."
             sudo rm ${kops_existing_path}
         else
             log_it "${__function_name}" "installer" "INFO" "1230" "Kops binary already available at path: ${kops_existing_path}.  Renaming."
@@ -77,7 +78,7 @@ else
     kops_new_path=$(which kops)
     if [[ $? -gt 0 ]]; then
         log_it "${__function_name}" "installer" "ERR" "1280" "Error while checking if kops shell is in path"
-            exit 1
+        exit 1
     fi
     if [[ "${kops_new_path}" = "${kops_local_path}" ]]; then
         log_it "${__function_name}" "installer" "DEBUG" "1282" "kops shell is in path"

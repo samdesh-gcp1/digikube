@@ -53,9 +53,10 @@ function unzip_file {
       eval $__resultvar="''"
       exit 1
    else
-      source_file=$1                                                     #should check the format
-      dest_file_name="${dest_file_path}digikube-${RANDOM}"
-      tar -xzvf ${dest_file_name} ${source_file}
+      source_file=$1
+      unzipped_file_name=$2
+      dest_file_name="${dest_file_path}${unzipped_file_name}"
+      tar -xzvf --overwrite ${source_file}
       __exit_code=$?
       if [[ $__exit_code -eq 0 ]]; then
          if [[ -f $dest_file_name ]]; then

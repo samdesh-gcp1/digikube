@@ -14,11 +14,11 @@ parse_yaml ${digikube_config} "__config_"
 
 log_it "${__function_name}" "installer" "INFO" "1210" "Started the kops-n installation process"
 
-kops_download_version=${__config_component_kopsn_version}
+kops_download_version=${__config_component_kops_version}
 log_it "${__function_name}" "installer" "DEBUG" "1215" "Target version of kops-n to be installed is: $kops_download_version"
 
 kops_existing_version=""
-kops_download_url=${__config_component_kopsn_url}
+kops_download_url=${__config_component_kops_kopsn_url}
 log_it "${__function_name}" "installer" "DEBUG" "1220" "Kops-n download site is: $kops_download_url"
 
 kops_existing_path=$(which kopsn)
@@ -55,7 +55,7 @@ else
         if [[ $? -gt 0 ]]; then
             log_it "${__function_name}" "installer" "INFO" "1255" "kops-n binary is compressed file.  Need to unzip."
             kops_binary_compressed=${kops_binary}
-            unzip_file ${kops_binary_compressed} ${kops_binary}
+            unzip_file ${kops_binary_compressed} kops_binary
             if [[ $? -gt 0 ]]; then
                 log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping kops-n binary"
                 exit 1
@@ -75,7 +75,7 @@ else
         kops_download_version=$($kops_binary version | cut -d " " -f 2)
         log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded kops-n version is: $kops_download_version"
         
-        kops_local_path=${__config_component_kopsn_localPath}
+        kops_local_path=${__config_component_kops_kopsn_localPath}
         sudo mv ${kops_binary} ${kops_local_path}
         _exit_code=$?
         if [[ $? -gt 0 ]]; then

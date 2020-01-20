@@ -41,13 +41,13 @@ function get-cluster-config {
     fi
   
     kops_region=$(get-config-value "cloud.project.region")
-    kops_master_zones=$(get-config-value "cloud.project.zone")
-    kops_worker_zones=$(get-config-value "cloud.project.zone")
+    kops_master_zones=$(get-config-value "cluster.kops.master.zone")
     kops_master_count_min=$(get-config-value "cluster.kops.master.countMin")
     kops_master_count_max=$(get-config-value "cluster.kops.master.countMax")
     kops_master_size=$(get-config-value "cluster.kops.master.size")
     kops_master_volume_size=$(get-config-value "cluster.kops.master.volumeSize")
     kops_master_image=$(get-config-value "cluster.kops.master.image")
+    kops_worker_zones=$(get-config-value "cluster.kops.node.zone")
     kops_node_count_min=$(get-config-value "cluster.kops.node.countMin")
     kops_node_count_max=$(get-config-value "cluster.kops.node.countMax")
     kops_node_size=$(get-config-value "cluster.kops.node.size")

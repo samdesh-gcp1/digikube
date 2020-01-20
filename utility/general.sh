@@ -38,6 +38,43 @@ function download_file {
    fi
 }
 
+function unzip_file {
+   
+   local __function_name="unzip_file"
+   local __resultvar=""
+   local __exit_code=0
+
+   local source_url
+   local dest_file_path="/tmp/"
+   local dest_file_name=""
+   
+   if [ $# -lt 2 ]; then
+      echo "Error: ${__function_name} : Insufficient arguments provided."
+      eval $__resultvar="''"
+      exit 1
+   else
+      source_file=$1                                                     #should check the format
+      dest_file_name="${dest_file_path}digikube-${RANDOM}"
+      tar -xzvf ${dest_file_name} ${source_file}
+      __exit_code=$?
+      if [[ $__exit_code -eq 0 ]]; then
+         if [[ -f $dest_file_name ]]; then
+                __resultvar=$2
+                eval $__resultvar="'$dest_file_name'"
+         else
+                echo "Error: ${__function_name} : Error while unzipping file: $dest_file_name from: $source_file.  Unable to access unzipped file."
+                eval $__resultvar="''"
+                exit 1
+         fi
+      else
+         echo "Error: ${__function_name}: Error while unzipping file: $dest_file_name from: $source_file.  Command tar returned non zero exit code."
+         eval $__resultvar="''"
+         exit 1
+      fi
+   fi
+   
+}
+
 function parse_yaml_temp {
    local __function_name="parse_yaml_temp"
    local prefix=$2

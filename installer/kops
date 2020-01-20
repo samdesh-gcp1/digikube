@@ -1,8 +1,6 @@
 #!/bin/bash
 # kops shell
 
-preemptible
-
 __function_name="kops"
 
 base_dir=~/

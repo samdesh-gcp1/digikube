@@ -60,7 +60,7 @@ else
 
     #kops not available.  Download and install
     kops_local_path=${__config_component_kops_localPath}
-    sudo cp ${kops_shell_file} ${kops_local_path}
+    sudo cp --preserve ${kops_shell_file} ${kops_local_path}
     _exit_code=$?
     if [[ $? -gt 0 ]]; then
       log_it "${__function_name}" "installer" "ERR" "1270" "Error while copying kops shell to ${kops_local_path}"

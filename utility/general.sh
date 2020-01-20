@@ -48,7 +48,7 @@ function unzip_file {
    local dest_file_path="/tmp/"
    local dest_file_name=""
    
-   if [ $# -lt 2 ]; then
+   if [ $# -lt 3 ]; then
       echo "Error: ${__function_name} : Insufficient arguments provided."
       eval $__resultvar="''"
       exit 1
@@ -60,7 +60,7 @@ function unzip_file {
       __exit_code=$?
       if [[ $__exit_code -eq 0 ]]; then
          if [[ -f $dest_file_name ]]; then
-                __resultvar=$2
+                __resultvar=$3
                 eval $__resultvar="'$dest_file_name'"
          else
                 echo "Error: ${__function_name} : Error while unzipping file: $dest_file_name from: $source_file.  Unable to access unzipped file."

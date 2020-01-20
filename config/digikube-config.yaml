@@ -58,7 +58,7 @@ cluster:
     node:
       countMin: 3
       countMax: 3
-      zone: "us-central1-c,us-central1-b,us-east1-a"
+      zone: "us-central1-c,us-central1-b,us-west1-a"
       size: "g1-small"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"

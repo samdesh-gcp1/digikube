@@ -33,7 +33,7 @@ component:
     url: "https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl"
     localPath: "/usr/local/bin/kubectl"
   kops:
-    version: "1.17.0"
+    version: "1.17.0-alpha.1"
     localPath: "/usr/local/bin/kops"
     kopsp:
       url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/kopsp.tar.gz"

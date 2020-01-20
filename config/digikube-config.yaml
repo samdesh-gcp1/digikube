@@ -63,4 +63,4 @@ cluster:
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"
     associatePublicIp: "false"  
-    preemptible: "true"
+    preemptible: "false"

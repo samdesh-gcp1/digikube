@@ -11,9 +11,6 @@ ${kubectl_installer}
 kops_installer=${digi_dir}installer/kops-installer.sh
 ${kops_installer}
 
-kopsp_installer=${digi_dir}installer/kopsp-installer.sh
-${kopsp_installer}
-
 #cluster_installer=${digi_dir}cluster/cluster-installer.sh
 #${cluster_installer}
 

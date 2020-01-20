@@ -1,0 +1,23 @@
+#!/bin/bash
+# kops shell
+
+preemptible
+
+__function_name="kops"
+
+base_dir=~/
+digi_dir=${base_dir}digikube/
+
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
+
+digikube_config=${digi_dir}config/digikube-config.yaml
+parse_yaml ${digikube_config} "__config_"
+
+kops_preemptible=${__config_cluster_kops_preemptible}
+
+if [[ "${kops_preemptible}" = "true" ]]; then
+  kopsp "$@"
+else
+  kopsn "$@"
+fi

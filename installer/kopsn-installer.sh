@@ -55,7 +55,8 @@ else
         if [[ $? -gt 0 ]]; then
             log_it "${__function_name}" "installer" "INFO" "1255" "kops-n binary is compressed file.  Need to unzip."
             kops_binary_compressed=${kops_binary}
-            unzip_file ${kops_binary_compressed} kops_binary
+            kops_binary="kops"
+            unzip_file ${kops_binary_compressed} ${kops_binary}
             if [[ $? -gt 0 ]]; then
                 log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping kops-n binary"
                 exit 1

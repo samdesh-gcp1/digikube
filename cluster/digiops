@@ -17,6 +17,7 @@ if [[ $# -gt 0 ]]; then
 	    	sys_app_name="${2}"
 	    	command_name="${3}"
 	    	command_param="${4}"
+		echo "${cluster_controller} ${sys_app_name} ${command_name} ${command_param} "
 			${cluster_controller} ${sys_app_name} ${command_name} ${command_param} 
 		else
 			echo "Unknown scope ${scope_name}"

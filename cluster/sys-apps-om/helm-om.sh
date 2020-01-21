@@ -1,1 +1,12 @@
-a
+function deploy {
+
+}
+
+function delete {
+
+}
+
+function update {
+
+
+}

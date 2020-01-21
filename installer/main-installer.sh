@@ -17,8 +17,7 @@ if [[ $? -gt 0 ]]; then
     exit 1
 fi
 
-. ${digi_ops_executer}
-create-cluster
+${digi_ops_executer} cluster create
 if [[ $? -gt 0 ]]; then
     exit 1
 fi

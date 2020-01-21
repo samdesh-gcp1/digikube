@@ -14,11 +14,11 @@ if [[ $# -gt 0 ]]; then
 		${cluster_controller} ${command_name} ${command_param}
 	else
 		if [[ "${scope_name}" == "sys-apps" ]]; then
-	    	sys_app_name="${2}"
-	    	command_name="${3}"
-	    	command_param="${4}"
-		echo "${cluster_controller} ${sys_app_name} ${command_name} ${command_param} "
-			${cluster_controller} ${sys_app_name} ${command_name} ${command_param} 
+	    		sys_app_name="${2}"
+	    		command_name="${3}"
+	    		command_param="${4}"
+			echo "${sys_app_controller} ${sys_app_name} ${command_name} ${command_param} "
+			${sys_app_controller} ${sys_app_name} ${command_name} ${command_param} 
 		else
 			echo "Unknown scope ${scope_name}"
 		fi

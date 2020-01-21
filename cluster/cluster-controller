@@ -399,3 +399,19 @@ function start-cluster {
     update-cluster
  
 }
+
+if [[ $# -gt 0 ]]; then
+	command_name="${1}"
+	case ${command_name} in 
+		"delete-cluster")
+        	delete-cluster
+            ;;
+		"stop-cluster")
+    		stop-cluster
+	    	;;
+		"start-cluster")
+			start-cluster
+		   	;;
+        *)
+    esac
+fi

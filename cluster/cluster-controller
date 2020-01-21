@@ -403,15 +403,18 @@ function start-cluster {
 if [[ $# -gt 0 ]]; then
 	command_name="${1}"
 	case ${command_name} in 
-		"delete-cluster")
+		"delete")
         	delete-cluster
             ;;
-		"stop-cluster")
+		"stop")
     		stop-cluster
 	    	;;
-		"start-cluster")
+		"start")
 			start-cluster
 		   	;;
+		"create")
+			create-cluster
+			;;
         *)
     esac
 fi

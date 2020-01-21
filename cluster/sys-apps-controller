@@ -29,7 +29,7 @@ else
         #The app configuration is enabled
         echo "Application is enabled in configuration"
         sys_app_om_shell="${digi_dir}cluster/sys-apps-om/${sys_app_name}-om.sh"
-        is_command_enabled=$(get-config-value "cluster.sysApps.${sys_app_name}.om-commands.${sys_app_command}")
+        is_command_enabled=$(get-config-value "cluster.sysApps.${sys_app_name}.omCommands.${sys_app_command}")
         if [[ -z ${is_command_enabled} ]]; then
             #Command is not defined
             echo "Command is not defined in configuration"

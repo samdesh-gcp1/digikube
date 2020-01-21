@@ -70,7 +70,7 @@ cluster:
       version: "v3.0.2"
       url: "https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz"
       localPath: "/usr/local/bin/helm"
-      om-commands:
+      omCommands:
         deploy: "true"
         delete: "true"
         update: "true"

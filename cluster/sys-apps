@@ -20,3 +20,11 @@ function get-cluster-config {
     kops_feature_flags=${KOPS_FEATURE_FLAGS}
     kops_state_store=${KOPS_STATE_STORE}
     kops_cloud=$(get-config-value "cloud.provider")
+
+}
+
+function helm {
+
+
+
+}

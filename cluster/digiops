@@ -3,32 +3,23 @@
 base_dir=~/
 digi_dir=${base_dir}digikube/
 
-#. ${digi_dir}utility/general.sh
-#. ${digi_dir}utility/log.sh
-#. ${digi_dir}common/digikube-config.sh
+cluster_controller=${digi_dir}cluster/cluster-controller
+sys_app_controller=${digi_dir}cluster/sys-app-controller
 
-. ${digi_dir}cluster/cluster-controller.sh
-. ${digi_dir}cluster/sys-app-controller.sh
-
-scope_name="${1}"
-if [[ "${scope_name}" == "cluster" ]]; then
-    command_name="${2}"
-    case ${command_name} in 
-        "delete-cluster")
-            delete-cluster
-            ;;
-	    "stop-cluster")
-    	    stop-cluster
-	        ;;
-	    "start-cluster")
-		    start-cluster
-		    ;;
-        *)
-    esac
-else
-    app_name="${2}"
-    command_name="${3}"
-    command_param="${4}"
+if [[ $# -gt 0 ]]; then
+	scope_name="${1}"
+	if [[ "${scope_name}" == "cluster" ]]; then
+		command_name="${2}"
+	    command_param="${3}"
+		${cluster_controller} ${command_name} ${command_param}
+	else
+		if [[ "${scope_name}" == "sys-apps" ]]; then
+	    	sys_app_name="${2}"
+	    	command_name="${3}"
+	    	command_param="${4}"
+			${cluster_controller} ${sys_app_name} ${command_name} ${command_param} 
+		else
+			echo "Unknown scope ${scope_name}"
+		fi
+	fi
 fi
-
-

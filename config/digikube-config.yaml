@@ -64,3 +64,10 @@ cluster:
       image: "cos-cloud/cos-stable-65-10323-99-0"
     associatePublicIp: "false"  
     preemptible: "false"
+  sysApps:
+    helm:
+      version: "v3.0.2"
+      url: "https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz"
+      localPath: "/usr/local/bin/helm"
+      
+  

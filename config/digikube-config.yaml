@@ -49,21 +49,21 @@ cluster:
       prefix: "c1" 
       suffix: "k8s.local"
     master:
-      countMin: 3
-      countMax: 3
-      zone: "us-central1-a,us-central1-b,us-central1-c"
+      countMin: 1
+      countMax: 1
+      zone: "us-central1-c"
       size: "g1-small"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"
     node:
-      countMin: 3
-      countMax: 3
-      zone: "us-central1-a,us-central1-b,us-central1-c"
+      countMin: 2
+      countMax: 2
+      zone: "us-central1-c"
       size: "g1-small"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"
     associatePublicIp: "false"  
-    preemptible: "false"
+    preemptible: "true"
   sysApps:
     helm:
       enabled: "true"
@@ -74,5 +74,3 @@ cluster:
         deploy: "true"
         delete: "true"
         update: "true"
-      
-  

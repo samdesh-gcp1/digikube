@@ -39,8 +39,8 @@ function deploy {
         if [[ "$helm_existing_version" = "$helm_download_version" ]]; then
             log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing helm binary version is same as expected target version: ${helm_download_version}. Using the pre-existing helm binary."
         else
-            log_it "${__function_name}" "installer" "ERR" "1240" "Pre-existing helm binary version is: ${helm_existing_version}.  Target version of helm is: ${helm_download_version}. Aborting helm installation.  Remove existing helm binary and rerun the installation."
-            exit 1
+            log_it "${__function_name}" "installer" "WARN" "1240" "Pre-existing helm binary version is: ${helm_existing_version}.  Target version of helm is: ${helm_download_version}.  Backingup."
+			sudo mv ${helm_existing_path} ${helm_existing_path}-${RANDOM}-bkp
         fi 
     
     else

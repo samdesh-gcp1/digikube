@@ -67,8 +67,8 @@ cluster:
   sysApps:
     helm:
       enabled: "true"
-      version: "v2.6.1"
-      url: "https://get.helm.sh/helm-v2.6.1-linux-amd64.tar.gz"
+      version: "v2.16.1"
+      url: "https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz"
       localPath: "/usr/local/bin/helm"
       omCommands:
         deploy: "true"

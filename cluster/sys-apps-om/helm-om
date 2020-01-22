@@ -83,7 +83,7 @@ function deploy {
 	        helm_download_version=$($helm_binary version | cut -d '"' -f 2 )
 	        log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded helm version is: $helm_download_version"
         
-	        helm_local_path=${__config_component_helm_localPath}
+	        helm_local_path=${__config_cluster_sysApps_helm_localPath}
 	        sudo mv ${helm_binary} ${helm_local_path}
 	        _exit_code=$?
 	        if [[ $? -gt 0 ]]; then

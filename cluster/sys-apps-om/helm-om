@@ -132,3 +132,23 @@ function delete {
 function update {
     echo "Command 'helm update' not yet implemented"
 }
+
+
+if [[ $# -gt 0 ]]; then
+	command_name="${1}"
+	case ${command_name} in 
+		"delete")
+        	delete-cluster
+            ;;
+		"stop")
+    		stop-cluster
+	    	;;
+		"start")
+			start-cluster
+		   	;;
+		"deploy")
+			deploy
+			;;
+        *)
+    esac
+fi

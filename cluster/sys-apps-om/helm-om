@@ -34,44 +34,44 @@ function deploy {
     if [[ -f ${helm_existing_path} ]]; then
 
         log_it "${__function_name}" "installer" "INFO" "1230" "Helm binary already available at path: ${helm_existing_path}"
-        helm_existing_version=$(helm version | grep Client | cut -d '\"' -f 2 )
+#        helm_existing_version=$(helm version | grep Client | cut -d '\"' -f 2 )
         
-        if [[ "$helm_existing_version" = "$helm_download_version" ]]; then
-            log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing helm binary version is same as expected target version: ${helm_download_version}. Using the pre-existing helm binary."
-        else
-            log_it "${__function_name}" "installer" "ERR" "1240" "Pre-existing helm binary version is: ${helm_existing_version}.  Target version of helm is: ${helm_download_version}. Aborting helm installation.  Remove existing helm binary and rerun the installation."
-            exit 1
-        fi 
+#        if [[ "$helm_existing_version" = "$helm_download_version" ]]; then
+#            log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing helm binary version is same as expected target version: ${helm_download_version}. Using the pre-existing helm binary."
+#        else
+#            log_it "${__function_name}" "installer" "ERR" "1240" "Pre-existing helm binary version is: ${helm_existing_version}.  Target version of helm is: ${helm_download_version}. Aborting helm installation.  Remove existing helm binary and rerun the installation."
+#            exit 1
+#        fi 
     
-    else
+#    else
 
         #helm not available.  Download and install
-        download_file $helm_download_url helm_binary
-        if [[ $? -gt 0 ]]; then
-            log_it "${__function_name}" "installer" "ERR" "1245" "Error while downloading helm binary"
-            exit 1
-        fi
+#        download_file $helm_download_url helm_binary
+#        if [[ $? -gt 0 ]]; then
+#            log_it "${__function_name}" "installer" "ERR" "1245" "Error while downloading helm binary"
+#            exit 1
+#        fi
     
-        if [[ -f ${helm_binary} ]]; then
+#        if [[ -f ${helm_binary} ]]; then
 
-            log_it "${__function_name}" "installer" "DEBUG" "1250" "Downloaded helm binary at: ${helm_binary}"
+#            log_it "${__function_name}" "installer" "DEBUG" "1250" "Downloaded helm binary at: ${helm_binary}"
         
-            file ${helm_binary} | grep gzip
-            if [[ $? -gt 0 ]]; then
-                var1=""
-            else
-                log_it "${__function_name}" "installer" "INFO" "1255" "Helm binary is compressed file.  Need to unzip."
-                helm_binary_compressed=${helm_binary}
-                helm_file_name="helm"
-                helm_binary=""
-                unzip_file ${helm_binary_compressed} ${helm_file_name} lelm_binary
-            if [[ $? -gt 0 ]]; then
-                log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping helm binary"
-                exit 1
-            else
-                log_it "${__function_name}" "installer" "DEBUG" "1260" "Unzipped helm binary"
-            fi
-        fi
+#            file ${helm_binary} | grep gzip
+#            if [[ $? -gt 0 ]]; then
+#                var1=""
+#            else
+#                log_it "${__function_name}" "installer" "INFO" "1255" "Helm binary is compressed file.  Need to unzip."
+#                helm_binary_compressed=${helm_binary}
+#                helm_file_name="helm"
+#                helm_binary=""
+#                unzip_file ${helm_binary_compressed} ${helm_file_name} lelm_binary
+#            if [[ $? -gt 0 ]]; then
+#                log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping helm binary"
+#                exit 1
+#            else
+#                log_it "${__function_name}" "installer" "DEBUG" "1260" "Unzipped helm binary"
+#            fi
+#        fi
         
 #        chmod +x ${helm_binary}
 #        if [[ $? -gt 0 ]]; then

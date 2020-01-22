@@ -43,86 +43,86 @@ function deploy {
             exit 1
         fi 
     
-#    else
+    else
 
         #helm not available.  Download and install
-#        download_file $helm_download_url helm_binary
-#        if [[ $? -gt 0 ]]; then
-#            log_it "${__function_name}" "installer" "ERR" "1245" "Error while downloading helm binary"
-#            exit 1
-#        fi
+        download_file $helm_download_url helm_binary
+        if [[ $? -gt 0 ]]; then
+            log_it "${__function_name}" "installer" "ERR" "1245" "Error while downloading helm binary"
+            exit 1
+        fi
     
-#        if [[ -f ${helm_binary} ]]; then
+        if [[ -f ${helm_binary} ]]; then
+            log_it "${__function_name}" "installer" "DEBUG" "1250" "Downloaded helm binary at: ${helm_binary}"
+        
+            file ${helm_binary} | grep gzip
+            if [[ $? -gt 0 ]]; then
+                var1=""
+            else
+                log_it "${__function_name}" "installer" "INFO" "1255" "Helm binary is compressed file.  Need to unzip."
+                helm_binary_compressed=${helm_binary}
+                helm_file_name="helm"
+                helm_binary=""
+                unzip_file ${helm_binary_compressed} ${helm_file_name} lelm_binary
+	            if [[ $? -gt 0 ]]; then
+	                log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping helm binary"
+	                exit 1
+	            else
+	                log_it "${__function_name}" "installer" "DEBUG" "1260" "Unzipped helm binary"
+	            fi
+			fi
+        
+	        chmod +x ${helm_binary}
+	        if [[ $? -gt 0 ]]; then
+	            log_it "${__function_name}" "installer" "ERR" "1255" "Error while changing the file perimissions for the downloaded helm binary"
+	            exit 1
+	        else
+	            log_it "${__function_name}" "installer" "DEBUG" "1260" "Changed the access permission of helm binary"
+	        fi
 
-#            log_it "${__function_name}" "installer" "DEBUG" "1250" "Downloaded helm binary at: ${helm_binary}"
+	        helm_download_version=$($helm_binary version | grep Client | cut -d '\"' -f 2 )
+	        log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded helm version is: $helm_download_version"
         
-#            file ${helm_binary} | grep gzip
-#            if [[ $? -gt 0 ]]; then
-#                var1=""
-#            else
-#                log_it "${__function_name}" "installer" "INFO" "1255" "Helm binary is compressed file.  Need to unzip."
-#                helm_binary_compressed=${helm_binary}
-#                helm_file_name="helm"
-#                helm_binary=""
-#                unzip_file ${helm_binary_compressed} ${helm_file_name} lelm_binary
-#            if [[ $? -gt 0 ]]; then
-#                log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping helm binary"
-#                exit 1
-#            else
-#                log_it "${__function_name}" "installer" "DEBUG" "1260" "Unzipped helm binary"
-#            fi
-#        fi
+	        helm_local_path=${__config_component_helm_localPath}
+	        sudo mv ${helm_binary} ${helm_local_path}
+	        _exit_code=$?
+	        if [[ $? -gt 0 ]]; then
+	            log_it "${__function_name}" "installer" "ERR" "1270" "Error while moving helm binary to ${helm_local_path}"
+	            exit 1
+	        else        
+	            if [[ -f "${helm_local_path}" ]]; then
+	                log_it "${__function_name}" "installer" "DEBUG" "1274" "Moved helm binary to ${helm_local_path}"
+	            else
+	                log_it "${__function_name}" "installer" "ERR" "1278" "Error while moving helm binary to ${helm_local_path}"
+	                exit 1
+	            fi
+	        fi
         
-#        chmod +x ${helm_binary}
-#        if [[ $? -gt 0 ]]; then
-#            log_it "${__function_name}" "installer" "ERR" "1255" "Error while changing the file perimissions for the downloaded helm binary"
-#            exit 1
-#        else
-#            log_it "${__function_name}" "installer" "DEBUG" "1260" "Changed the access permission of helm binary"
-#        fi
-
-#        helm_download_version=$($helm_binary version | grep Client | cut -d '\"' -f 2 )
-#        log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded helm version is: $helm_download_version"
+	        #Check if helm binary is in path
+	        helm_new_path=$(which helm)
+	        if [[ $? -gt 0 ]]; then
+	            log_it "${__function_name}" "installer" "ERR" "1280" "Error while checking if helm binary is in path"
+	            exit 1
+	        fi
+			if [[ "${helm_new_path}" = "${helm_local_path}" ]]; then
+	           log_it "${__function_name}" "installer" "DEBUG" "1282" "helm binary is in path"
+			else 
+	           log_it "${__function_name}" "installer" "ERR" "1284" "Different helm binary is available in path."
+	           exit 1
+			fi
         
-#        helm_local_path=${__config_component_helm_localPath}
-#        sudo mv ${helm_binary} ${helm_local_path}
-#        _exit_code=$?
-#        if [[ $? -gt 0 ]]; then
-#            log_it "${__function_name}" "installer" "ERR" "1270" "Error while moving helm binary to ${helm_local_path}"
-#            exit 1
-#        else        
-#            if [[ -f "${helm_local_path}" ]]; then
-#                log_it "${__function_name}" "installer" "DEBUG" "1274" "Moved helm binary to ${helm_local_path}"
-#            else
-#                log_it "${__function_name}" "installer" "ERR" "1278" "Error while moving helm binary to ${helm_local_path}"
-#                exit 1
-#            fi
-#        fi
-        
-#        #Check if helm binary is in path
-#        helm_new_path=$(which helm)
-#        if [[ $? -gt 0 ]]; then
-#            log_it "${__function_name}" "installer" "ERR" "1280" "Error while checking if helm binary is in path"
-#            exit 1
-#        fi
-#       if [[ "${helm_new_path}" = "${helm_local_path}" ]]; then
-#           log_it "${__function_name}" "installer" "DEBUG" "1282" "helm binary is in path"
-#       else 
-#           log_it "${__function_name}" "installer" "ERR" "1284" "Different helm binary is available in path."
-#           exit 1
-#       fi
-        
-#        helm_inpath_version=$(helm version | grep Client | cut -d '\"' -f 2 )
-#        if [[ "${helm_inpath_version}" = "${helm_download_version}" ]]; then
-#            log_it "${__function_name}" "installer" "DEBUG" "1286" "helm binary in path has version: $helm_download_version"
-#            log_it "${__function_name}" "installer" "INFO" "1288" "Successfully installed helm version: $helm_download_version"
-#        else
-#            log_it "${__function_name}" "installer" "ERR" "1290" "Incorrect version of helm binary in path.  Expected version: ${helm_download_version} Actual version: ${helm_inpath_version}"
-#        fi
-    else
-        log_it "${__function_name}" "installer" "ERR" "1292" "Not able to get handle on downloaded helm binary"
-        exit 1  
-    fi
+			helm_inpath_version=$(helm version | grep Client | cut -d '\"' -f 2 )
+	        if [[ "${helm_inpath_version}" = "${helm_download_version}" ]]; then
+	            log_it "${__function_name}" "installer" "DEBUG" "1286" "helm binary in path has version: $helm_download_version"
+	            log_it "${__function_name}" "installer" "INFO" "1288" "Successfully installed helm version: $helm_download_version"
+	        else
+	            log_it "${__function_name}" "installer" "ERR" "1290" "Incorrect version of helm binary in path.  Expected version: ${helm_download_version} Actual version: ${helm_inpath_version}"
+	        fi
+	    else
+    	    log_it "${__function_name}" "installer" "ERR" "1292" "Not able to get handle on downloaded helm binary"
+        	exit 1  
+    	fi
+	fi
 }
 
 function delete {

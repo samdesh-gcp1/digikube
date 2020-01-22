@@ -34,14 +34,14 @@ function deploy {
     if [[ -f ${helm_existing_path} ]]; then
 
         log_it "${__function_name}" "installer" "INFO" "1230" "Helm binary already available at path: ${helm_existing_path}"
-#        helm_existing_version=$(helm version | grep Client | cut -d '\"' -f 2 )
+        helm_existing_version=$(helm version | grep Client | cut -d '\"' -f 2 )
         
-#        if [[ "$helm_existing_version" = "$helm_download_version" ]]; then
-#            log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing helm binary version is same as expected target version: ${helm_download_version}. Using the pre-existing helm binary."
-#        else
-#            log_it "${__function_name}" "installer" "ERR" "1240" "Pre-existing helm binary version is: ${helm_existing_version}.  Target version of helm is: ${helm_download_version}. Aborting helm installation.  Remove existing helm binary and rerun the installation."
-#            exit 1
-#        fi 
+        if [[ "$helm_existing_version" = "$helm_download_version" ]]; then
+            log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing helm binary version is same as expected target version: ${helm_download_version}. Using the pre-existing helm binary."
+        else
+            log_it "${__function_name}" "installer" "ERR" "1240" "Pre-existing helm binary version is: ${helm_existing_version}.  Target version of helm is: ${helm_download_version}. Aborting helm installation.  Remove existing helm binary and rerun the installation."
+            exit 1
+        fi 
     
 #    else
 

@@ -61,9 +61,9 @@ function deploy {
             else
                 log_it "${__function_name}" "installer" "INFO" "1255" "Helm binary is compressed file.  Need to unzip."
                 helm_binary_compressed=${helm_binary}
-                helm_file_name="helm"
+                helm_file_name="linux-amd64/helm"
                 helm_binary=""
-                unzip_file ${helm_binary_compressed} ${helm_file_name} lelm_binary
+                unzip_file ${helm_binary_compressed} ${helm_file_name} helm_binary
 	            if [[ $? -gt 0 ]]; then
 	                log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping helm binary"
 	                exit 1

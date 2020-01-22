@@ -34,7 +34,7 @@ function deploy {
     if [[ -f ${helm_existing_path} ]]; then
 
         log_it "${__function_name}" "installer" "INFO" "1230" "Helm binary already available at path: ${helm_existing_path}"
-        helm_existing_version=$(helm version | cut -d '"' -f 2 )
+        helm_existing_version=$(helm version | cut -d '"' -f 2 | head -n 1)
         
         if [[ "$helm_existing_version" = "$helm_download_version" ]]; then
             log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing helm binary version is same as expected target version: ${helm_download_version}. Using the pre-existing helm binary."
@@ -80,7 +80,7 @@ function deploy {
 	            log_it "${__function_name}" "installer" "DEBUG" "1260" "Changed the access permission of helm binary"
 	        fi
 
-	        helm_download_version=$($helm_binary version | cut -d '"' -f 2 )
+	        helm_download_version=$($helm_binary version | cut -d '"' -f 2 | head -n 1)
 	        log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded helm version is: $helm_download_version"
         
 	        helm_local_path=${__config_cluster_sysApps_helm_localPath}
@@ -111,7 +111,7 @@ function deploy {
 	           exit 1
 			fi
         
-			helm_inpath_version=$(helm version | cut -d '"' -f 2 )
+			helm_inpath_version=$(helm version | cut -d '"' -f 2 | head -n 1)
 	        if [[ "${helm_inpath_version}" = "${helm_download_version}" ]]; then
 	            log_it "${__function_name}" "installer" "DEBUG" "1286" "helm binary in path has version: $helm_download_version"
 	            log_it "${__function_name}" "installer" "INFO" "1288" "Successfully installed helm version: $helm_download_version"

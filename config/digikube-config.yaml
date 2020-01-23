@@ -75,7 +75,7 @@ cluster:
         create: "true"
         update: "true"
         delete: "true"
-      deploymentEngine: "helm"
+      deploymentEngine: "helm-chart"
         chartName: "stable/nginx-ingress"
         appName: "ingress-controller"
         chartValues: "ingress-controller-config-values.yaml"

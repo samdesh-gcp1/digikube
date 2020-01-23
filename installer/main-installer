@@ -34,28 +34,28 @@ fi
 
 #Install sys-apps
 #ingress-controller
-${digi_ops_executer} sys-apps ingress-controller create
-if [[ $? -gt 0 ]]; then
-    echo "Some error"
-fi
+#${digi_ops_executer} sys-apps ingress-controller create
+#if [[ $? -gt 0 ]]; then
+#    echo "Some error"
+#fi
 
 #kubernetes-dashboard
-${digi_ops_executer} sys-apps kubernetes-dashboard create
-if [[ $? -gt 0 ]]; then
-    echo "Some error"
-fi
+#${digi_ops_executer} sys-apps kubernetes-dashboard create
+#if [[ $? -gt 0 ]]; then
+#    echo "Some error"
+#fi
 
 #GAP
-${digi_ops_executer} sys-apps gap create
-if [[ $? -gt 0 ]]; then
-    echo "Some error"
-fi
+#${digi_ops_executer} sys-apps gap create
+#if [[ $? -gt 0 ]]; then
+#    echo "Some error"
+#fi
 
 #ELK
-${digi_ops_executer} sys-apps elk create
-if [[ $? -gt 0 ]]; then
-    echo "Some error"
-fi
+#${digi_ops_executer} sys-apps elk create
+#if [[ $? -gt 0 ]]; then
+#    echo "Some error"
+#fi
 
 #Install platform-apps
 #MongoDB Operator

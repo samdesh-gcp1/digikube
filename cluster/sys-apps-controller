@@ -36,13 +36,12 @@ else
 				case ${deployment_engine} in 
 					"cmd")	
 						sys_app_om_shell="${digi_dir}cluster/sys-apps-om/${sys_app_name}-om"
-						${sys_app_om_shell} ${sys_app_command} ${sys_app_command_param}
+						${sys_app_om_shell} ${sys_app_command} "${sys_app_command_param}"
 						__return_code=$?
 						;;
 					"helm-chart")
 						sys_app_om_shell="${digi_dir}cluster/sys-apps-om/helm-chart-om"
-						deployment_params=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentParams")
-						${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${deployment_params} "${sys_app_command_param}"
+						${sys_app_om_shell} ${sys_app_name} ${sys_app_command} "${sys_app_command_param}"
 						__return_code=$?
 						;;
 					"kubectl-apply")

@@ -26,8 +26,8 @@ function create {
 	echo "helm install ${chart_name} ${release_name} -f ${chart_values_file}"
 	helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 	helm repo update
-	#helm install ${chart_name} ${release_name} -f ${chart_values_file}	
-	helm install ${chart_name} myRelease -f ${chart_values_file}	
+	helm install ${release_name} ${chart_name} -f ${chart_values_file}	
+	
 }
 
 create ${1} ${3}

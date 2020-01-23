@@ -1,5 +1,5 @@
 #!/bin/bash
-# kops installer
+#kops main installer
 
 __function_name="installer/kops-installer.sh"
 

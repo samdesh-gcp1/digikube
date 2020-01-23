@@ -36,7 +36,7 @@ else
                 else
                     if [[ "${deployment_engine}" == "helm" ]]; then
                         sys_app_om_shell="${digi_dir}cluster/sys-apps-om/helm-apps-om"
-                        ${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${sys_app_command_param}
+                        ${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${sys_app_command_param} --values 
                     else
                         if [[ "${deployment_engine}" == "kubectl" ]]; then
                             sys_app_om_shell="${digi_dir}cluster/sys-apps-om/kubectl-apps-om"

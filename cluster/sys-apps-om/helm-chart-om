@@ -23,7 +23,7 @@ function create {
 	chart_values=$(get-config-value "cluster.sysApps.${sys_app_name}.chartValues")
 	chart_values_file=${digi_dir}config/sys-apps/${chart_values}
 
-	helm install ${chart_name} --name ${release_name} -f ${chart_values_file}
+	helm install ${chart_name} ${release_name} -f ${chart_values_file}
 	
 }
 

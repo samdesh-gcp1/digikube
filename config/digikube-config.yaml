@@ -67,9 +67,20 @@ cluster:
   sysApps:
     helm:
       enabled: "true"
+      deploymentEngine: "cmd"
       version: "v3.0.2"
       url: "https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz"
       localPath: "/usr/local/bin/helm"
+      omCommands:
+        deploy: "true"
+        delete: "true"
+        update: "true"
+    ingressController:
+      enabled: "true"
+      deploymentEngine: "helm"
+      version: ""
+      url: ""
+      localPath: ""
       omCommands:
         deploy: "true"
         delete: "true"

@@ -21,7 +21,7 @@ fi
 
 #Install helm
 helm_installer=${digi_dir}installer/helm-installer
-${kops_installer}
+${helm_installer}
 if [[ $? -gt 0 ]]; then
     exit 1
 fi

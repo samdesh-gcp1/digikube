@@ -20,7 +20,6 @@ else
     if [[ "${is_app_enabled}" == "true" ]]; then
         #The app configuration is enabled
         echo "Application is enabled in configuration"
-        sys_app_om_shell="${digi_dir}cluster/sys-apps-om/${sys_app_name}-om"
         is_command_enabled=$(get-config-value "cluster.sysApps.${sys_app_name}.omCommands.${sys_app_command}")
         if [[ -z ${is_command_enabled} ]]; then
             #Command is not defined
@@ -30,18 +29,40 @@ else
             if [[ "${is_command_enabled}" == "true" ]]; then
                 #Command is enabled in configuration"
                 echo "Command is enabled in configuration"
-                ${sys_app_om_shell} ${sys_app_command} ${sys_app_command_param}
+                deployment_engine=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentEngine")
+                if [[ "${deployment_engine}" == "cmd" ]]; then
+                    sys_app_om_shell="${digi_dir}cluster/sys-apps-om/${sys_app_name}-om"
+                    ${sys_app_om_shell} ${sys_app_command} ${sys_app_command_param}
+                else
+                    if [[ "${deployment_engine}" == "helm" ]]; then
+                        sys_app_om_shell="${digi_dir}cluster/sys-apps-om/helm-apps-om"
+                        ${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${sys_app_command_param}
+                    else
+                        if [[ "${deployment_engine}" == "kubectl" ]]; then
+                            sys_app_om_shell="${digi_dir}cluster/sys-apps-om/kubectl-apps-om"
+                            ${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${sys_app_command_param}
+                        else
+                            echo "Unknown deployment engine specified in config: ${deployment_engine}"
+                            exit 1
+                        fi
+                    fi
+                fi
+                
                 if [[ $? -gt 0 ]]; then
                     #Error while executing the command
                     echo "Error while executing the command"
+                    exit 1
                 else
                     #Command executed successfully
                     echo "Command executed successfuly"
                 fi
+                
             else
+                
                 #Command is disabled in configuration
                 echo "Command is disabled in configuration"
                 exit 1
+                
             fi
         fi
     else

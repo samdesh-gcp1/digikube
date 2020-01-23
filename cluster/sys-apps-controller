@@ -1,7 +1,7 @@
 #!/bin/bash
 #Controller for sys-apps
 
-__function_name="installer/kopsn-installer.sh"
+__function_name="cluster/sys-app-controller"
 
 base_dir=~/
 digi_dir=${base_dir}digikube/
@@ -33,24 +33,37 @@ else
 				#Command is enabled in configuration"
 				echo "Command is enabled in configuration"
 				deployment_engine=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentEngine")
-				if [[ "${deployment_engine}" == "cmd" ]]; then
-					sys_app_om_shell="${digi_dir}cluster/sys-apps-om/${sys_app_name}-om"
-					${sys_app_om_shell} ${sys_app_command} ${sys_app_command_param}
-				else
-					if [[ "${deployment_engine}" == "helm" ]]; then
-						sys_app_om_shell="${digi_dir}cluster/sys-apps-om/helm-apps-om"
-						${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${sys_app_command_param} --values 
-					else
-						if [[ "${deployment_engine}" == "kubectl" ]]; then
-							sys_app_om_shell="${digi_dir}cluster/sys-apps-om/kubectl-apps-om"
-							${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${sys_app_command_param}
-						else
-							echo "Unknown deployment engine specified in config: ${deployment_engine}"
-							exit 1
-						fi
-					fi
-				fi
-				if [[ $? -gt 0 ]]; then
+				case ${deployment_engine} in 
+					"cmd")	
+						sys_app_om_shell="${digi_dir}cluster/sys-apps-om/${sys_app_name}-om"
+						${sys_app_om_shell} ${sys_app_command} ${sys_app_command_param}
+						__return_code=$?
+						;;
+					"helm-chart")
+						sys_app_om_shell="${digi_dir}cluster/sys-apps-om/helm-chart-om"
+						deployment_params=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentParams")
+						${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${deployment_params} "${sys_app_command_param}"
+						__return_code=$?
+						;;
+					"kubectl-apply")
+						sys_app_om_shell="${digi_dir}cluster/sys-apps-om/kubectl-apply-om"
+						deployment_params=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentParams")
+						${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${deployment_params} "${sys_app_command_param}"
+						__return_code=$?
+						;;
+					"kubectl-crew")
+						#Need to change this section
+						sys_app_om_shell="${digi_dir}cluster/sys-apps-om/kubectl-crew-om"
+						deployment_params=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentParams")
+						${sys_app_om_shell} ${sys_app_name} ${sys_app_command} ${deployment_params} "${sys_app_command_param}"
+						__return_code=$?
+						;;
+					*)
+						echo "Unknown deployment engine specified in config: ${deployment_engine}"
+						exit 1
+				esac
+
+				if [[ ${__return_code} -gt 0 ]]; then
 					#Error while executing the command
 					echo "Error while executing the command"
 					exit 1
@@ -69,4 +82,3 @@ else
 		exit 1
 	fi
 fi
-

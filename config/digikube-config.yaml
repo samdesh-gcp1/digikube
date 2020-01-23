@@ -78,6 +78,7 @@ cluster:
     ingressController:
       enabled: "true"
       deploymentEngine: "helm"
+      deploymentParams: "ingress-controller-config-values.yaml"
       version: ""
       url: ""
       localPath: ""

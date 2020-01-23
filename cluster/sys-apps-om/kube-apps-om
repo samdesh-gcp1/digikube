@@ -1,0 +1,4 @@
+
+
+
+helm install stable/nginx-ingress --name my-release -f values.yaml

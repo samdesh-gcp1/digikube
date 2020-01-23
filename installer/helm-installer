@@ -1,7 +1,7 @@
 #!/bin/bash
 # helm installer
 
-__function_name="installer/helm"
+__function_name="installer/helm-installer"
 
 base_dir=~/
 digi_dir=${base_dir}digikube/

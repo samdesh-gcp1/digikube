@@ -24,6 +24,7 @@ function create {
 	chart_values_file=${digi_dir}config/sys-apps/${chart_values}
 	
 	echo "helm install ${chart_name} --name ${release_name} -f ${chart_values_file}"
+	helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 	helm repo update
 	helm install ${chart_name} --name ${release_name} -f ${chart_values_file}	
 }

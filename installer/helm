@@ -1,5 +1,7 @@
 #!/bin/bash
-# kops installer
+# helm installer
+
+__function_name="installer/helm"
 
 base_dir=~/
 digi_dir=${base_dir}digikube/
@@ -10,62 +12,55 @@ digi_dir=${base_dir}digikube/
 digikube_config=${digi_dir}config/digikube-config.yaml
 parse_yaml ${digikube_config} "__config_"
 
-function deploy {
+log_it "${__function_name}" "installer" "INFO" "1210" "Started the helm installation process"
 
-    __function_name="cluster/sys-apps-om/helm-om"
+helm_enabled=${__config_cluster_sysApps_helm_enabled}
+log_it "${__function_name}" "installer" "DEBUG" "1215" "Helm is enabled in configuration"
+
+helm_download_version=${__config_cluster_sysApps_helm_version}
+log_it "${__function_name}" "installer" "DEBUG" "1215" "Helm version to be installed is : ${helm_download_version}"
     
-    log_it "${__function_name}" "installer" "INFO" "1210" "Started the helm installation process"
-
-    helm_enabled=${__config_cluster_sysApps_helm_enabled}
-    log_it "${__function_name}" "installer" "DEBUG" "1215" "Helm is enabled in configuration"
-
-    helm_download_version=${__config_cluster_sysApps_helm_version}
-    log_it "${__function_name}" "installer" "DEBUG" "1215" "Helm version to be installed is : ${helm_download_version}"
+helm_existing_version=""
+helm_download_url=${__config_cluster_sysApps_helm_url}
+log_it "${__function_name}" "installer" "DEBUG" "1220" "Helm download site is: ${helm_download_url}"
     
-    helm_existing_version=""
-    helm_download_url=${__config_cluster_sysApps_helm_url}
-    log_it "${__function_name}" "installer" "DEBUG" "1220" "Helm download site is: ${helm_download_url}"
-    
-    helm_existing_path=$(which helm)
-    if [[ $? -gt 0 ]]; then
-        log_it "${__function_name}" "installer" "WARN" "1225" "Error while checking if helm is already installed.  Ignoring and proceeding"
-    fi
+helm_existing_path=$(which helm)
+if [[ $? -gt 0 ]]; then
+	log_it "${__function_name}" "installer" "WARN" "1225" "Error while checking if helm is already installed.  Ignoring and proceeding"
+fi
 
-    if [[ -f ${helm_existing_path} ]]; then
-
-        log_it "${__function_name}" "installer" "INFO" "1230" "Helm binary already available at path: ${helm_existing_path}"
-        helm_existing_version=$(helm version | cut -d '"' -f 2 | head -n 1)
-        
-        if [[ "$helm_existing_version" = "$helm_download_version" ]]; then
-            log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing helm binary version is same as expected target version: ${helm_download_version}. Using the pre-existing helm binary."
-        else
-            log_it "${__function_name}" "installer" "WARN" "1240" "Pre-existing helm binary version is: ${helm_existing_version}.  Target version of helm is: ${helm_download_version}.  Backingup."
-			sudo mv ${helm_existing_path} ${helm_existing_path}-${RANDOM}-bkp
-        fi 
-    fi
+if [[ -f ${helm_existing_path} ]]; then
+	log_it "${__function_name}" "installer" "INFO" "1230" "Helm binary already available at path: ${helm_existing_path}"
+	helm_existing_version=$(helm version | cut -d '"' -f 2 | head -n 1)
+	if [[ "$helm_existing_version" = "$helm_download_version" ]]; then
+		log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing helm binary version is same as expected target version: ${helm_download_version}. Using the pre-existing helm binary."
+	else
+		log_it "${__function_name}" "installer" "WARN" "1240" "Pre-existing helm binary version is: ${helm_existing_version}.  Target version of helm is: ${helm_download_version}.  Backingup."
+		sudo mv ${helm_existing_path} ${helm_existing_path}-${RANDOM}-bkp
+	fi 
+fi
     
-    #helm not available.  Download and install
-    download_file $helm_download_url helm_binary
+#helm not available.  Download and install
+download_file $helm_download_url helm_binary
+if [[ $? -gt 0 ]]; then
+	log_it "${__function_name}" "installer" "ERR" "1245" "Error while downloading helm binary"
+	exit 1
+fi
+   
+if [[ -f ${helm_binary} ]]; then
+	log_it "${__function_name}" "installer" "DEBUG" "1250" "Downloaded helm binary at: ${helm_binary}"
+	file ${helm_binary} | grep gzip
 	if [[ $? -gt 0 ]]; then
-		log_it "${__function_name}" "installer" "ERR" "1245" "Error while downloading helm binary"
-		exit 1
-	fi
-    
-    if [[ -f ${helm_binary} ]]; then
-		log_it "${__function_name}" "installer" "DEBUG" "1250" "Downloaded helm binary at: ${helm_binary}"
-        
-	    file ${helm_binary} | grep gzip
+		dummyvar=""
+	else
+		log_it "${__function_name}" "installer" "INFO" "1255" "Helm binary is compressed file.  Need to unzip."
+		helm_binary_compressed=${helm_binary}
+		helm_file_name="linux-amd64/helm"
+		helm_binary=""
+		unzip_file ${helm_binary_compressed} ${helm_file_name} helm_binary
 		if [[ $? -gt 0 ]]; then
-			var1=""
-		else
-			log_it "${__function_name}" "installer" "INFO" "1255" "Helm binary is compressed file.  Need to unzip."
-			helm_binary_compressed=${helm_binary}
-            helm_file_name="linux-amd64/helm"
-            helm_binary=""
-            unzip_file ${helm_binary_compressed} ${helm_file_name} helm_binary
-	        if [[ $? -gt 0 ]]; then
-	        	log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping helm binary"
-	            exit 1
+			log_it "${__function_name}" "installer" "ERR" "1255" "Error while unzipping helm binary"
+			exit 1
 	        else
 	        	log_it "${__function_name}" "installer" "DEBUG" "1260" "Unzipped helm binary"
 	        fi

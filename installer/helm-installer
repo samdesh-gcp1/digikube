@@ -14,14 +14,11 @@ parse_yaml ${digikube_config} "__config_"
 
 log_it "${__function_name}" "installer" "INFO" "1210" "Started the helm installation process"
 
-helm_enabled=${__config_cluster_sysApps_helm_enabled}
-log_it "${__function_name}" "installer" "DEBUG" "1215" "Helm is enabled in configuration"
-
-helm_download_version=${__config_cluster_sysApps_helm_version}
+helm_download_version=${__config_component_helm_version}
 log_it "${__function_name}" "installer" "DEBUG" "1215" "Helm version to be installed is : ${helm_download_version}"
-    
+
 helm_existing_version=""
-helm_download_url=${__config_cluster_sysApps_helm_url}
+helm_download_url=${__config_component_helm_url}
 log_it "${__function_name}" "installer" "DEBUG" "1220" "Helm download site is: ${helm_download_url}"
     
 helm_existing_path=$(which helm)
@@ -37,7 +34,7 @@ if [[ -f ${helm_existing_path} ]]; then
 	else
 		log_it "${__function_name}" "installer" "WARN" "1240" "Pre-existing helm binary version is: ${helm_existing_version}.  Target version of helm is: ${helm_download_version}.  Backingup."
 		sudo mv ${helm_existing_path} ${helm_existing_path}-${RANDOM}-bkp
-	fi 
+	fi
 fi
     
 #helm not available.  Download and install
@@ -46,11 +43,9 @@ if [[ $? -gt 0 ]]; then
 	log_it "${__function_name}" "installer" "ERR" "1245" "Error while downloading helm binary"
 	exit 1
 fi
-   
-if [[ -f ${helm_binary} ]]; then
-	
-	log_it "${__function_name}" "installer" "DEBUG" "1250" "Downloaded helm binary at: ${helm_binary}"
 
+if [[ -f ${helm_binary} ]]; then
+	log_it "${__function_name}" "installer" "DEBUG" "1250" "Downloaded helm binary at: ${helm_binary}"
 	file ${helm_binary} | grep gzip
 	if [[ $? -gt 0 ]]; then
 		dummyvar=""
@@ -75,7 +70,7 @@ if [[ -f ${helm_binary} ]]; then
 	else
 		log_it "${__function_name}" "installer" "DEBUG" "1260" "Changed the access permission of helm binary"
 	fi
-	
+
 	helm_download_version=$($helm_binary version | cut -d '"' -f 2 | head -n 1)
 	log_it "${__function_name}" "installer" "DEBUG" "1265" "Downloaded helm version is: $helm_download_version"
 	
@@ -107,15 +102,15 @@ if [[ -f ${helm_binary} ]]; then
 		log_it "${__function_name}" "installer" "ERR" "1284" "Different helm binary is available in path."
 		exit 1
 	fi
-   
+
 	helm_inpath_version=$(helm version | cut -d '"' -f 2 | head -n 1)
 	if [[ "${helm_inpath_version}" = "${helm_download_version}" ]]; then
 		log_it "${__function_name}" "installer" "DEBUG" "1286" "helm binary in path has version: $helm_download_version"
 		log_it "${__function_name}" "installer" "INFO" "1288" "Successfully installed helm version: $helm_download_version"
 	else
 		log_it "${__function_name}" "installer" "ERR" "1290" "Incorrect version of helm binary in path.  Expected version: ${helm_download_version} Actual version: ${helm_inpath_version}"
+		exit 1
 	fi
-
 else
 	log_it "${__function_name}" "installer" "ERR" "1292" "Not able to get handle on downloaded helm binary"
 	exit 1  

@@ -71,12 +71,11 @@ cluster:
   sysApps:
     ingressController:
       enabled: "true"
-      deploymentEngine: "helm"
-      deploymentParams: "ingress-controller-config-values.yaml"
-      version: ""
-      url: ""
-      localPath: ""
       omCommands:
-        deploy: "true"
-        delete: "true"
+        create: "true"
         update: "true"
+        delete: "true"
+      deploymentEngine: "helm"
+        chartName: "stable/nginx-ingress"
+        appName: "ingress-controller"
+        chartValues: "ingress-controller-config-values.yaml"

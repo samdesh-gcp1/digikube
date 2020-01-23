@@ -78,4 +78,4 @@ cluster:
       deploymentEngine: "helm-chart"
         chartName: "stable/nginx-ingress"
         releaseName: "ingress-controller"
-        chartValuesFile: "ingress-controller-config-values.yaml"
+        chartValues: "ingress-controller-config-values.yaml"

@@ -1,3 +1,48 @@
+#!/bin/bash
+# kops installer
+
+base_dir=~/
+digi_dir=${base_dir}digikube/
+
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
+. ${digi_dir}common/digikube-config.sh
+    
+digikube_config=${digi_dir}config/digikube-config.yaml
+parse_yaml ${digikube_config} "__config_"
+
+function deploy {
+
+    __function_name="cluster/sys-apps-om/kube-apps-om/deploy"
+    
+    sys_app_name="${1}"
+    sys_app_command="${2}"
+    sys_app_command_param="${3}"
+
+    is_app_enabled=$(get-config-value "cluster.sysApps.${sys_app_name}.enabled")
+if [[ -z ${is_app_enabled} ]]; then
+    #The configuration is not defined for this application
+    echo "Application is not defined in configuration"
+    exit 1
+else
+
+
+    log_it "${__function_name}" "installer" "INFO" "1210" "Started the helm installation process"
+
+    helm_enabled=${__config_cluster_sysApps_helm_enabled}
+    log_it "${__function_name}" "installer" "DEBUG" "1215" "Helm is enabled in configuration"
+
+    helm_download_version=${__config_cluster_sysApps_helm_version}
+    log_it "${__function_name}" "installer" "DEBUG" "1215" "Helm version to be installed is : ${helm_download_version}"
+    
+    helm_existing_version=""
+    helm_download_url=${__config_cluster_sysApps_helm_url}
+    log_it "${__function_name}" "installer" "DEBUG" "1220" "Helm download site is: ${helm_download_url}"
+    
+    helm_existing_path=$(which helm)
+    if [[ $? -gt 0 ]]; then
+        log_it "${__function_name}" "installer" "WARN" "1225" "Error while checking if helm is already installed.  Ignoring and proceeding"
+    fi
 
 
 

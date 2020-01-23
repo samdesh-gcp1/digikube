@@ -1,0 +1,31 @@
+#!/bin/bash
+#OM for helm chart based system apps
+
+base_dir=~/
+digi_dir=${base_dir}digikube/
+
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
+. ${digi_dir}common/digikube-config.sh
+   
+digikube_config=${digi_dir}config/digikube-config.yaml
+parse_yaml ${digikube_config} "__config_"
+
+function create {
+
+	__function_name="cluster/sys-apps-om/helm-chart-om.deploy"
+	
+	sys_app_name="${1}"
+	sys_app_command_param="${2}"
+
+	chart_name=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentEngine.chartName")
+	release_name=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentEngine.releaseName")
+	chart_values=$(get-config-value "cluster.sysApps.${sys_app_name}.chartValues")
+	chart_values_file=${digi_dir}config/sys-apps/${chart_values}
+
+	helm install ${chart_name} --name ${release_name} -f ${chart_values_file}
+	
+}
+
+create ${1} ${3}
+

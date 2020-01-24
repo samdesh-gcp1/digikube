@@ -91,5 +91,5 @@ cluster:
        chartName: "stable/kubernetes-dashboard"
        chartRepo: "https://kubernetes-charts.storage.googleapis.com/"
        releaseName: "kubernetes-dashboard"
-       chartValues: "kuberenets-dashboard-config-values.yaml"
+       chartValues: "kubernetes-dashboard-config-values.yaml"
        namespace: "digikube-sys-apps"

@@ -46,5 +46,18 @@ function delete {
 	helm delete ${release_name} --namespace ${release_namespace}	
 	
 }
-create ${1} ${3}
 
+shell_command_option=${2}
+case ${shell_command_option} in 
+	"create")	
+		create "${1}" "${3}"
+		;;
+	"delete")
+		delete "${1}" "${3}"
+		;;
+	"update")
+		update "${1}" "${3}"
+		;;
+	*)
+		echo "Command not known: ${shell_command_option}"
+esac

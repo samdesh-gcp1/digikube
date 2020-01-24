@@ -65,7 +65,7 @@ function delete {
 		exit 1
 	fi
 	
-	kubectl get deployment ${release_name} --namespace ${release_namespace}
+	kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
 	if [[ ${?} -gt 0 ]]; then
 		echo "No release available with name: ${release_name}. Aborting."
 		exit 1

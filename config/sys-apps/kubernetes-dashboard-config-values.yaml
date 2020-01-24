@@ -109,22 +109,22 @@ resources:
 ingress:
   ## If true, Kubernetes Dashboard Ingress will be created.
   ##
-  enabled: false
+  enabled: true
 
   ## Kubernetes Dashboard Ingress annotations
   ##
   ## Add custom labels
   # labels:
   #   key: value
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: 'true'
+  annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: 'true'
   ## If you plan to use TLS backend with enableInsecureLogin set to false
   ## (default), you need to uncomment the below.
   ## If you use ingress-nginx < 0.21.0
   #   nginx.ingress.kubernetes.io/secure-backends: "true"
   ## if you use ingress-nginx >= 0.21.0
-  #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 
 
   ## Kubernetes Dashboard Ingress paths
@@ -136,16 +136,16 @@ ingress:
   ## Kubernetes Dashboard Ingress hostnames
   ## Must be provided if Ingress is enabled
   ##
-  # hosts:
-  #   - kubernetes-dashboard.domain.com
+  hosts:
+      - kubernetes-dashboard.c1.digikube003.dev1.k8s.local
 
   ## Kubernetes Dashboard Ingress TLS configuration
   ## Secrets must be manually created in the namespace
   ##
-  # tls:
-  #   - secretName: kubernetes-dashboard-tls
-  #     hosts:
-  #       - kubernetes-dashboard.domain.com
+  tls:
+      - secretName: kubernetes-dashboard-tls
+        hosts:
+          - kubernetes-dashboard.c1.digikube003.dev1.k8s.local
 
 rbac:
   # Specifies whether RBAC resources should be created

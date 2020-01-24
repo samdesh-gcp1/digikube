@@ -79,3 +79,15 @@ cluster:
         chartName: "stable/nginx-ingress"
         releaseName: "ingress-controller"
         chartValues: "ingress-controller-config-values.yaml"
+        namespace: "digikube-sys-apps"
+   kubernetesDashboard:
+     enabled: "true"
+     omCommands:
+       create: "true"
+       update: "true"
+       delete: "true"
+     deploymentEngine: "helm-chart"
+       chartName: "stable/kubernetes-dashboard"
+       releaseName: "kubernetes-dashboard"
+       chartValues: "kuberenets-dashboard-config-values.yaml"
+       namespace: "digikube-sys-apps"

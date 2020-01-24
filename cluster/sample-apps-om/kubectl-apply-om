@@ -37,8 +37,8 @@ function create {
 	
 	kubectl get deployment ${app_name} --namespace ${app_namespace}
 	if [[ ${?} -gt 0 ]]; then
-		echo "kubectl create ${app_name} --namespace ${app_namespace} -f ${app_config_file}"
-		kubectl apply ${app_name} --namespace ${app_namespace} -f ${app_config_file}
+		echo "kubectl create --namespace ${app_namespace} -f ${app_config_file}"
+		kubectl apply --namespace ${app_namespace} -f ${app_config_file}
 	else
 		echo "Application already available with name: ${app_namespace}.  Please delete it or use update command."
 		exit 1

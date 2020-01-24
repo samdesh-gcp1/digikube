@@ -93,3 +93,14 @@ cluster:
         releaseName: "kubernetes-dashboard"
         chartValues: "kubernetes-dashboard-config-values.yaml"
         namespace: "digikube-sys-apps"
+  sampleApps:
+    nodeMongoSample:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+      deploymentEngine: "kubectl-apply"
+        appName: "node-mongo-sample"
+        appConfig: "node-mongo-sample-config.yaml"
+        namespace: "digikube-sample-apps"

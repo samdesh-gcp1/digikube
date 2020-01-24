@@ -80,7 +80,7 @@ cluster:
         chartRepo: "https://kubernetes-charts.storage.googleapis.com/"
         releaseName: "ingress-controller"
         chartValues: "ingress-controller-config-values.yaml"
-        namespace: "digikube-sys-apps"
+        namespace: "default"
     kubernetesDashboard:
       enabled: "true"
       omCommands:

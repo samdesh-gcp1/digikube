@@ -8,7 +8,7 @@ digi_dir=${base_dir}digikube/
 
 cluster_controller=${digi_dir}cluster/cluster-controller
 sys_app_controller=${digi_dir}cluster/sys-apps-controller
-sample-app-controller=${digi_dir}cluster/sample-apps-controller
+sample_app_controller=${digi_dir}cluster/sample-apps-controller
 
 if [[ $# -gt 0 ]]; then
 	scope_name="${1}"

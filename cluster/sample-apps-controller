@@ -1,7 +1,7 @@
 #!/bin/bash
 #Controller for sample-apps
 
-__function_name="cluster/sample-app-controller"
+__function_name="cluster/sample-apps-controller"
 
 base_dir=~/
 digi_dir=${base_dir}digikube/

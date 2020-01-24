@@ -92,7 +92,7 @@ cluster:
         chartRepo: "https://kubernetes-charts.storage.googleapis.com/"
         releaseName: "kubernetes-dashboard"
         chartValues: "kubernetes-dashboard-config-values.yaml"
-        namespace: "digikube-sys-apps"
+        namespace: "default"
   sampleApps:
     nodeMongoSample:
       enabled: "true"

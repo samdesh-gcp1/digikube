@@ -145,7 +145,7 @@ ingress:
   ##
   tls:
     - secretName: kubernetes-dashboard-tls
-    hosts:
+      hosts:
       - kubernetes-dashboard.c1.digikube003.dev1.k8s.local
 
 rbac:

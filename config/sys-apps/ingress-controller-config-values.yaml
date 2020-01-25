@@ -108,7 +108,7 @@ controller:
   ##   default-ssl-certificate: "<namespace>/<secret_name>"
   #extraArgs: {}
   extraArgs:
-    - --enable-ssl-passthrough
+    enable-ssl-passthrough: true
 
   ## Additional environment variables to set
   extraEnvs: []

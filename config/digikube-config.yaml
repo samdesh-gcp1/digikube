@@ -80,7 +80,7 @@ cluster:
         chartRepo: "https://kubernetes-charts.storage.googleapis.com/"
         releaseName: "ingress-controller"
         chartValues: "ingress-controller-config-values.yaml"
-        namespace: "default"
+        namespace: "sys-apps"
     kubernetesDashboard:
       enabled: "true"
       omCommands:
@@ -92,7 +92,7 @@ cluster:
         chartRepo: "https://kubernetes-charts.storage.googleapis.com/"
         releaseName: "kubernetes-dashboard"
         chartValues: "kubernetes-dashboard-config-values.yaml"
-        namespace: "default"
+        namespace: "sys-apps"
   sampleApps:
     nodeMongoSample:
       enabled: "true"

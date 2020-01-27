@@ -1,1 +1,66 @@
+#! /bin/bash
+
+base_dir=~/
+digi_dir=${base_dir}digikube/
+polyaxon_dir=${digi_dir}platform-apps/polyaxon
+
+
+alias python=python3
+
+function init-polyaxon {
+
+	alias python=python3
+	##echo "setting up prerequisites"
+	##echo "checking pip3"
+
+	pip3 --version
+	if [[ $? -ne 0 ]]; then
+		sudo apt install python3-pip
+		pip3 install --upgrade pip
+	fi
+
+	pip3 --version
+
+
+	helm version
+	if [[ $? -ne 0 ]]; then
+		helm repo add ${platform_app_name} ${chartName}
+		helm repo update
+	else
+		helm_version=$(helm version | cut -d "\"" -f 2 | head -n 1)
+		##echo "helm version: " $helm_version
+	fi
+
+	polyaxon 
+
+	if [[ $? -ne 0 ]]; then
+		pip3 install -U polyaxon-cli
+		PATH=$PATH:${base_dir}/.local/bin
+		polyaxon version 
+	else
+		echo "polyaxon CLI exists"
+	fi
+}
+
+function delete-polyaxon {
+	##echo "deleting existing polyaxon set-up"
+
+	init-polyaxon
+}
+
+function create-polyaxon {
+
+	##echo "Run install command - this might take a while"
+
+	init-polyaxon
+
+}
+
+function install-polyaxon {
+
+	##echo "Run install command - this might take a while"
+
+	init-polyaxon
+
+}
 

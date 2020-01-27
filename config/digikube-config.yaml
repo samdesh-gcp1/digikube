@@ -93,6 +93,22 @@ cluster:
         releaseName: "kubernetes-dashboard"
         chartValues: "kubernetes-dashboard-config-values.yaml"
         namespace: "kube-system"
+  platformApps:
+    polyaxon:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+        validate: "true"
+      deploymentEngine: "helm-chart"
+        chartName: "polyaxon/polyaxon"
+        chartRepo: "https://charts.polyaxon.com"
+        releaseName: "polyaxon"
+        chartValues: "polyaxon-config-values.yaml"
+        namespace: "polyaxon"
+        preExecutionHook: "polyaxon-preexecution.sh"
+        postExecutionHook: "polyaxon-postexecution.sh"
   sampleApps:
     nodeMongoSample:
       enabled: "true"

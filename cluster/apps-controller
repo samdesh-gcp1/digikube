@@ -37,25 +37,25 @@ else
 				case ${__deployment_engine} in 
 					"cmd")	
 						__app_om_shell="${digi_dir}cluster/om/${__app_name}-om"
-						${__app_om_shell} ${__app_command} "${__app_command_param}"
+						${__app_om_shell} ${__app_type} ${__app_command} "${__app_command_param}"
 						__return_code=$?
 						;;
 					"helm-chart")
 						__app_om_shell="${digi_dir}cluster/apps-om/helm-chart-om"
-						${__app_om_shell} ${__app_name} ${__app_command} "${__app_command_param}"
+						${__app_om_shell} ${__app_type} ${__app_name} ${__app_command} "${__app_command_param}"
 						__return_code=$?
 						;;
 					"kubectl-apply")
 						__app_om_shell="${digi_dir}cluster/om/kubectl-apply-om"
 						__deployment_params=$(get-config-value "cluster.${__app_type}.${__app_name}.deploymentParams")
-						${__app_om_shell} ${__app_name} ${__app_command} ${__deployment_params} "${__app_command_param}"
+						${__app_om_shell} ${__app_type} ${__app_name} ${__app_command} ${__deployment_params} "${__app_command_param}"
 						__return_code=$?
 						;;
 					"kubectl-crew")
 						#Need to change this section
 						__app_om_shell="${digi_dir}cluster/om/kubectl-crew-om"
 						__deployment_params=$(get-config-value "cluster.${__app_type}.${__app_name}.deploymentParams")
-						${__app_om_shell} ${__app_name} ${__app_command} ${__deployment_params} "${__app_command_param}"
+						${__app_om_shell} ${__app_type} ${__app_name} ${__app_command} ${__deployment_params} "${__app_command_param}"
 						__return_code=$?
 						;;
 					*)

@@ -41,7 +41,7 @@ else
 						__return_code=$?
 						;;
 					"helm-chart")
-						__app_om_shell="${digi_dir}cluster/helm-chart-om"
+						__app_om_shell="${digi_dir}cluster/apps-om/helm-chart-om"
 						${__app_om_shell} ${__app_name} ${__app_command} "${__app_command_param}"
 						__return_code=$?
 						;;

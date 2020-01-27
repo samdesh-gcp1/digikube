@@ -7,7 +7,7 @@ digi_dir=${base_dir}digikube/
 . ${digi_dir}utility/log.sh
 . ${digi_dir}common/digikube-config.sh
 
-digikube_config=${digi_dir}/config/digikube-config.yaml
+digikube_config=${digi_dir}config/digikube-config.yaml
 parse_yaml ${digikube_config} "_config_"
 
 app_type="${1}"
@@ -22,6 +22,7 @@ chartRepo=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.c
 release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.releaseName")
 namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
 config=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartValues")
+config_file=${digi_dir}cluster/${app_type}.${app_name}/config/${config}
 
 function delete-polyaxon {
 	##echo "deleting existing polyaxon set-up"
@@ -80,7 +81,7 @@ function validate-polyaxon {
 
 function update-polyaxon {
 
-	polyaxon admin upgrade -f ${config}
+	polyaxon admin upgrade -f ${config_file}
 	validate-polyaxon
 
 }

@@ -102,7 +102,7 @@ cluster:
         delete: "true"
         validate: "true"
       deploymentEngine: "helm-chart"
-        chartName: "stable/polyaxon"
+        chartName: "polyaxon/polyaxon"
         chartRepo: "https://charts.polyaxon.com"
         releaseName: "polyaxon"
         chartValues: "polyaxon-config-values.yaml"

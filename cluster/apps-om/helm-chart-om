@@ -11,6 +11,13 @@ digi_dir=${base_dir}digikube/
 digikube_config=${digi_dir}config/digikube-config.yaml
 parse_yaml ${digikube_config} "__config_"
 
+function executionHook {
+
+	preExecutionHookShell=${digi_dir}cluster/${1}.${2}/bin/post-execution-hook
+	postExecutionHookShell=${digi_dir}cluster/${1}.${2}/bin/post-execution-hook
+
+}
+
 function create {
 
 	__function_name="cluster/apps-om/helm-chart-om.create"
@@ -26,6 +33,12 @@ function create {
 	chart_values_file=${digi_dir}config/${app_type}/${chart_values}
 	release_namespace=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentEngine.namespace")
 	
+	${digi_dir}cluster/${app_type}/${app_name}/bin/pre-execution-hook
+	if [[ ${?} -gt 0 ]]; then
+		echo "error"
+		exit 1
+	fi
+	
 	kubectl get namespace ${release_namespace}
 	if [[ ${?} -gt 0 ]]; then
 		echo "Namespace not available: ${release_namespace}.  Creating new"
@@ -37,13 +50,20 @@ function create {
 			echo "Created namespace: ${release_namespace}"
 		fi
 	fi
-	
+		
 	kubectl get deployment ${release_name} --namespace ${release_namespace}
 	if [[ ${?} -gt 0 ]]; then
 		echo "helm install ${release_name} ${chart_name} --namespace ${release_namespace} -f ${chart_values_file}"
 		helm repo add stable ${chart_repo}
 		helm repo update
 		helm install ${release_name} ${chart_name} --namespace ${release_namespace} -f ${chart_values_file}
+		
+		${digi_dir}cluster/${app_type}/${app_name}/bin/post-execution-hook
+		if [[ ${?} -gt 0 ]]; then
+			echo "error"
+		exit 1
+	fi
+		
 	else
 		echo "Release already available with name: ${release_namespace}.  Please delete it or use update command."
 		exit 1
@@ -76,16 +96,16 @@ function delete {
 	fi
 }
 
-shell_command_option=${2}
+shell_command_option=${3}
 case ${shell_command_option} in 
 	"create")	
-		create "${1}" "${3}"
+		create "${1}" "${2}" "${4}"
 		;;
 	"delete")
-		delete "${1}" "${3}"
+		delete "${1}" "${2}" "${4}"
 		;;
 	"update")
-		update "${1}" "${3}"
+		update "${1}" "${2}" "${4}"
 		;;
 	*)
 		echo "Command not known: ${shell_command_option}"

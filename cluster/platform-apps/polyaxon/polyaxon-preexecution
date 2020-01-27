@@ -2,14 +2,31 @@
 
 base_dir=~/
 digi_dir=${base_dir}digikube/
-polyaxon_dir=${digi_dir}platform-apps/polyaxon
 
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
+. ${digi_dir}common/digikube-config.sh
+
+digikube_config=${digi_dir}/config/digikube-config.yaml
+parse_yaml ${digikube_config} "_config_"
+
+app_type="${1}"
+app_name="${2}"
+app_command="${3}"
+app_command_param="${4}"
+
+alias python=python3
+
+chartName=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartName")
+chartRepo=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartRepo")
+release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.releaseName")
+namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
+config=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartValues")
 
 alias python=python3
 
 function init-polyaxon {
 
-	alias python=python3
 	##echo "setting up prerequisites"
 	##echo "checking pip3"
 
@@ -22,17 +39,16 @@ function init-polyaxon {
 	pip3 --version
 
 
-	helm version
-	if [[ $? -ne 0 ]]; then
-		helm repo add ${platform_app_name} ${chartName}
-		helm repo update
-	else
-		helm_version=$(helm version | cut -d "\"" -f 2 | head -n 1)
-		##echo "helm version: " $helm_version
-	fi
+	#helm version
+	#if [[ $? -ne 0 ]]; then
+	#	helm repo add ${platform_app_name} ${chartName}
+	#	helm repo update
+	#else
+	#	helm_version=$(helm version | cut -d "\"" -f 2 | head -n 1)
+	#	##echo "helm version: " $helm_version
+	#fi
 
 	polyaxon 
-
 	if [[ $? -ne 0 ]]; then
 		pip3 install -U polyaxon-cli
 		PATH=$PATH:${base_dir}/.local/bin
@@ -40,6 +56,7 @@ function init-polyaxon {
 	else
 		echo "polyaxon CLI exists"
 	fi
+	
 }
 
 function delete-polyaxon {

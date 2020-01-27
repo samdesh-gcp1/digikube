@@ -80,12 +80,14 @@ function create-polyaxon {
 
 	##echo "Run install command - this might take a while"
 
-	validate-polyaxon
+	init-polyaxon
 	
 }
 
 function validate-polyaxon {
 
+        init-polyaxon
+	
 	kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} |grep "poly"
 	status=$(kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} | grep "poly" | cut -d " " -f 4)
 

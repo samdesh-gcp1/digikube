@@ -23,39 +23,6 @@ release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngin
 namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
 config=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartValues")
 
-function init-polyaxon {
-
-	#alias python=python3
-	##echo "setting up prerequisites"
-	##echo "checking pip3"
-
-	pip3 --version
-	if [[ $? -ne 0 ]]; then
-		sudo apt install python3-pip
-		pip3 install --upgrade pip
-	fi
-
-	pip3 --version
-
-	#helm version
-	#if [[ $? -ne 0 ]]; then
-	#	helm repo add ${chartName} ${chartRepo}}
-	#	helm repo update
-	#else
-	#	helm_version=$(helm version | cut -d "\"" -f 2 | head -n 1)
-	#	##echo "helm version: " $helm_version
-	#fi
-
-	polyaxon 
-	if [[ $? -ne 0 ]]; then
-		pip3 install -U polyaxon-cli
-		PATH=$PATH:${base_dir}/.local/bin
-		polyaxon version 
-	else
-		echo "polyaxon CLI exists"
-	fi
-}
-
 function delete-polyaxon {
 	##echo "deleting existing polyaxon set-up"
 
@@ -69,7 +36,7 @@ function delete-polyaxon {
 	do
 		status=$(kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} | grep "poly" | cut -d " " -f 4)
 		sleep 10
-    done
+	done
 
 	kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} | grep "poly" 
 }
@@ -80,13 +47,14 @@ function create-polyaxon {
 
 	##echo "Run install command - this might take a while"
 
-	init-polyaxon
+	validate-polyaxon
 	
 }
 
+
 function validate-polyaxon {
 
-        init-polyaxon
+        #init-polyaxon
 	
 	kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} |grep "poly"
 	status=$(kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} | grep "poly" | cut -d " " -f 4)
@@ -113,6 +81,7 @@ function validate-polyaxon {
 function update-polyaxon {
 
 	polyaxon admin upgrade -f ${config}
+	validate-polyaxon
 
 }
 

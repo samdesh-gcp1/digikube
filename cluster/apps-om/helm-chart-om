@@ -31,7 +31,7 @@ function create {
 	release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.releaseName")
 	chart_values=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartValues")
 	chart_values_file=${digi_dir}config/${app_type}/${chart_values}
-	release_namespace=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentEngine.namespace")
+	release_namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
 	
 	${digi_dir}cluster/${app_type}/${app_name}/bin/pre-execution-hook
 	if [[ ${?} -gt 0 ]]; then

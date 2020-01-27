@@ -30,3 +30,4 @@ email:
   useTls: true
   hostUser: "foo"
   hostPassword: "bar"
+hostName: polyaxon.foo.com

@@ -50,12 +50,12 @@ function create {
 		helm repo add ${app_name} ${chart_repo}
 		helm repo update
 		helm install ${release_name} ${chart_name} --namespace ${release_namespace} -f ${chart_values_file}
-		
+		echo "Installation done... executing post installation hooks"
 		${digi_dir}cluster/${app_type}/${app_name}/bin/post-execution-hook
 		if [[ ${?} -gt 0 ]]; then
 			echo "error"
-		exit 1
-	fi
+			exit 1
+		fi
 		
 	else
 		echo "Release already available with name: ${release_namespace}.  Please delete it or use update command."

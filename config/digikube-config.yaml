@@ -43,7 +43,7 @@ component:
       localPath: "/usr/local/bin/kopsn"
   helm:
     version: "v2.13.1"
-    url: "https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz"
+    url: "https://get.helm.sh/helm-v2.13.1-linux-amd64.tar.gz"
     localPath: "/usr/local/bin/helm"      
 cluster:
   kops:

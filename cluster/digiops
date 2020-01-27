@@ -17,7 +17,7 @@ if [[ $# -gt 0 ]]; then
 		command_param="${3}"
 		${cluster_controller} ${command_name} ${command_param}
 	else
-		if [[ "${scope_name}" == "sys-apps" || "${scope_name}" == "platform-apps" || "${scope_name}" == "sample-apps" ]]; then
+		if [[ "${scope_name}" == "sysApps" || "${scope_name}" == "platformApps" || "${scope_name}" == "sampleApps" ]]; then
 			app_type="${1}"
 			app_name="${2}"
 			command_name="${3}"

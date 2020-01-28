@@ -101,7 +101,7 @@ app_command_option=${3}
 app_command_param="${4}"
 
 #This will load additional command options (like validate, downgrade, clean, purge, deep-delete, etc.)
-helm-chart-om-extension-shell=${digi_dir}cluster/${app_type}/${app_name}/bin/helm-chart-om-extension
+helm-chart-om-extension-shell="${digi_dir}cluster/${app_type}/${app_name}/bin/helm-chart-om-extension"
 if [[ -f ${helm-chart-om-extension-shell} ]]; then
 	${helm-chart-om-extension-shell} 
 	if [[ ${?} -gt 0 ]]; then

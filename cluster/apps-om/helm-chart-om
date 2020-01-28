@@ -49,7 +49,7 @@ function create {
 	fi
 		
 	kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
-	if [[ ${?} -gt 0 ]]; then
+	if [[ ${?} -eq 0 ]]; then
 		echo "Release already available with name: ${release_name}.  Please delete it or use update command."
 		exit 1
 	else

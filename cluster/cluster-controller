@@ -396,6 +396,9 @@ if [[ $# -gt 0 ]]; then
 		"create")
 			create-cluster
 			;;
+		"validate")
+			validate-cluster
+			;;
 		*)
 	esac
 fi

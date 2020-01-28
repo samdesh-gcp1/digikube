@@ -110,5 +110,11 @@ case ${app_command_option} in
 		;;
 	*)
 		#echo "Command not known: ${shell_command_option}"
-		${app_command_option} "${app_type}" "${app_name}" "${app_command_param}"
+		${app_command_option}
+		if [[ $? -eq 0 ]]; then
+			${app_command_option} "${app_type}" "${app_name}" "${app_command_param}"
+		else
+			echo "Command not available ${app_command_option}"
+			exit 1
+		fi
 esac

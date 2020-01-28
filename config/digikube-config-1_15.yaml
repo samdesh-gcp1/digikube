@@ -1,0 +1,122 @@
+cloud:
+  provider: "gce"
+  adminUser: "samdesh_gcp1"
+  project:
+    name: "digikube003"
+      overrideAllowed: "no"  
+    region: "us-central1"
+    zone: "us-central1-c"
+    vpc: "<dynamic>"
+  bucket:
+    nameSuffix: "bucket"
+    name: "<dynamic>"
+    class: "STANDARD"
+  bastionHost:
+    namePrefix: "bastion-host"
+    machineType: "f1-micro"
+    networkTier: "STANDARD"
+    preemptible: "Yes"
+    tagIdentifier: "bastion-host"
+    tags: "http-server,https-server"
+    image: "ubuntu-1804-bionic-v20191211"
+    imageProject: "ubuntu-os-cloud"
+    bootDiskSize: "10GB"
+    bootDiskType: "pd-standard"
+    labels: "type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"
+gitConfig:
+  digikube:
+    repository: "https://github.com/samdesh-gcp1/digikube.git"
+    user: "samdesh.gcp1@gmail.com"
+component:
+  kubectl:
+    version: "1.17"
+    url: "https://storage.googleapis.com/kubernetes-release/release/v1.17.0/bin/linux/amd64/kubectl"
+    localPath: "/usr/local/bin/kubectl"
+  kops:
+    version: "1.17.0-alpha.1"
+    localPath: "/usr/local/bin/kops"
+    kopsp:
+      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/kopsp.tar.gz"
+      localPath: "/usr/local/bin/kopsp"
+    kopsn:
+      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/kops.tar.gz"
+      localPath: "/usr/local/bin/kopsn"
+  helm:
+    version: "v3.0.2"
+    url: "https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz"
+    localPath: "/usr/local/bin/helm"      
+cluster:
+  kops:
+    featureFlags: "AlphaAllowGCE"
+    env: "dev1"
+    name: "<dynamic>"
+      prefix: "c1" 
+      suffix: "k8s.local"
+    master:
+      countMin: 1
+      countMax: 1
+      zone: "us-central1-c"
+      size: "g1-small"
+      volumeSize: 10
+      image: "cos-cloud/cos-stable-65-10323-99-0"
+    node:
+      countMin: 2
+      countMax: 2
+      zone: "us-central1-c"
+      size: "n1-standard-2"
+      volumeSize: 10
+      image: "cos-cloud/cos-stable-65-10323-99-0"
+    associatePublicIp: "false"  
+    preemptible: "true"
+  sysApps:
+    ingressController:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+      deploymentEngine: "helm-chart"
+        chartName: "stable/nginx-ingress"
+        chartRepo: "https://kubernetes-charts.storage.googleapis.com/"
+        releaseName: "ingress-controller"
+        chartValues: "ingress-controller-config-values.yaml"
+        namespace: "sys-apps"
+    kubernetesDashboard:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+      deploymentEngine: "helm-chart"
+        chartName: "stable/kubernetes-dashboard"
+        chartRepo: "https://kubernetes-charts.storage.googleapis.com/"
+        releaseName: "kubernetes-dashboard"
+        chartValues: "kubernetes-dashboard-config-values.yaml"
+        namespace: "kube-system"
+  platformApps:
+    polyaxon:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+        validate: "true"
+      deploymentEngine: "helm-chart"
+        chartName: "polyaxon/polyaxon"
+        chartRepo: "https://charts.polyaxon.com"
+        releaseName: "polyaxon"
+        chartValues: "polyaxon-config-values.yaml"
+        namespace: "polyaxon"
+        preExecutionHook: "polyaxon-preexecution.sh"
+        postExecutionHook: "polyaxon-postexecution.sh"
+  sampleApps:
+    nodeMongoSample:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+      deploymentEngine: "kubectl-apply"
+        appName: "node-mongo-sample"
+        appConfig: "node-mongo-sample-config.yaml"
+        namespace: "digikube-sample-apps"

@@ -3,7 +3,7 @@
 
 base_dir=~/
 digi_dir=${base_dir}digikube/
-digi_ops_executer=${digi_dir}cluster/digiops
+digiops_executer=${digi_dir}cluster/digiops
 
 #Install kubectl
 kubectl_installer=${digi_dir}installer/kubectl-installer
@@ -26,8 +26,15 @@ if [[ $? -gt 0 ]]; then
     exit 1
 fi
 
+#Install digiops
+digiops_installer=${digi_dir}installer/digiops-installer
+${digiops_installer}
+if [[ $? -gt 0 ]]; then
+    exit 1
+fi
+
 #Install cluster
-${digi_ops_executer} cluster create
+digiops cluster create
 if [[ $? -gt 0 ]]; then
     exit 1
 fi

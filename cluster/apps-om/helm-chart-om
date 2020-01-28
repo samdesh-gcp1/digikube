@@ -26,10 +26,13 @@ function create {
 	chart_values_file=${digi_dir}cluster/${app_type}/${app_name}/config/${chart_values}
 	release_namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
 	
-	${digi_dir}cluster/${app_type}/${app_name}/bin/pre-execution-hook
-	if [[ ${?} -gt 0 ]]; then
-		echo "error"
-		exit 1
+	pre_execution_hook_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/pre-execution-hook
+	if [[ -f ${pre_execution_hook_shell} ]]; then
+		${pre_execution_hook_shell}
+		if [[ ${?} -gt 0 ]]; then
+			echo "error"
+			exit 1
+		fi
 	fi
 	
 	kubectl get namespace ${release_namespace}
@@ -51,12 +54,14 @@ function create {
 		helm repo update
 		helm install ${release_name} ${chart_name} --namespace ${release_namespace} -f ${chart_values_file}
 		echo "Installation done... executing post installation hooks"
-		${digi_dir}cluster/${app_type}/${app_name}/bin/post-execution-hook
-		if [[ ${?} -gt 0 ]]; then
-			echo "error"
-			exit 1
+		post_execution_hook_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/post-execution-hook
+		if [[ -f ${post_execution_hook_shell} ]]; then
+			${post_execution_hook_shell}
+			if [[ ${?} -gt 0 ]]; then
+				echo "error"
+				exit 1
+			fi
 		fi
-		
 	else
 		echo "Release already available with name: ${release_namespace}.  Please delete it or use update command."
 		exit 1
@@ -96,7 +101,13 @@ app_command_param="${4}"
 
 #This will load additional command options (like validate, downgrade, clean, purge, deep-delete, etc.)
 helm-chart-om-extension-shell=${digi_dir}cluster/${app_type}/${app_name}/bin/helm-chart-om-extension
-${helm-chart-om-extension-shell} 
+if [[ -f ${helm-chart-om-extension-shell} ]]; then
+	${helm-chart-om-extension-shell} 
+	if [[ ${?} -gt 0 ]]; then
+		echo "error"
+		exit 1
+	fi
+fi
 
 case ${app_command_option} in 
 	"create")	

@@ -12,20 +12,24 @@ apps_controller=${digi_dir}cluster/apps-controller
 
 if [[ $# -gt 0 ]]; then
 	scope_name="${1}"
-	if [[ "${scope_name}" == "cluster" ]]; then
-		command_name="${2}"
-		command_param="${3}"
-		${cluster_controller} ${command_name} ${command_param}
+	if [[ "${scope_name}" == "version" ]]; then
+		cat ${digi_dir}version
 	else
-		if [[ "${scope_name}" == "sysApps" || "${scope_name}" == "platformApps" || "${scope_name}" == "sampleApps" ]]; then
-			app_type="${1}"
-			app_name="${2}"
-			command_name="${3}"
-			command_param="${4}"
-			${apps_controller} ${app_type} ${app_name} ${command_name} ${command_param} 
+		if [[ "${scope_name}" == "cluster" ]]; then
+			command_name="${2}"
+			command_param="${3}"
+			${cluster_controller} ${command_name} ${command_param}
 		else
-			echo "Unknown scope ${scope_name}"
-			exit 1
+			if [[ "${scope_name}" == "sysApps" || "${scope_name}" == "platformApps" || "${scope_name}" == "sampleApps" ]]; then
+				app_type="${1}"
+				app_name="${2}"
+				command_name="${3}"
+				command_param="${4}"
+				${apps_controller} ${app_type} ${app_name} ${command_name} ${command_param} 
+			else
+				echo "Unknown scope ${scope_name}"
+				exit 1
+			fi
 		fi
 	fi
 fi

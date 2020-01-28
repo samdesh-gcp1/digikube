@@ -1,7 +1,7 @@
 rbac:
   enabled: true
 ingress:
-  enabled: false
+  enabled: true
 serviceType: LoadBalancer
 user:
   username: "root"

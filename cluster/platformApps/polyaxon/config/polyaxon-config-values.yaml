@@ -24,10 +24,3 @@ persistence:
     data:
       mountPath: "/tmp/data"
       hostPath: "/tmp/data"
-email:
-  host: "smtp.gmail.com"
-  port: 587
-  useTls: true
-  hostUser: "foo"
-  hostPassword: "bar"
-hostName: polyaxon.foo.com

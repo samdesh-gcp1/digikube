@@ -29,17 +29,17 @@ gitConfig:
     user: "samdesh.gcp1@gmail.com"
 component:
   kubectl:
-    version: "1.17"
-    url: "https://storage.googleapis.com/kubernetes-release/release/v1.17.0/bin/linux/amd64/kubectl"
+    version: "1.15"
+    url: "https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl"
     localPath: "/usr/local/bin/kubectl"
   kops:
-    version: "1.17.0-alpha.1"
+    version: "1.15.0"
     localPath: "/usr/local/bin/kops"
     kopsp:
-      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/kopsp.tar.gz"
+      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/v15/kopsp.tar.gz"
       localPath: "/usr/local/bin/kopsp"
     kopsn:
-      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/kops.tar.gz"
+      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/v15/kopsn.tar.gz"
       localPath: "/usr/local/bin/kopsn"
   helm:
     version: "v3.0.2"

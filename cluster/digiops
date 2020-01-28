@@ -7,7 +7,7 @@ base_dir=~/
 digi_dir=${base_dir}digikube/
 
 cluster_controller=${digi_dir}cluster/cluster-controller
-sys_app_controller=${digi_dir}cluster/apps-controller
+apps_controller=${digi_dir}cluster/apps-controller
 #sample_app_controller=${digi_dir}cluster/sample-apps-controller
 
 if [[ $# -gt 0 ]]; then
@@ -22,7 +22,7 @@ if [[ $# -gt 0 ]]; then
 			app_name="${2}"
 			command_name="${3}"
 			command_param="${4}"
-			${sys_app_controller} ${app_type} ${app_name} ${command_name} ${command_param} 
+			${apps_controller} ${app_type} ${app_name} ${command_name} ${command_param} 
 		else
 			echo "Unknown scope ${scope_name}"
 			exit 1

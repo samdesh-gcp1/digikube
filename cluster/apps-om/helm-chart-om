@@ -89,17 +89,26 @@ function delete {
 	fi
 }
 
-shell_command_option=${3}
-case ${shell_command_option} in 
+app_type="${1}"
+app_name="${2}"
+app_command_option=${3}
+app_command_param="${4}"
+
+#This will load additional command options (like validate, downgrade, clean, purge, deep-delete, etc.)
+helm-chart-om-extension-shell=${digi_dir}cluster/${app_type}/${app_name}/bin/helm-chart-om-extension
+${helm-chart-om-extension-shell} 
+
+case ${app_command_option} in 
 	"create")	
-		create "${1}" "${2}" "${4}"
+		create "${app_type}" "${app_name}" "${app_command_param}"
 		;;
 	"delete")
-		delete "${1}" "${2}" "${4}"
+		delete "${app_type}" "${app_name}" "${app_command_param}"
 		;;
 	"update")
-		update "${1}" "${2}" "${4}"
+		update "${app_type}" "${app_name}" "${app_command_param}"
 		;;
 	*)
-		echo "Command not known: ${shell_command_option}"
+		#echo "Command not known: ${shell_command_option}"
+		${app_command_option} "${app_type}" "${app_name}" "${app_command_param}"
 esac

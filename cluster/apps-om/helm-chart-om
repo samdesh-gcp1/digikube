@@ -19,8 +19,9 @@ function create {
 	app_name="${2}"
 	app_command_param="${3}"
 
-	chart_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartName")
+	chart_repo_url=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartRepoUrl")
 	chart_repo=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartRepo")
+	chart_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartName")
 	release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.releaseName")
 	chart_values=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartValues")
 	chart_values_file=${digi_dir}cluster/${app_type}/${app_name}/config/${chart_values}
@@ -47,12 +48,12 @@ function create {
 		fi
 	fi
 		
-	kubectl get deployment ${release_name} --namespace ${release_namespace}
+	kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
 	if [[ ${?} -gt 0 ]]; then
-		echo "helm install ${release_name} ${chart_name} --namespace ${release_namespace} -f ${chart_values_file}"
-		helm repo add ${app_name} ${chart_repo}
+		echo "helm install ${release_name} ${chart_repo}/${chart_name} --namespace ${release_namespace} -f ${chart_values_file}"
+		helm repo add ${chart_repo}/${chart_name} ${chart_repo_url}
 		helm repo update
-		helm install ${release_name} ${chart_name} --namespace ${release_namespace} -f ${chart_values_file}
+		helm install ${release_name} ${chart_repo}/${chart_name} --namespace ${release_namespace} -f ${chart_values_file}
 		echo "Installation done... executing post installation hooks"
 		post_execution_hook_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/post-execution-hook
 		if [[ -f ${post_execution_hook_shell} ]]; then

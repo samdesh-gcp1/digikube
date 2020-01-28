@@ -1,0 +1,83 @@
+#!/bin/bash
+#Controller for sample-apps
+
+__function_name="cluster/sample-apps-controller"
+
+base_dir=~/
+digi_dir=${base_dir}digikube/
+
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
+. ${digi_dir}common/digikube-config.sh
+
+sample_app_name="${1}"
+sample_app_command="${2}"
+sample_app_command_param="${3}"
+
+is_app_enabled=$(get-config-value "cluster.sampleApps.${sample_app_name}.enabled")
+if [[ -z ${is_app_enabled} ]]; then
+	#The configuration is not defined for this application
+	echo "Application is not defined in configuration"
+	exit 1
+else
+	if [[ "${is_app_enabled}" == "true" ]]; then
+		#The app configuration is enabled
+		echo "Application is enabled in configuration"
+		is_command_enabled=$(get-config-value "cluster.sampleApps.${sample_app_name}.omCommands.${sample_app_command}")
+		if [[ -z ${is_command_enabled} ]]; then
+			#Command is not defined
+			echo "Command is not defined in configuration"
+			exit 1
+		else
+			if [[ "${is_command_enabled}" == "true" ]]; then
+				#Command is enabled in configuration"
+				echo "Command is enabled in configuration"
+				deployment_engine=$(get-config-value "cluster.sampleApps.${sample_app_name}.deploymentEngine")
+				case ${deployment_engine} in 
+					"cmd")	
+						sample_app_om_shell="${digi_dir}cluster/sample-apps-om/${sample_app_name}-om"
+						${sample_app_om_shell} ${sample_app_command} "${sample_app_command_param}"
+						__return_code=$?
+						;;
+					"helm-chart")
+						sample_app_om_shell="${digi_dir}cluster/sample-apps-om/helm-chart-om"
+						${sample_app_om_shell} ${sample_app_name} ${sample_app_command} "${sample_app_command_param}"
+						__return_code=$?
+						;;
+					"kubectl-apply")
+						sample_app_om_shell="${digi_dir}cluster/sample-apps-om/kubectl-apply-om"
+						deployment_params=$(get-config-value "cluster.sampleApps.${sample_app_name}.deploymentParams")
+						${sample_app_om_shell} ${sample_app_name} ${sample_app_command} ${deployment_params} "${sample_app_command_param}"
+						__return_code=$?
+						;;
+					"kubectl-crew")
+						#Need to change this section
+						sample_app_om_shell="${digi_dir}cluster/sample-apps-om/kubectl-crew-om"
+						deployment_params=$(get-config-value "cluster.sampleApps.${sample_app_name}.deploymentParams")
+						${sample_app_om_shell} ${sample_app_name} ${sample_app_command} ${deployment_params} "${sample_app_command_param}"
+						__return_code=$?
+						;;
+					*)
+						echo "Unknown deployment engine specified in config: ${deployment_engine}"
+						exit 1
+				esac
+
+				if [[ ${__return_code} -gt 0 ]]; then
+					#Error while executing the command
+					echo "Error while executing the command"
+					exit 1
+				else
+					#Command executed successfully
+					echo "Command executed successfuly"
+				fi
+			else
+				#Command is disabled in configuration
+				echo "Command is disabled in configuration"
+				exit 1
+			fi
+		fi
+	else
+		echo "Application is disabled in configuration"
+		exit 1
+	fi
+fi

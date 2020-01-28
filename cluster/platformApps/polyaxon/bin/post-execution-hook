@@ -1,0 +1,116 @@
+#! /bin/bash
+
+base_dir=~/
+digi_dir=${base_dir}digikube/
+
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
+. ${digi_dir}common/digikube-config.sh
+
+digikube_config=${digi_dir}config/digikube-config.yaml
+parse_yaml ${digikube_config} "_config_"
+
+app_type="${1}"
+app_name="${2}"
+app_command="${3}"
+app_command_param="${4}"
+
+alias python=python3
+
+chartName=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartName")
+chartRepo=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartRepo")
+release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.releaseName")
+namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
+config=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartValues")
+config_file=${digi_dir}cluster/${app_type}.${app_name}/config/${config}
+
+function delete-polyaxon {
+	##echo "deleting existing polyaxon set-up"
+
+	##echo "checking delete status 1001"
+
+	status=$(kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} | grep "poly" |cut -d " " -f 4)
+
+	##echo "status value="  $status
+
+	while [ $status != "No resources found in polyaxon namespace." ]
+	do
+		status=$(kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} | grep "poly" | cut -d " " -f 4)
+		sleep 10
+	done
+
+	kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} | grep "poly" 
+}
+
+
+
+function create-polyaxon {
+
+	##echo "Run install command - this might take a while"
+
+	validate-polyaxon
+	
+}
+
+
+function validate-polyaxon {
+
+        #init-polyaxon
+	
+	kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} |grep "poly"
+	status=$(kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} | grep "poly" | cut -d " " -f 4)
+
+	while [ $status != "2/2" ]
+	do
+		sleep 10
+		status=$(kubectl get pod -l "app=polyaxon-polyaxon-api" -n ${namespace} | grep "poly" | cut -d " " -f 4)
+		##echo $status
+	done
+	
+	if [[ $status == "2/2" ]]; then
+
+		export POLYAXON_IP=$(kubectl get svc --namespace ${namespace} polyaxon-polyaxon-api -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+		export POLYAXON_PORT=80
+		export POLYAXON_URL="http://${POLYAXON_IP}:${POLYAXON_PORT}"
+    ##echo "Click on the link to access polyaxon via browser" $POLYAXON_URL
+	
+		polyaxon config set --host=$POLYAXON_IP --port=$POLYAXON_PORT --verbose=True
+	fi
+  
+}
+
+function update-polyaxon {
+
+	polyaxon admin upgrade -f ${config_file}
+	validate-polyaxon
+
+}
+
+
+if [[ $# -gt 0 ]]; then
+	command_name="${1}"
+	case ${command_name} in
+		"delete")
+		delete-polyaxon
+		
+		;;
+		
+		"validate")
+		
+		validate-polyaxon
+		
+		;;
+		
+		"create")
+		
+		create-polyaxon
+		;;
+		
+		"update")
+		 
+		update-polyaxon
+		;;
+		
+		*)
+	esac
+fi

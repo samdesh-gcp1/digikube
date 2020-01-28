@@ -1,0 +1,26 @@
+rbac:
+  enabled: true
+ingress:
+  enabled: false
+serviceType: LoadBalancer
+user:
+  username: "root"
+  email: "root@polyaxon.local"
+  password: "rootpassword"
+persistence:
+  logs:
+    existingClaim:
+    mountPath: "/tmp/logs"
+    hostPath: "/tmp/logs"
+  repos:
+    existingClaim:
+    mountPath: "/tmp/repos"
+    hostPath: "/tmp/repos"
+  outputs:
+    outputs:
+      mountPath: "/tmp/outputs"
+      hostPath: "/tmp/outputs"
+  data:
+    data:
+      mountPath: "/tmp/data"
+      hostPath: "/tmp/data"

@@ -29,13 +29,22 @@ gitConfig:
     user: "samdesh.gcp1@gmail.com"
 component:
   kubectl:
-    version: "1.15"
-    url: "https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl"
+    version: "1.17"
+    url: "https://storage.googleapis.com/kubernetes-release/release/v1.17.0/bin/linux/amd64/kubectl"
     localPath: "/usr/local/bin/kubectl"
   kops:
-    version: "1.17.0"
-    url: "gs://digikube-bucket/digikube-package/kops-bin/kopsp"
+    version: "1.17.0-alpha.1"
     localPath: "/usr/local/bin/kops"
+    kopsp:
+      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/kopsp.tar.gz"
+      localPath: "/usr/local/bin/kopsp"
+    kopsn:
+      url: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/bin/kops.tar.gz"
+      localPath: "/usr/local/bin/kopsn"
+  helm:
+    version: "v3.0.2"
+    url: "https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz"
+    localPath: "/usr/local/bin/helm"      
 cluster:
   kops:
     featureFlags: "AlphaAllowGCE"
@@ -46,13 +55,68 @@ cluster:
     master:
       countMin: 1
       countMax: 1
+      zone: "us-central1-c"
       size: "g1-small"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"
     node:
       countMin: 2
       countMax: 2
-      size: "g1-small"
+      zone: "us-central1-c"
+      size: "n1-standard-2"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"
     associatePublicIp: "false"  
+    preemptible: "true"
+  sysApps:
+    ingressController:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+      deploymentEngine: "helm-chart"
+        chartName: "stable/nginx-ingress"
+        chartRepo: "https://kubernetes-charts.storage.googleapis.com/"
+        releaseName: "ingress-controller"
+        chartValues: "ingress-controller-config-values.yaml"
+        namespace: "sys-apps"
+    kubernetesDashboard:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+      deploymentEngine: "helm-chart"
+        chartName: "stable/kubernetes-dashboard"
+        chartRepo: "https://kubernetes-charts.storage.googleapis.com/"
+        releaseName: "kubernetes-dashboard"
+        chartValues: "kubernetes-dashboard-config-values.yaml"
+        namespace: "kube-system"
+  platformApps:
+    polyaxon:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+        validate: "true"
+      deploymentEngine: "helm-chart"
+        chartName: "polyaxon/polyaxon"
+        chartRepo: "https://charts.polyaxon.com"
+        releaseName: "polyaxon"
+        chartValues: "polyaxon-config-values.yaml"
+        namespace: "polyaxon"
+        preExecutionHook: "polyaxon-preexecution.sh"
+        postExecutionHook: "polyaxon-postexecution.sh"
+  sampleApps:
+    nodeMongoSample:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+      deploymentEngine: "kubectl-apply"
+        appName: "node-mongo-sample"
+        appConfig: "node-mongo-sample-config.yaml"
+        namespace: "digikube-sample-apps"

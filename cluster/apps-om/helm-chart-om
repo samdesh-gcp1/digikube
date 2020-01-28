@@ -50,9 +50,9 @@ function create {
 		
 	kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
 	if [[ ${?} -eq 0 ]]; then
-		echo "Release already available with name: ${release_name}.  Please delete it or use update command."
-		exit 1
-	else
+	#	echo "Release already available with name: ${release_name}.  Please delete it or use update command."
+	#	exit 1
+	#else
 		echo "helm install ${release_name} ${chart_repo}/${chart_name} --namespace ${release_namespace} -f ${chart_values_file}"
 		helm repo add ${chart_repo}/${chart_name} ${chart_repo_url}
 		helm repo update

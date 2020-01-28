@@ -44,7 +44,11 @@ component:
   helm:
     version: "v3.0.2"
     url: "https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz"
-    localPath: "/usr/local/bin/helm"      
+    localPath: "/usr/local/bin/helm"  
+  digiops:
+    version: "0.1"
+    url: "cluster/digiops"
+    localPath: "/usr/local/bin/digiops"      
 cluster:
   kops:
     featureFlags: "AlphaAllowGCE"

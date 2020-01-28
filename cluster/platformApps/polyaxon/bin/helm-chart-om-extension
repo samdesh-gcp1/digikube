@@ -1,0 +1,18 @@
+#! /bin/bash
+
+base_dir=~/
+digi_dir=${base_dir}digikube/
+
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
+. ${digi_dir}common/digikube-config.sh
+
+digikube_config=${digi_dir}config/digikube-config.yaml
+parse_yaml ${digikube_config} "_config_"
+
+if [[ -z ${1} ]]; then
+	exit 0
+else
+	echo "Hi"
+	exit 0
+fi

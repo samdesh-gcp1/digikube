@@ -126,13 +126,17 @@ app_command_option=${3}
 app_command_param="${4}"
 
 #This will load additional command options (like validate, downgrade, clean, purge, deep-delete, etc.)
+echo "helm_chart_om_extension_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/helm-chart-om-extension"
 helm_chart_om_extension_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/helm-chart-om-extension
 if [[ -f ${helm_chart_om_extension_shell} ]]; then
+	echo "Extension shell available"	
 	${helm_chart_om_extension_shell} 
 	if [[ ${?} -gt 0 ]]; then
 		echo "error"
 		exit 1
 	fi
+else
+	echo "Extension shell not available"
 fi
 
 case ${app_command_option} in 

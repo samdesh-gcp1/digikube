@@ -150,6 +150,7 @@ case ${app_command_option} in
 		update "${app_type}" "${app_name}" "${app_command_param}"
 		;;
 	"getRelease")
+		echo "get_release ${app_type} ${app_name} ${app_command_param}"
 		get_release "${app_type}" "${app_name}" "${app_command_param}"
 		;;
 	*)

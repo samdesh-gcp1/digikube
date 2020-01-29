@@ -74,8 +74,9 @@ function delete {
 
 	__function_name="cluster/apps-om/helm-chart-om.delete"
 	
-	app_name="${1}"
-	app_command_param="${2}"
+	app_type="${1}"
+	app_name="${2}"
+	app_command_param="${3}"
 
 	release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.releaseName")
 	release_namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
@@ -101,12 +102,14 @@ function get_release {
 
 	__function_name="cluster/apps-om/helm-chart-om.get_release"
 	
-	app_name="${1}"
-	app_command_param="${2}"
+	app_type="${1}"
+	app_name="${2}"
+	app_command_param="${3}"
 
 	release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.releaseName")
 	release_namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
 	
+	echo "$(kubectl get deployment -l release=${release_name} --namespace ${release_namespace} |  sed -n 1p | awk '{print $1;}')"
 	__deployment=$(kubectl get deployment -l release=${release_name} --namespace ${release_namespace} |  sed -n 1p | awk '{print $1;}')
 	#kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
 	if [[ -z ${__deployment} ]]; then

@@ -130,7 +130,7 @@ echo "helm_chart_om_extension_shell=${digi_dir}cluster/${app_type}/${app_name}/b
 helm_chart_om_extension_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/helm-chart-om-extension
 if [[ -f ${helm_chart_om_extension_shell} ]]; then
 	echo "Extension shell available"	
-	${helm_chart_om_extension_shell} 
+	. ${helm_chart_om_extension_shell} 
 	if [[ ${?} -gt 0 ]]; then
 		echo "error"
 		exit 1

@@ -1,7 +1,11 @@
 function validate {
 
-  echo "inside ${1} ${2} ${3} ${4}"
-  echo "Command not yet implemented."
-  exit 1
+  if [[ -z ${1} ]]; then
+    exit 0
+  else
+    echo "inside ${1} ${2} ${3} ${4}"
+    echo "Command not yet implemented."
+    exit 1
+  fi
 
 }

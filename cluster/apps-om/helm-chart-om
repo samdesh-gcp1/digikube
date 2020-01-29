@@ -47,12 +47,10 @@ function create {
 			echo "Created namespace: ${release_namespace}"
 		fi
 	fi
-		
-	kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
-	if [[ ${?} -eq 0 ]]; then
-	#	echo "Release already available with name: ${release_name}.  Please delete it or use update command."
-	#	exit 1
-	#else
+	
+	__deployment=$(kubectl get deployment -l release=${release_name} --namespace ${release_namespace} |  sed -n 1p | awk '{print $1;}')
+	#kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
+	if [[ -z ${__deployment} ]]; then
 		echo "helm install ${release_name} ${chart_repo}/${chart_name} --namespace ${release_namespace} -f ${chart_values_file}"
 		helm repo add ${chart_repo}/${chart_name} ${chart_repo_url}
 		helm repo update
@@ -66,6 +64,9 @@ function create {
 				exit 1
 			fi
 		fi
+	else
+		echo "Release already available with name: ${release_name}.  Please delete it or use update command."
+		exit 1
 	fi
 }
 
@@ -85,13 +86,34 @@ function delete {
 		exit 1
 	fi
 	
-	kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
-	if [[ ${?} -gt 0 ]]; then
+	__deployment=$(kubectl get deployment -l release=${release_name} --namespace ${release_namespace} |  sed -n 1p | awk '{print $1;}')
+	#kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
+	if [[ -z ${__deployment} ]]; then
 		echo "No release available with name: ${release_name}. Aborting."
 		exit 1
 	else
 		echo "helm delete ${release_name} --namespace ${release_namespace}"
 		helm delete ${release_name} --namespace ${release_namespace}
+	fi
+}
+
+function get_release {
+
+	__function_name="cluster/sys-apps-om/helm-chart-om.get-release"
+	
+	sys_app_name="${1}"
+	sys_app_command_param="${2}"
+
+	release_name=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentEngine.releaseName")
+	release_namespace=$(get-config-value "cluster.sysApps.${sys_app_name}.deploymentEngine.namespace")
+	
+	__deployment=$(kubectl get deployment -l release=${release_name} --namespace ${release_namespace} |  sed -n 1p | awk '{print $1;}')
+	#kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
+	if [[ -z ${__deployment} ]]; then
+		echo "No release available with name: ${release_name}."
+		exit 1
+	else
+		echo "Release available with name: ${release_name} in namespace: ${release_namespace}."
 	fi
 }
 
@@ -119,6 +141,9 @@ case ${app_command_option} in
 		;;
 	"update")
 		update "${app_type}" "${app_name}" "${app_command_param}"
+		;;
+	"get-release")
+		get_release "${app_type}" "${app_name}" 
 		;;
 	*)
 		#echo "Command not known: ${shell_command_option}"

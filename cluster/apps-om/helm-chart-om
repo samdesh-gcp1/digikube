@@ -142,7 +142,7 @@ case ${app_command_option} in
 	"update")
 		update "${app_type}" "${app_name}" "${app_command_param}"
 		;;
-	"get-release")
+	"getRelease")
 		get_release "${app_type}" "${app_name}" 
 		;;
 	*)

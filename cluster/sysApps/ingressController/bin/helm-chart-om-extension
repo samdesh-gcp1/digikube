@@ -1,5 +1,7 @@
 function validate {
 
   echo "inside ${1} ${2} ${3} ${4}"
+  echo "Command not yet implemented."
+  exit 1
 
 }

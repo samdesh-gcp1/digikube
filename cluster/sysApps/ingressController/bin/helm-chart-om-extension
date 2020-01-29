@@ -1,5 +1,5 @@
 function validate {
 
-  helm get release ${2}
+  echo "inside ${1} ${2} ${3} ${4}"
 
 }

@@ -13,7 +13,7 @@ cloud:
     class: "STANDARD"
   bastionHost:
     namePrefix: "bastion-host"
-    machineType: "f1-micro"
+    machineType: "g1-small"
     networkTier: "STANDARD"
     preemptible: "Yes"
     tagIdentifier: "bastion-host"

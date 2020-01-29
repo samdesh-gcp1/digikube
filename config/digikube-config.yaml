@@ -79,7 +79,7 @@ cluster:
         create: "true"
         update: "false"
         delete: "true"
-        validate: "false"
+        validate: "true"
         getRelease: "true"
       deploymentEngine: "helm-chart"
         chartRepoUrl: "https://kubernetes-charts.storage.googleapis.com/"

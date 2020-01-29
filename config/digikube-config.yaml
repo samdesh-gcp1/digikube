@@ -77,9 +77,10 @@ cluster:
       enabled: "true"
       omCommands:
         create: "true"
-        update: "true"
+        update: "false"
         delete: "true"
-        validate: "true"
+        validate: "false"
+        get-release: "true"
       deploymentEngine: "helm-chart"
         chartRepoUrl: "https://kubernetes-charts.storage.googleapis.com/"
         chartRepo: "stable"

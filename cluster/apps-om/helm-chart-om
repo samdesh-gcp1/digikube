@@ -99,7 +99,7 @@ function delete {
 
 function get_release {
 
-	__function_name="cluster/sys-apps-om/helm-chart-om.get-release"
+	__function_name="cluster/sys-apps-om/helm-chart-om.get_release"
 	
 	sys_app_name="${1}"
 	sys_app_command_param="${2}"

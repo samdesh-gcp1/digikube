@@ -28,8 +28,8 @@ function validate-digikube-config {
 	#gce bellow to be replaced by dynamic cloud provider detection
 	__cloud_provider="gce"
 	if [[ "${__config_cloud_provider}" == "${__cloud_provider}" ]]; then
-		#local current_cloud_project=$(get-cloud-project 'gce')
-		local current_cloud_project="$(gcloud info |tr -d '[]' | awk '/project:/ {print $2}')"
+		local current_cloud_project=$(get-cloud-project 'gce')
+		#local current_cloud_project="$(gcloud info |tr -d '[]' | awk '/project:/ {print $2}')"
 		echo ${current_cloud_project}
 		if [[ $? -gt 0 ]]; then
 			log_it "${__function_name}" "installer" "ERR" "2110" "Not able to get project details."

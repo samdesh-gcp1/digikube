@@ -91,6 +91,11 @@ f="$(wget -q -O - ${digikube_repo}/cloud-init/gce-bastion-host-init-shell.sh)"
 t="#<placeholder for digikube admin user name>"
 s="export DIGIKUBE_CLOUD_ADMIN=$(whoami)"
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
+
+f=$n
+t="#<placeholder for digikube repo url>"
+s="export digikube_repo=${digikube_repo}"
+[ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
 export BASTION_INIT_SCRIPT=$n
 
 #echo $f

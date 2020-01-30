@@ -5,6 +5,21 @@ export DIGIKUBE_CLOUD_ADMIN=$(whoami)
 FLOW_OPTION_YES="yes"
 FLOW_OPTION_NO="no"
 
+DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
+
+BASTION_HOST_NAME="bastion-host-01"
+export BASTION_HOST_ZONE=$(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(zone)")
+if [ $? -gt 0 ]; then
+	echo "Unable to get the cloud zone details.  Exiting the DigiKube delete."
+	echo "Manually review and delete DigiKube cloud resources."
+	exit 1
+fi
+if [ -z ${BASTION_HOST_ZONE} ]; then
+	echo "Unable to get the cloud zone details.  Exiting the DigiKube delete."
+	echo "Manually review and delete DigiKube cloud resources."
+	exit 1
+fi
+
 if [ $# -gt 0 ]; then
 	FLOW_DELETE_CHOICE=$1
 else
@@ -67,23 +82,32 @@ else
 fi
 
 ##########################################################
+#Get bastion host
+IP=$(gcloud compute instances list --zone=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
+if nc -w 1 -z $IP 22; then
+    echo "OK! Ready for heavy metal"
+    
+else
+    gcloud compute instances start $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE
+    IP=$(gcloud compute instances list --zone=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
+    if nc -w 1 -z $IP 22; then
+    	echo "OK! Ready for heavy metal"
+		
+	else
+		echo "Not able to access bastion host."
+		exit 1
+	fi
+fi
+echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
+gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
+
+
+##########################################################
 #Delete the Bastion Host for DigiKube
 if [ "$FLOW_DELETE_BASTION_HOST" = "$FLOW_OPTION_YES" ]; then
-	export BASTION_HOST_NAME="bastion-host-01"
-	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME}."
-	export BASTION_HOST_ZONE=$(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(zone)")
-	if [ $? -gt 0 ]; then
-		echo "Unable to get the bastion host or its zone details.  Exiting the DigiKube delete."
-		echo "Manually review and delete DigiKube cloud resources."
-		exit 1
-	fi
-	if [ -z ${BASTION_HOST_ZONE} ]; then
-		echo "Unable to get the bastion host or its zone details.  Exiting the DigiKube delete."
-		echo "Manually review and delete DigiKube cloud resources."
-		exit 1
-	else
-		echo "Deleting bastion host in zone: ${BASTION_HOST_ZONE}."
-	fi
+	
+	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME} in zone ${BASTION_HOST_ZONE}."
+		
 	if [ -z $(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(name)") ]; then
   		echo "No bastion host available with the name ${BASTION_HOST_NAME}.  Skipping bastion host deletion."
 	else

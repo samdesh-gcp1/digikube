@@ -93,7 +93,7 @@ fi
 
 ##########################################################
 #Get bastion host
-if [ "$FLOW_DELETE_CLUSTER" = "$FLOW_OPTION_YES" ]; then
+if [ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]; then
 	bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
 	if [[ "${bastion_status}" == "status: RUNNING" ]]; then
     		echo "OK! Ready for heavy metal"
@@ -122,7 +122,7 @@ if [ "$FLOW_DELETE_CLUSTER" = "$FLOW_OPTION_YES" ]; then
 	fi
 fi
 
-##########################################################
+
 #Delete the Bastion Host for DigiKube
 echo "This is $FLOW_DELETE_BASTION_HOST"
 if [ "$FLOW_DELETE_BASTION_HOST" = "$FLOW_OPTION_YES" ]; then

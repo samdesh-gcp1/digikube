@@ -15,7 +15,7 @@ else
 					Only K8S Cluster: cluster\n
 					K8S Cluster with bastion host:	bastion-host\n
 					K8S Cluster, bastion-host, cloud-resourses: all\n
-					K8S Cluster, bastion-host, cloud-resources, bucket:	all-with-bucket\n
+					K8S Cluster, bastion-host, cloud-resources, bucket: all-with-bucket\n
 					>> : " delete_scope	
 		#wget -q --no-cache -O - "${digikube_repo}/cloud-init/gce-cloud-delete.sh ${delete_scope}" | bash
 		echo "wget -q --no-cache -O - ${digikube_repo}/cloud-init/gce-cloud-delete.sh ${delete_scope} | bash"

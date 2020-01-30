@@ -9,57 +9,57 @@ digi_dir=${base_dir}digikube/
 
 
 function export-digikube-config {
-# Get the DigiKube configuration
+	# Get the DigiKube configuration
 
-__function_name="common/export-digikube-config"
+	__function_name="common/export-digikube-config"
 
-digikube_config=${digi_dir}config/digikube-config.yaml
-parse_yaml ${digikube_config} "__config_"
+	digikube_config=${digi_dir}config/digikube-config.yaml
+	parse_yaml ${digikube_config} "__config_"
 
-log_it "${__function_name}" "installer" "DEBUG" "2110" "Exported the DigiKube configuration"
-
+	log_it "${__function_name}" "installer" "DEBUG" "2110" "Exported the DigiKube configuration"
 }
 
 function validate-digikube-config {
-#Validate the digikube config against the current setup
+	#Validate the digikube config against the current setup
 
-  __function_name="common/validate-digikube-config"
+	__function_name="common/validate-digikube-config"
 
-#Cloud provider
-  if [[ "${__config_cloud_provider}" = "gce" ]]; then
-      local cloud_project=$(get-cloud-project 'gce')
-      if [[ $? -gt 0 ]]; then
-          log_it "${__function_name}" "installer" "ERR" "2110" "Current cloud execution environment is not same as the one specified in config.  Exiting."
-          exit 1
-      fi
-  else
-      log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
-      exit 1
-  fi
+	#Cloud provider
+	#gce bellow to be replaced by dynamic cloud provider detection
+	__cloud_provider="gce"
+	if [[ "${__config_cloud_provider}" == "${__cloud_provider} ]]; then
+		local current_cloud_project=$(get-cloud-project 'gce')
+		if [[ $? -gt 0 ]]; then
+			log_it "${__function_name}" "installer" "ERR" "2110" "Not able to get project details."
+			exit 1
+		else
+      		#Cloud project
+  			if [[ "${__config_cloud_project_name}" == "${current_cloud_project}" ]]; then
+      			#do nothing
+      			temp1="1"
+  			else
+      			log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
+      			exit 1
+  			fi
+	else
+		log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
+		exit 1
+	fi
 
-#Cloud admin user
-  if [[ "${__config_cloud_adminUser}" = "$(whoami)" ]]; then
-      #do nothing
-      temp1="1"
-  else
-      log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
-      exit 1
-  fi
-  
-#Cloud project
-  if [[ "${__config_cloud_project_name}" = "$(get-cloud-project 'gce')" ]]; then
-      #do nothing
-      temp1="1"
-  else
-      log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
-      exit 1
-  fi
-  
-#VPC
-  export __config_cloud_project_vpc="${__config_cloud_project_name}-vpc"
+	#Cloud admin user
+	if [[ "${__config_cloud_adminUser}" == "$(whoami)" ]]; then
+		#do nothing
+		temp1="1"
+	else
+		log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
+		exit 1
+	fi
 
-#Bucket
-  export __config_cloud_bucket_name="${__config_cloud_adminUser}-${__config_cloud_project_name}-${__config_cloud_bucket_nameSuffix}"
+	#VPC
+	export __config_cloud_project_vpc="${__config_cloud_project_name}-vpc"
+
+	#Bucket
+	export __config_cloud_bucket_name="${__config_cloud_adminUser}-${__config_cloud_project_name}-${__config_cloud_bucket_nameSuffix}"
 
 }
 

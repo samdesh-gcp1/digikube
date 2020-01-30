@@ -124,7 +124,7 @@ fi
 
 ##########################################################
 #Delete the Bastion Host for DigiKube
-echo $FLOW_DELETE_BASTION_HOST
+echo "This is $FLOW_DELETE_BASTION_HOST"
 if [ "$FLOW_DELETE_BASTION_HOST" = "$FLOW_OPTION_YES" ]; then
 	
 	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME} in zone ${BASTION_HOST_ZONE}."

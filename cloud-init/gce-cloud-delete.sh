@@ -36,19 +36,29 @@ if [ -z $FLOW_DELETE_CHOICE ]; then
 	exit 1
 else
 	if [[ "$FLOW_DELETE_CHOICE" == "all-with-bucket" ]]; then
+		FLOW_DELETE_CLUSTER=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_YES
 		FLOW_DELETE_VPC=$FLOW_OPTION_YES
 		FLOW_DELETE_BUCKET=$FLOW_OPTION_YES
 	fi
 	if [[ "$FLOW_DELETE_CHOICE" == "all" ]]; then
+		FLOW_DELETE_CLUSTER=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_YES
 		FLOW_DELETE_VPC=$FLOW_OPTION_YES
 		FLOW_DELETE_BUCKET=$FLOW_OPTION_NO
 	fi
 	if [[ "$FLOW_DELETE_CHOICE" == "bastion-host" ]]; then
+		FLOW_DELETE_CLUSTER=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
+		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_NO
+		FLOW_DELETE_VPC=$FLOW_OPTION_NO
+		FLOW_DELETE_BUCKET=$FLOW_OPTION_NO
+	fi
+	if [[ "$FLOW_DELETE_CHOICE" == "cluster" ]]; then
+		FLOW_DELETE_CLUSTER=$FLOW_OPTION_YES
+		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_NO
 		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_NO
 		FLOW_DELETE_VPC=$FLOW_OPTION_NO
 		FLOW_DELETE_BUCKET=$FLOW_OPTION_NO
@@ -83,23 +93,23 @@ fi
 
 ##########################################################
 #Get bastion host
-bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
-if [[ "${bastion_status}" == "status: RUNNING" ]]; then
-    echo "OK! Ready for heavy metal"
-    
-else
-    gcloud compute instances start $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE
-    bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
-    #IP=$(gcloud compute instances list --zones=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
-    if [[ "${bastion_status}" == "status: RUNNING" ]]; then
-    	echo "OK! Ready for heavy metal"
-	else
-		echo "Not able to access bastion host."
-		exit 1
+if [ "$FLOW_DELETE_CLUSTER" = "$FLOW_OPTION_YES" ]; then
+	bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
+	if [[ "${bastion_status}" == "status: RUNNING" ]]; then
+    		echo "OK! Ready for heavy metal"
+    	else
+    		gcloud compute instances start $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE
+    		bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
+    		if [[ "${bastion_status}" == "status: RUNNING" ]]; then
+    			echo "OK! Ready for heavy metal"
+		else
+			echo "Not able to access bastion host."
+			exit 1
+		fi
 	fi
+	echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
+	gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
 fi
-echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
-gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
 
 ##########################################################
 #Delete the Bastion Host for DigiKube

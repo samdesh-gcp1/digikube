@@ -2,6 +2,11 @@
 # Init script
 
 BASE_DIR=~/
+digikube_lock=${BASE_DIR}/.digikube-lock
+if [[ -f ${digikube_lock} ]]; then
+	echo "Exiting"
+	exit 0
+fi
 
 LOG_DIR=${BASE_DIR}digikube-logs/
 if [[ -d ${LOG_DIR} ]]; then
@@ -64,4 +69,4 @@ else
 	exit 1
 fi
 
-
+touch ${digikube_lock}

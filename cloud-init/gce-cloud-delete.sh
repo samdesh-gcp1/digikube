@@ -115,21 +115,15 @@ if [ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]; then
 	else
 		if [[ __return_code -eq 2 ]]; then
 			echo "this is also ok"
-			echo "ttttt"
 		else
 			echo "this is not ok"
 			exit 1
 		fi
-		echo "mmmmm"
 	fi
-	echo "nnnnn"
 fi
-echo "hhhhh"
 
-echo "iiiii"
 #Delete the Bastion Host for DigiKube
-echo "aaaa"
-echo "This is $FLOW_DELETE_BASTION_HOST"
+
 if [ "$FLOW_DELETE_BASTION_HOST" = "$FLOW_OPTION_YES" ]; then
 	
 	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME} in zone ${BASTION_HOST_ZONE}."

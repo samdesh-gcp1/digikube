@@ -17,7 +17,8 @@ else
 					K8S Cluster, bastion-host, cloud-resourses: all\n
 					K8S Cluster, bastion-host, cloud-resources, bucket: all-with-bucket\n
 					>> : " delete_scope	
-		#wget -q --no-cache -O - "${digikube_repo}/cloud-init/gce-cloud-delete.sh ${delete_scope}" | bash
-		echo "wget -q --no-cache -O - ${digikube_repo}/cloud-init/gce-cloud-delete.sh ${delete_scope} | bash"
+		export FLOW_DELETE_CHOICE_ENV_VAR=${delete_scope}
+		#wget -q --no-cache -O - "${digikube_repo}/cloud-init/gce-cloud-delete.sh" | bash
+		echo "wget -q --no-cache -O - ${digikube_repo}/cloud-init/gce-cloud-delete.sh | bash"
 	fi
 fi

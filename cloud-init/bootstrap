@@ -1,1 +1,7 @@
 
+function get_file {
+  file_name="${1}"
+  export source_url="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master"
+wget -q --no-cache -O $file_name - "$source_url/test2.sh"
+chmod +x $file_name
+./$file_name $source_url

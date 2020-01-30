@@ -52,7 +52,7 @@ function create {
 	#kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
 	if [[ -z ${__deployment} ]]; then
 		echo "helm install ${release_name} ${chart_repo}/${chart_name} --namespace ${release_namespace} -f ${chart_values_file}"
-		helm repo add ${chart_repo}/${chart_name} ${chart_repo_url}
+		helm repo add ${chart_repo} ${chart_repo_url}
 		helm repo update
 		helm install ${release_name} ${chart_repo}/${chart_name} --namespace ${release_namespace} -f ${chart_values_file}
 		echo "Installation done... executing post installation hooks"

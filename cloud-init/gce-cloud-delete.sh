@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export DIGIKUBE_CLOUD_ADMIN=$(whoami)
+export digikube_cloud_admin=$(whoami)
 
 FLOW_OPTION_YES="yes"
 FLOW_OPTION_NO="no"
@@ -83,13 +83,13 @@ fi
 
 ##########################################################
 #Get bastion host
-IP=$(gcloud compute instances list --zone=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
+IP=$(gcloud compute instances list --zones=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
 if nc -w 1 -z $IP 22; then
     echo "OK! Ready for heavy metal"
     
 else
-    gcloud compute instances start $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE
-    IP=$(gcloud compute instances list --zone=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
+    gcloud compute instances start $BASTION_HOST_NAME --zones=$BASTION_HOST_ZONE
+    IP=$(gcloud compute instances list --zones=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
     if nc -w 1 -z $IP 22; then
     	echo "OK! Ready for heavy metal"
 		
@@ -98,8 +98,8 @@ else
 		exit 1
 	fi
 fi
-echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
-gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
+echo "gcloud compute ssh $BASTION_HOST_NAME --zones=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
+gcloud compute ssh $BASTION_HOST_NAME --zones=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
 
 
 ##########################################################
@@ -174,7 +174,7 @@ fi
 #Delete the storage bucket for DigiKube
 if [ "$FLOW_DELETE_BUCKET" = "$FLOW_OPTION_YES" ]; then
 	
-	CLOUD_BUCKET="${DIGIKUBE_CLOUD_ADMIN}-${CLOUD_PROJECT}-bucket"
+	CLOUD_BUCKET="${digikube_cloud_admin}-${CLOUD_PROJECT}-bucket"
 	BUCKET_URL="gs://${CLOUD_BUCKET}"
 	echo "Attempting to delete bucket for Digikube.  Bucket name: ${CLOUD_BUCKET}."
 	

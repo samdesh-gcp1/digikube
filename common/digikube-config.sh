@@ -41,8 +41,9 @@ function validate-digikube-config {
       			log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
       			exit 1
   			fi
+		fi
 	else
-		log_it "${__function_name}" "installer" "ERR" "2110" "Cloud project is not same as the one specified in config.  Exiting"
+		log_it "${__function_name}" "installer" "ERR" "2110" "Cloud provider is not same as the one specified in config.  Exiting"
 		exit 1
 	fi
 

@@ -5,6 +5,12 @@
 #<placeholder for digikube admin user name>
 #<placeholder for digikube repo url>
 
+BASE_DIR=~/
+digikube_init_lock=${BASE_DIR}/.digikube-init-lock
+if [[ -f ${digikube_lock} ]]; then
+	echo "Exiting"
+	exit 0
+fi
 
 if [ $# -gt 0 ]; then
   DIGIKUBE_CLOUD_ADMIN=$1
@@ -26,3 +32,5 @@ su - $DIGIKUBE_CLOUD_ADMIN --preserve-environment -c "$INIT_SCRIPT_SOURCE"
 su - $DIGIKUBE_CLOUD_ADMIN --preserve-environment -c "chmod +x /tmp/gce-bastion-host-init.sh"
 
 su - $DIGIKUBE_CLOUD_ADMIN --preserve-environment -c "/tmp/gce-bastion-host-init.sh"
+
+su - $DIGIKUBE_CLOUD_ADMIN --preserve-environment -c "touch ${digikube_init_lock}"

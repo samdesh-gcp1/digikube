@@ -4,7 +4,7 @@
 if [[ ${#} -lt 2 ]]; then
 	echo "Insufficient parameters provided."
 else
-	digikube_repo="${1}"
+	export digikube_repo="${1}"
 	bootstrap_command="${2}"
 	
 	if [[ "${bootstrap_command}" == "create" ]]; then

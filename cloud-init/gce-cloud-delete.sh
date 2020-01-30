@@ -124,6 +124,7 @@ fi
 
 ##########################################################
 #Delete the Bastion Host for DigiKube
+echo $FLOW_DELETE_BASTION_HOST
 if [ "$FLOW_DELETE_BASTION_HOST" = "$FLOW_OPTION_YES" ]; then
 	
 	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME} in zone ${BASTION_HOST_ZONE}."
@@ -149,6 +150,7 @@ export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
 
 ###########################################################
 #Delete firewall rule for bastion host
+
 if [ "$FLOW_DELETE_BASTION_FIREWALL_RULE" = "$FLOW_OPTION_YES" ]; then
 	export BASTION_HOST_FIREWALL_RULE_NAME="${CLOUD_SUBNET}-allow-bastion-ssh"
 	echo "Attempting to delete firewall rule for bastion host: ${BASTION_HOST_FIREWALL_RULE_NAME}"

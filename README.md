@@ -23,4 +23,4 @@
       bootstrap_shell="/tmp/digikube-${RANDOM}";
       wget -q --no-cache -O ${bootstrap_shell} - "${digikube_repo}/cloud-init/bootstrap";
       chmod +x ${bootstrap_shell};
-      ${bootstrap_shell} ${digikube_repo} delete 
+      . ${bootstrap_shell} ${digikube_repo} delete 

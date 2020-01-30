@@ -245,7 +245,7 @@ function delete-cluster {
 	__kops_exit_status=$?
 	if [[ ${__kops_exit_status} -gt 0 ]]; then
 		log_it "${__function_name}" "installer" "ERR" "2110" "No cluster available for deletion"
-		exit 1
+		exit 2
 	fi
 
 	kops delete cluster                 \

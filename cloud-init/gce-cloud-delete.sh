@@ -83,24 +83,23 @@ fi
 
 ##########################################################
 #Get bastion host
-IP=$(gcloud compute instances list --zones=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
-if nc -w 1 -z $IP 22; then
+bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
+if [[ "${bastion_status}" == "status: RUNNING" ]]; then
     echo "OK! Ready for heavy metal"
     
 else
-    gcloud compute instances start $BASTION_HOST_NAME --zones=$BASTION_HOST_ZONE
-    IP=$(gcloud compute instances list --zones=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
-    if nc -w 1 -z $IP 22; then
+    gcloud compute instances start $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE
+    bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
+    #IP=$(gcloud compute instances list --zones=$BASTION_HOST_ZONE | awk '/'$BASTION_HOST_NAME'/ {print $5}')
+    if [[ "${bastion_status}" == "status: RUNNING" ]]; then
     	echo "OK! Ready for heavy metal"
-		
 	else
 		echo "Not able to access bastion host."
 		exit 1
 	fi
 fi
-echo "gcloud compute ssh $BASTION_HOST_NAME --zones=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
-gcloud compute ssh $BASTION_HOST_NAME --zones=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
-
+echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
+gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
 
 ##########################################################
 #Delete the Bastion Host for DigiKube

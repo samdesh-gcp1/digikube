@@ -109,6 +109,17 @@ if [ "$FLOW_DELETE_CLUSTER" = "$FLOW_OPTION_YES" ]; then
 	fi
 	echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
 	gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
+	__return_code=$?
+	if [[ __return_code -eq 0 ]]; then
+		echo "ok"
+	else
+		if [[ __return_code -eq 2 ]]; then
+			echo "this is also ok"
+		else
+			echo "this is not ok"
+			exit 1
+		fi
+	fi
 fi
 
 ##########################################################

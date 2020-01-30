@@ -3,6 +3,8 @@
 
 #Do not change the bellow line -- will be replaced at runtime
 #<placeholder for digikube admin user name>
+#<placeholder for digikube repo url>
+
 
 if [ $# -gt 0 ]; then
   DIGIKUBE_CLOUD_ADMIN=$1

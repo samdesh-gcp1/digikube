@@ -124,7 +124,7 @@ if [ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]; then
 	echo "continue11"
 fi
 
-echo "continue"
+echo "continue ddd"
 
 #Delete the Bastion Host for DigiKube
 

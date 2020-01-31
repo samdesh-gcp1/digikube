@@ -24,5 +24,9 @@ function deleteFull {
 	delete ${1} ${2} "crds.yaml" 
 	echo "deleted crds"
 	
+	kubectl delete secret ops-manager-gen-key --namespace=${release_namespace}
+	kubectl delete pvc --all --namespace=${release_namespace}
 	kubectl delete pv --all --namespace=${release_namespace}
+	kubectl delete namespace ${release_namespace}
+	
 }

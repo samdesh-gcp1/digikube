@@ -114,7 +114,8 @@ if [ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]; then
 		echo "ok"
 	else
 		if [[ __return_code -eq 2 ]]; then
-			echo "this is also ok"
+			echo "this is also ok 1"
+			echo "sss"
 		else
 			echo "this is not ok"
 			exit 1

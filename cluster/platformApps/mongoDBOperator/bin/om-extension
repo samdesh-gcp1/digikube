@@ -1,1 +1,7 @@
+function createFull {
 
+	__function=cluster/platformApps/mongoDBOperator/bin/om-extension
+	
+	create
+
+}

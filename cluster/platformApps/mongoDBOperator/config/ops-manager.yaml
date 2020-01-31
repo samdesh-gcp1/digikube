@@ -35,3 +35,7 @@ spec:
     persistent: true
     podSpec:
       cpu: '0.25'
+      
+  externalConnectivity:
+    type: NodePort
+    port: 30036

@@ -143,6 +143,7 @@ function update-cluster {
 
 	#TODO: Need to get updated cluster configurations and apply
 	kops update cluster                   \
+		--name=${kops_cluster_name}      \
 		--state=${kops_state_store}	  \
 		--yes
         

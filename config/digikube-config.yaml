@@ -125,12 +125,8 @@ cluster:
         validate: "true"
         createFull: "true"
       deploymentEngine: "kubectl-apply"
-        chartRepoUrl: "https://charts.polyaxon.com"
-        chartRepo: "polyaxon"
-        chartName: "polyaxon/polyaxon"
-        releaseName: "polyaxon"
-        chartValues: "polyaxon-config-values.yaml"
-        namespace: "polyaxon"      
+        configFileName: ""
+        namespace: "mongodb"      
   sampleApps:
     nodeMongoSample:
       enabled: "true"

@@ -120,6 +120,7 @@ if [ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]; then
 			exit 1
 		fi
 	fi
+	echo "continue11"
 fi
 
 echo "continue"

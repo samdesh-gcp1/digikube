@@ -30,7 +30,7 @@ spec:
   # the application database backing Ops Manager. Replica Set is the only supported type
   # Application database has the SCRAM-SHA authentication mode always enabled
   applicationDatabase:
-    members: 3
+    members: 1
     version: 4.2.0
     persistent: true
     podSpec:

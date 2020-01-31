@@ -19,22 +19,18 @@ function create {
 	app_name="${2}"
 	app_command_param="${3}"
 
-	chart_repo_url=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartRepoUrl")
-	chart_repo=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartRepo")
-	chart_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartName")
-	release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.releaseName")
-	chart_values=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.chartValues")
-	chart_values_file=${digi_dir}cluster/${app_type}/${app_name}/config/${chart_values}
+	config_file_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.configFileName")
+	config_file_path=${digi_dir}cluster/${app_type}/${app_name}/config/${config_file_name}
 	release_namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
 	
-	pre_execution_hook_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/pre-execution-hook
-	if [[ -f ${pre_execution_hook_shell} ]]; then
-		${pre_execution_hook_shell} create
-		if [[ ${?} -gt 0 ]]; then
-			echo "error"
-			exit 1
-		fi
-	fi
+	#pre_execution_hook_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/pre-execution-hook
+	#if [[ -f ${pre_execution_hook_shell} ]]; then
+	#	${pre_execution_hook_shell} create
+	#	if [[ ${?} -gt 0 ]]; then
+	#		echo "error"
+	#		exit 1
+	#	fi
+	#fi
 	
 	kubectl get namespace ${release_namespace}
 	if [[ ${?} -gt 0 ]]; then
@@ -48,26 +44,18 @@ function create {
 		fi
 	fi
 	
-	__deployment=$(kubectl get deployment -l release=${release_name} --namespace ${release_namespace} |  sed -n 2p | awk '{print $1;}')
-	#kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
-	if [[ -z ${__deployment} ]]; then
-		echo "helm install ${release_name} ${chart_name} --namespace ${release_namespace} -f ${chart_values_file}"
-		helm repo add ${chart_repo} ${chart_repo_url}
-		helm repo update
-		helm install ${release_name} ${chart_name} --namespace ${release_namespace} -f ${chart_values_file}
-		echo "Installation done... executing post installation hooks"
-		post_execution_hook_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/post-execution-hook
-		if [[ -f ${post_execution_hook_shell} ]]; then
-			${post_execution_hook_shell} create
-			if [[ ${?} -gt 0 ]]; then
-				echo "error"
-				exit 1
-			fi
-		fi
-	else
-		echo "Release already available with name: ${release_name}.  Please delete it or use update command."
-		exit 1
-	fi
+	echo "kubectl apply -f ${config_file_path} --namespace ${release_namespace}"
+	kubectl apply -f "${config_file_path}" --namespace "${release_namespace}"
+	echo "Installation done... executing post installation hooks"
+	#post_execution_hook_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/post-execution-hook
+	#if [[ -f ${post_execution_hook_shell} ]]; then
+	#	${post_execution_hook_shell} create
+	#	if [[ ${?} -gt 0 ]]; then
+	#		echo "error"
+	#		exit 1
+	#	fi
+	#fi
+
 }
 
 function delete {
@@ -126,11 +114,11 @@ app_command_option=${3}
 app_command_param="${4}"
 
 #This will load additional command options (like validate, downgrade, clean, purge, deep-delete, etc.)
-echo "helm_chart_om_extension_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/helm-chart-om-extension"
-helm_chart_om_extension_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/helm-chart-om-extension
-if [[ -f ${helm_chart_om_extension_shell} ]]; then
+echo "om_extension_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/om-extension"
+om_extension_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/om-extension
+if [[ -f ${om_extension_shell} ]]; then
 	echo "Extension shell available"	
-	. ${helm_chart_om_extension_shell} 
+	. ${om_extension_shell} 
 	if [[ ${?} -gt 0 ]]; then
 		echo "error"
 		exit 1

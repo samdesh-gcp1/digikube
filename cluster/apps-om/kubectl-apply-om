@@ -61,13 +61,15 @@ function create {
 
 function delete {
 
-	__function_name="cluster/apps-om/helm-chart-om.delete"
+	__function_name="cluster/apps-om/kubectl-apply-om.delete"
 	
 	app_type="${1}"
 	app_name="${2}"
 	app_command_param="${3}"
 
-	release_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.releaseName")
+	#config_file_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.configFileName")
+	config_file_name=${app_command_param}
+	config_file_path=${digi_dir}cluster/${app_type}/${app_name}/config/${config_file_name}
 	release_namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
 	
 	kubectl get namespace ${release_namespace}
@@ -76,15 +78,10 @@ function delete {
 		exit 1
 	fi
 	
-	__deployment=$(kubectl get deployment -l release=${release_name} --namespace ${release_namespace} |  sed -n 2p | awk '{print $1;}')
-	#kubectl get deployment -l release=${release_name} --namespace ${release_namespace}
-	if [[ -z ${__deployment} ]]; then
-		echo "No release available with name: ${release_name}. Aborting."
-		exit 1
-	else
-		echo "helm delete ${release_name} --namespace ${release_namespace}"
-		helm delete ${release_name} --namespace ${release_namespace}
-	fi
+	echo "kubectl delete -f ${config_file_path} --namespace ${release_namespace}"
+	kubectl delete -f "${config_file_path}" --namespace "${release_namespace}"
+	echo "Deleted resources"
+
 }
 
 function get_release {

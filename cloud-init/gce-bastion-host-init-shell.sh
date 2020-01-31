@@ -7,7 +7,7 @@
 
 BASE_DIR=~/
 digikube_init_lock=${BASE_DIR}/.digikube-init-lock
-if [[ -f ${digikube_lock} ]]; then
+if [[ -f ${digikube_init_lock} ]]; then
 	echo "Exiting"
 	exit 0
 fi

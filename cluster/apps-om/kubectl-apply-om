@@ -143,7 +143,7 @@ case ${app_command_option} in
 		get_release "${app_type}" "${app_name}" "${app_command_param}"
 		;;
 	*)
-		#echo "Command not known: ${shell_command_option}"
+		echo "Command not known: ${shell_command_option}"
 		${app_command_option}
 		if [[ $? -eq 0 ]]; then
 			echo "${app_command_option} ${app_type} ${app_name} ${app_command_param}"

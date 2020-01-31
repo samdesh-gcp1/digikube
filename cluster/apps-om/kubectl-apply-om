@@ -143,13 +143,19 @@ case ${app_command_option} in
 		get_release "${app_type}" "${app_name}" "${app_command_param}"
 		;;
 	*)
-		echo "Command not known: ${app_command_option}"
-		${app_command_option}
-		if [[ $? -eq 0 ]]; then
-			echo "${app_command_option} ${app_type} ${app_name} ${app_command_param}"
-			${app_command_option} "${app_type}" "${app_name}" "${app_command_param}"
-		else
+		#echo "Command not known: ${shell_command_option}"
+		echo "${app_command_option} ${app_type} ${app_name} ${app_command_param}"
+		${app_command_option} "${app_type}" "${app_name}" "${app_command_param}"
+		__return_code=$?
+		if [[ ${__return_code} -eq 127 ]]; then
 			echo "Command not available ${app_command_option}"
 			exit 1
+		else
+			if [[ ${__return_code} -gt 0 ]]; then
+				echo "Error while executing command ${app_command_option}"
+				exit 1
+			else
+				echo "Command ${app_command_option} executed"
+			fi
 		fi
 esac

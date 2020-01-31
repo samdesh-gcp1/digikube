@@ -13,10 +13,10 @@ parse_yaml ${digikube_config} "__config_"
 
 function create {
 
-	__function_name="cluster/sample-apps-om/kubectl-apply-om.create"
+	__function_name="cluster/apps-om/kubectl-apply-om.create"
 	
-	sample_app_name="${1}"
-	sample_app_command_param="${2}"
+	app_name="${1}"
+	app_command_param="${2}"
 
 	app_name=$(get-config-value "cluster.sampleApps.${sample_app_name}.deploymentEngine.appName")
 	app_config=$(get-config-value "cluster.sampleApps.${sample_app_name}.deploymentEngine.appConfig")

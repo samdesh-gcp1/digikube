@@ -122,6 +122,9 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 		fi
 	fi
 	echo "continue11"
+	if [[ "1" == "1" ]]; then
+		echo " this is it"
+	fi
 fi
 
 echo "this helps"

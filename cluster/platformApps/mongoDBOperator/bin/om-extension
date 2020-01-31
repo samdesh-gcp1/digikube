@@ -1,11 +1,11 @@
 function createFull {
 
-	create "crds.yaml" 
+	create ${1} ${2} "crds.yaml" 
 	echo "create crds"
-	create "mongodb-enterprise.yaml"
+	create ${1} ${2} "mongodb-enterprise.yaml"
 	echo "create mongodb operator"
-	create "ops-manager-secret.yaml"
+	create ${1} ${2}  "ops-manager-secret.yaml"
 	echo "created secret"
-	create "ops-manager.yaml"
+	create ${1} ${2}  "ops-manager.yaml"
 	echo "created ops manager"
 }

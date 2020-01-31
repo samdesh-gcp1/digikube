@@ -12,14 +12,17 @@ function createFull {
 
 function deleteFull {
 
-	create ${1} ${2} "crds.yaml" 
-	echo "create crds"
-	create ${1} ${2} "mongodb-enterprise.yaml"
-	echo "create mongodb operator"
-	create ${1} ${2}  "ops-manager-secret.yaml"
-	echo "created secret"
-	create ${1} ${2}  "ops-manager.yaml"
-	echo "created ops manager"
+	delete ${1} ${2}  "ops-manager.yaml"
+	delete "deleted ops manager"
+	
+	delete ${1} ${2}  "ops-manager-secret.yaml"
+	echo "deleted secret"
+	
+	delete ${1} ${2} "mongodb-enterprise.yaml"
+	echo "deleted mongodb operator"
+	
+	delete ${1} ${2} "crds.yaml" 
+	echo "deleted crds"
 	
 	kubectl delete pv --all --namespace=${release_namespace}
 }

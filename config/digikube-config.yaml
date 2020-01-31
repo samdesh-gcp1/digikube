@@ -124,6 +124,7 @@ cluster:
         delete: "true"
         validate: "true"
         createFull: "true"
+        deleteFull: "true"
       deploymentEngine: "kubectl-apply"
         configFileName: ""
         namespace: "mongodb"      

@@ -67,7 +67,7 @@ cluster:
       countMin: 2
       countMax: 2
       zone: "us-central1-c"
-      size: "g1-small"
+      size: "n1-standard2"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"
     associatePublicIp: "false"  

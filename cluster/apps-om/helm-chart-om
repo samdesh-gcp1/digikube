@@ -54,7 +54,7 @@ function create {
 		echo "helm install ${release_name} ${chart_repo}/${chart_name} --namespace ${release_namespace} -f ${chart_values_file}"
 		helm repo add ${chart_repo} ${chart_repo_url}
 		helm repo update
-		helm install ${release_name} ${chart_repo}/${chart_name} --namespace ${release_namespace} -f ${chart_values_file}
+		helm install ${release_name} ${chart_name} --namespace ${release_namespace} -f ${chart_values_file}
 		echo "Installation done... executing post installation hooks"
 		post_execution_hook_shell=${digi_dir}cluster/${app_type}/${app_name}/bin/post-execution-hook
 		if [[ -f ${post_execution_hook_shell} ]]; then

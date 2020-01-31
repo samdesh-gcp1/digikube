@@ -1,7 +1,11 @@
 function createFull {
 
-	__function=cluster/platformApps/mongoDBOperator/bin/om-extension
-	
-	create
-
+	create "crds.yaml" 
+	echo "create crds"
+	create "mongodb-enterprise.yaml"
+	echo "create mongodb operator"
+	create "ops-manager-secret.yaml"
+	echo "created secret"
+	create "ops-manager.yaml"
+	echo "created ops manager"
 }

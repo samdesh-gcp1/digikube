@@ -116,6 +116,21 @@ cluster:
         releaseName: "polyaxon"
         chartValues: "polyaxon-config-values.yaml"
         namespace: "polyaxon"
+    mongoDBOperator:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+        validate: "true"
+        createFull: "true"
+      deploymentEngine: "kubectl-apply"
+        chartRepoUrl: "https://charts.polyaxon.com"
+        chartRepo: "polyaxon"
+        chartName: "polyaxon/polyaxon"
+        releaseName: "polyaxon"
+        chartValues: "polyaxon-config-values.yaml"
+        namespace: "polyaxon"      
   sampleApps:
     nodeMongoSample:
       enabled: "true"

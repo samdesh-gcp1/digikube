@@ -19,7 +19,8 @@ function create {
 	app_name="${2}"
 	app_command_param="${3}"
 
-	config_file_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.configFileName")
+	#config_file_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.configFileName")
+	config_file_name=${app_command_param}
 	config_file_path=${digi_dir}cluster/${app_type}/${app_name}/config/${config_file_name}
 	release_namespace=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.namespace")
 	

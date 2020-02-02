@@ -7,6 +7,12 @@ FLOW_OPTION_NO="no"
 
 DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
 
+function gcloud_ssh_shell {
+
+	gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
+
+}
+
 BASTION_HOST_NAME="bastion-host-01"
 export BASTION_HOST_ZONE=$(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(zone)")
 if [ $? -gt 0 ]; then
@@ -108,7 +114,8 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 		fi
 	fi
 	echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
-	gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
+	#gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
+	gcloud_ssh_shell
 	__return_code=$?
 	if [[ __return_code -eq 0 ]]; then
 		echo "ok"

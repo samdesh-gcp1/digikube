@@ -13,7 +13,7 @@ cloud:
     class: "STANDARD"
   bastionHost:
     namePrefix: "bastion-host"
-    machineType: "g1-small"
+    machineType: "f1-micro"
     networkTier: "STANDARD"
     preemptible: "Yes"
     tagIdentifier: "bastion-host"
@@ -67,7 +67,7 @@ cluster:
       countMin: 2
       countMax: 2
       zone: "us-central1-c"
-      size: "n1-standard-2"
+      size: "g1-small"
       volumeSize: 10
       image: "cos-cloud/cos-stable-65-10323-99-0"
     associatePublicIp: "false"  

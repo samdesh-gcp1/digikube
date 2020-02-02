@@ -124,7 +124,7 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 			echo "Error while executiing remote command on bastion host."
 		else
 			echo "Error while deleting the cluster."
-			exit 1
+			#exit 1
 		fi
 	fi
 fi

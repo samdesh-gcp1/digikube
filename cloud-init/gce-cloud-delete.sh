@@ -132,7 +132,7 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 	if [[ "1" == "1" ]]; then
 		echo " this is it"
 	fi
-fi
+
 
 echo "this helps"
 
@@ -160,6 +160,8 @@ if [[ "$FLOW_DELETE_BASTION_HOST" == "$FLOW_OPTION_YES" ]]; then
 else
 	echo "Skipping bastion-host deletion."
 fi
+
+fi 
 
 export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
 

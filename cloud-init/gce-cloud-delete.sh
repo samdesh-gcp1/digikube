@@ -129,8 +129,7 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 	fi
 fi
 
-#Delete the Bastion Host for DigiKube
-if [[ "$FLOW_DELETE_BASTION_HOST" == "$FLOW_OPTION_YES" ]]; then
+if [[ $FLOW_DELETE_BASTION_HOST == $FLOW_OPTION_YES ]]; then
 	
 	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME} in zone ${BASTION_HOST_ZONE}."
 		

@@ -118,28 +118,18 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 	gcloud_ssh_shell
 	__return_code=$?
 	if [[ __return_code -eq 0 ]]; then
-		echo "ok"
+		echo "Deleted the cluster."
 	else
-		if [[ __return_code -eq 2 ]]; then
-			echo "this is also ok 1"
-			echo "sss"
+		if [[ __return_code -eq 255 ]]; then
+			echo "Error while executiing remote command on bastion host."
 		else
-			echo "this is not ok"
+			echo "Error while deleting the cluster."
 			exit 1
 		fi
 	fi
-	echo "continue11"
-	if [[ "1" == "1" ]]; then
-		echo " this is it"
-	fi
-
-
-echo "this helps"
-
-echo "continue ddd"
+fi
 
 #Delete the Bastion Host for DigiKube
-
 if [[ "$FLOW_DELETE_BASTION_HOST" == "$FLOW_OPTION_YES" ]]; then
 	
 	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME} in zone ${BASTION_HOST_ZONE}."
@@ -160,8 +150,6 @@ if [[ "$FLOW_DELETE_BASTION_HOST" == "$FLOW_OPTION_YES" ]]; then
 else
 	echo "Skipping bastion-host deletion."
 fi
-
-fi 
 
 export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
 

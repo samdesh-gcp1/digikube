@@ -8,6 +8,7 @@ FLOW_OPTION_NO="no"
 #DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
 DELETE_CLUSTER_COMMAND="ls -l"
 
+echo $DELETE_CLUSTER_COMMAND
 
 function gcloud_ssh_shell {
 
@@ -117,7 +118,7 @@ fi
 	fi
 	echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
 	#echo $(gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}")
-	echo $(gcloud compute ssh bastion-host-01 --zone=us-central1-c --command=ls)
+	echo $(gcloud compute ssh bastion-host-01 --zone=us-central1-c --command='ls -l')
 	#__return_code=$?
 	#if [[ __return_code -eq 0 ]]; then
 	#	echo "Deleted the cluster.  xxxxxxxx"

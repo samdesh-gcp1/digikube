@@ -4,12 +4,7 @@ export digikube_cloud_admin=$(whoami)
 FLOW_OPTION_YES="yes"
 FLOW_OPTION_NO="no"
 
-#DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
-DELETE_CLUSTER_COMMAND="ls -l"
-
-function gcloud_ssh_shell {
-	gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
-}
+DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
 
 BASTION_HOST_NAME="bastion-host-01"
 export BASTION_HOST_ZONE=$(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(zone)")
@@ -94,36 +89,42 @@ fi
 
 ##########################################################
 #Get bastion host
-#if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
-bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
-if [[ "${bastion_status}" == "status: RUNNING" ]]; then
-	echo "OK! Ready for heavy metal"
-else
-	gcloud compute instances start $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE
+if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
+
 	bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
 	if [[ "${bastion_status}" == "status: RUNNING" ]]; then
-		echo "OK! Ready for heavy metal"
+		echo "Bastion host available.  Tryining to delete cluster through bastion host."
 	else
-		echo "Not able to access bastion host."
-		exit 1
+		#Need to check for shutdown status.... currently assuming it is in shutdown status.
+		gcloud compute instances start $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE
+		bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
+		if [[ "${bastion_status}" == "status: RUNNING" ]]; then
+			echo "Bastion host available.  Tryining to delete cluster through bastion host."
+		else
+			echo "Not able to access bastion host."
+			exit 1
+		fi
 	fi
+	
+	echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
+	#echo $(gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}")
+	echo $(gcloud compute ssh bastion-host-01 --zone=us-central1-c --command=ls)
+	__return_code=$?
+	if [[ __return_code -eq 0 ]]; then
+		echo "Deleted the cluster.  xxxxxxxx"
+		echo "111111"
+	else
+		if [[ __return_code -eq 255 ]]; then
+			echo "Error while executiing remote command on bastion host."
+		else
+			echo "Error while deleting the cluster."
+			exit 1
+		fi
+	fi
+	
+	echo "Hi 1234"
 fi
-echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
-#echo $(gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}")
-echo $(gcloud compute ssh bastion-host-01 --zone=us-central1-c --command=ls)
-#__return_code=$?
-#if [[ __return_code -eq 0 ]]; then
-#echo "Deleted the cluster.  xxxxxxxx"
-#echo "111111"
-#else
-#if [[ __return_code -eq 255 ]]; then
-#echo "Error while executiing remote command on bastion host."
-#else
-#echo "Error while deleting the cluster."
-#exit 1
-#fi
-#fi
-echo "Hi 1234"
+
 if [[ $FLOW_DELETE_BASTION_HOST == $FLOW_OPTION_YES ]]; then
 	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME} in zone ${BASTION_HOST_ZONE}."
 	if [ -z $(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(name)") ]; then
@@ -132,7 +133,7 @@ if [[ $FLOW_DELETE_BASTION_HOST == $FLOW_OPTION_YES ]]; then
 		#gcloud --quiet compute instances delete ${BASTION_HOST_NAME} --zone=${BASTION_HOST_ZONE}
 		ls -l
 		if [ $? -gt 0 ]; then
-			#Unknown error while deleting the bastion host.
+			#Unknown error while deleting the bastion host
 			echo "Unable to delete bastion host for DigiKube.  Exiting the DigiKube delete."
 			echo "Manually review and delete DigiKube cloud resources."
 			exit 1
@@ -143,8 +144,7 @@ if [[ $FLOW_DELETE_BASTION_HOST == $FLOW_OPTION_YES ]]; then
 else
 	echo "Skipping bastion-host deletion."
 fi
-
-
+	
 export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
 
 ###########################################################

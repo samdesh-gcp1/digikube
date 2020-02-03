@@ -126,7 +126,7 @@ if [[ ${delete_cluster} ]]; then
 	
 	echo "Attempting to delete Digikube K8S cluster."
 	echo "gcloud compute ssh ${bastion_host_name} --zone=${bastion_host_zone} --command=${DELETE_CLUSTER_COMMAND}"
-	gcloud compute ssh ${bastion_host_name} --zone=${bastion_host_zone} --command="${DELETE_CLUSTER_COMMAND}"
+	. gcloud compute ssh ${bastion_host_name} --zone=${bastion_host_zone} --command="${DELETE_CLUSTER_COMMAND}"
 	__return_code=$?
 	if [[ ${__return_code} -eq 0 ]]; then
 		echo "Deleted the Digikube cluster."

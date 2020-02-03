@@ -65,6 +65,7 @@ case ${__option} in
 		;;
 	*)
 		echo "Unknown delete option: ${__option}.  Exiting."
+		exit 1
 esac
 
 echo " "

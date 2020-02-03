@@ -5,7 +5,8 @@ export digikube_cloud_admin=$(whoami)
 FLOW_OPTION_YES="yes"
 FLOW_OPTION_NO="no"
 
-DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
+#DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
+DELETE_CLUSTER_COMMAND="ls -l"
 
 function gcloud_ssh_shell {
 
@@ -137,7 +138,8 @@ if [[ $FLOW_DELETE_BASTION_HOST == $FLOW_OPTION_YES ]]; then
 	if [ -z $(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(name)") ]; then
   		echo "No bastion host available with the name ${BASTION_HOST_NAME}.  Skipping bastion host deletion."
 	else
-  		gcloud --quiet compute instances delete ${BASTION_HOST_NAME} --zone=${BASTION_HOST_ZONE}
+  		#gcloud --quiet compute instances delete ${BASTION_HOST_NAME} --zone=${BASTION_HOST_ZONE}
+		ls -l
   		if [ $? -gt 0 ]; then
     			#Unknown error while deleting the bastion host.
     			echo "Unable to delete bastion host for DigiKube.  Exiting the DigiKube delete."

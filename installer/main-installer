@@ -13,11 +13,11 @@ if [[ $? -gt 0 ]]; then
 fi
 
 #Install krew
-krew_installer=${digi_dir}installer/krew-installer
-${krew_installer}
-if [[ $? -gt 0 ]]; then
-    exit 1
-fi
+#krew_installer=${digi_dir}installer/krew-installer
+#${krew_installer}
+#if [[ $? -gt 0 ]]; then
+#    exit 1
+#fi
 
 #Install kops
 kops_installer=${digi_dir}installer/kops-installer

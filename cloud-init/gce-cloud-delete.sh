@@ -117,7 +117,7 @@ fi
 	fi
 	echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
 	#echo $(gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}")
-	echo $(gcloud compute ssh bastion-host-01 --zone=us-central1-c --command=ls -l)
+	echo $(gcloud compute ssh bastion-host-01 --zone=us-central1-c --command=ls)
 	#__return_code=$?
 	#if [[ __return_code -eq 0 ]]; then
 	#	echo "Deleted the cluster.  xxxxxxxx"

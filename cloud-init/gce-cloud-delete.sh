@@ -2,7 +2,11 @@
 export digikube_cloud_admin=$(whoami)
 
 DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
-#TO DO: Pickup the bastion host name from configuration.
+
+#TO DO: Pickup the values from configuration.
+cloud_type="gce"
+cloud_region="us-central1"
+cloud_zone="us-central1-c"
 bastion_host_name="bastion-host-01"
 
 bastion_host_zone=$(gcloud compute instances list --filter="name=${bastion_host_name}" --format="value(zone)")
@@ -29,74 +33,88 @@ else
 	fi
 fi
 
-case 
-if [[ "${delete_choice}" == "all-with-bucket" ]]; then
-	delete_cluster=true
-	delete_bastion_host=true
-	delete_bastion_firewall_rule=true
-	delete_vpc=true
-	delete_bucket=true
-fi
-
-if [[ "$FLOW_DELETE_CHOICE" == "all" ]]; then
-		FLOW_DELETE_CLUSTER=$FLOW_OPTION_YES
-		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
-		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_YES
-		FLOW_DELETE_VPC=$FLOW_OPTION_YES
-		FLOW_DELETE_BUCKET=$FLOW_OPTION_NO
-	fi
-	if [[ "$FLOW_DELETE_CHOICE" == "bastion-host" ]]; then
-		FLOW_DELETE_CLUSTER=$FLOW_OPTION_YES
-		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
-		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_NO
-		FLOW_DELETE_VPC=$FLOW_OPTION_NO
-		FLOW_DELETE_BUCKET=$FLOW_OPTION_NO
-	fi
-	if [[ "$FLOW_DELETE_CHOICE" == "cluster" ]]; then
-		FLOW_DELETE_CLUSTER=$FLOW_OPTION_YES
-		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_NO
-		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_NO
-		FLOW_DELETE_VPC=$FLOW_OPTION_NO
-		FLOW_DELETE_BUCKET=$FLOW_OPTION_NO
-	fi
-fi
-
-export CLOUD_TYPE="gce"
-export CLOUD_REGION="us-central1"
-export CLOUD_ZONE="us-central1-c"
+__option="${delete_choice}"
+case ${__option} in 
+	"all-with-bucket")
+		delete_cluster=true
+		delete_bastion_host=true
+		delete_bastion_firewall_rule=true
+		delete_vpc=true
+		delete_bucket=true
+		;;
+	"all")
+		delete_cluster=true
+		delete_bastion_host=true
+		delete_bastion_firewall_rule=true
+		delete_vpc=true
+		delete_bucket=false
+		;;
+	"bastion-host")
+		delete_cluster=true
+		delete_bastion_host=true
+		delete_bastion_firewall_rule=false
+		delete_vpc=false
+		delete_bucket=false
+		;;
+	"cluster")
+		delete_cluster=true
+		delete_bastion_host=false
+		delete_bastion_firewall_rule=false
+		delete_vpc=false
+		delete_bucket=false
+		;;
+	*)
+		echo "Unknown delete option: ${__option}.  Exiting."
+esac
 
 echo " "
 echo " "
-echo "Removing cloud environemnt for DigiKube.  Cloud provider: gce."
+echo "Removing cloud environemnt for DigiKube.  Cloud provider: ${cloud_type}"
 echo " "
 
 ##########################################################
 #Get cloud project details
-export CLOUD_PROJECT="$(gcloud info |tr -d '[]' | awk '/project:/ {print $2}')"
-if [ $? -gt 0 ]; then
+cloud_project="$(gcloud info |tr -d '[]' | awk '/project:/ {print $2}')"
+__return_code=$?
+if [[ ${__return_code} -gt 0 ]]; then
 	echo "Unable to get the project details for DigiKube.  Exiting the DigiKube delete."
 	echo "Manually review and delete DigiKube cloud resources."
-	exit 1
+	exit ${__return_code}
 fi
-if [ -z ${CLOUD_PROJECT} ]; then
+if [[ -z ${cloud_project} ]]; then
 	echo "Unable to get the project details for DigiKube.  Exiting the DigiKube delete."
 	echo "Manually review and delete DigiKube cloud resources."
 	exit 1
 else
-	echo "Deleting DigiKube resources from cloud project.  Cloud project id: ${CLOUD_PROJECT}."
+	echo "Deleting DigiKube resources from cloud project.  Cloud project id: ${cloud_project}."
 fi
 
 ##########################################################
-#Get bastion host
-if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
+#Delete the Digikube k8s cluster
+if [[ ${delete_cluster} ]]; then
 
-	bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
+	bastion_status=$(gcloud compute instances describe ${bastion_host_name} --zone=${bastion_host_zone} | grep "status: RUNNING")
+	__return_code=$?
+	if [[ ${__return_code} -gt 0 ]]; then
+		echo "Error while checking the bastion host status.  Exiting the DigiKube delete."
+		exit ${__return_code}
+	fi
 	if [[ "${bastion_status}" == "status: RUNNING" ]]; then
 		echo "Bastion host available.  Tryining to delete cluster through bastion host."
 	else
-		#Need to check for shutdown status.... currently assuming it is in shutdown status.
-		gcloud compute instances start $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE
-		bastion_status=$(gcloud compute instances describe $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE | grep "status: RUNNING")
+		#TO DO: Need to check for shutdown status.... currently assuming it is in shutdown status.
+		gcloud compute instances start ${bastion_host_name} --zone=${bastion_host_zone}
+		__return_code=$?
+		if [[ ${__return_code} -gt 0 ]]; then
+			echo "Error while starting bastion host.  Exiting the DigiKube delete."
+			exit ${__return_code}
+		fi
+		bastion_status=$(gcloud compute instances describe ${bastion_host_name} --zone=${bastion_host_zone} | grep "status: RUNNING")
+		__return_code=$?
+		if [[ ${__return_code} -gt 0 ]]; then
+			echo "Error while checking the bastion host status.  Exiting the DigiKube delete."
+			exit ${__return_code}
+		fi
 		if [[ "${bastion_status}" == "status: RUNNING" ]]; then
 			echo "Bastion host available.  Tryining to delete cluster through bastion host."
 		else
@@ -105,60 +123,68 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 		fi
 	fi
 	
-	echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
-	gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
+	echo "Attempting to delete Digikube K8S cluster."
+	echo "gcloud compute ssh ${bastion_host_name} --zone=${bastion_host_zone} --command=${DELETE_CLUSTER_COMMAND}"
+	gcloud compute ssh ${bastion_host_name} --zone=${bastion_host_zone} --command="${DELETE_CLUSTER_COMMAND}"
 	__return_code=$?
 	if [[ ${__return_code} -eq 0 ]]; then
-		echo "Deleted the cluster."
+		echo "Deleted the Digikube cluster."
 	else
 		if [[ ${__return_code} -eq 255 ]]; then
-			echo "Error while performing ssh to bastion host."
+			echo "Error while performing ssh on bastion host."
+			exit 255
 		else
-			echo "Error while deleting the cluster."
+			echo "Error while deleting the Digikube cluster."
 			exit ${__return_code}
 		fi
 	fi
 fi
 
-if [[ $FLOW_DELETE_BASTION_HOST == $FLOW_OPTION_YES ]]; then
-	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${BASTION_HOST_NAME} in zone ${BASTION_HOST_ZONE}."
-	if [ -z $(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(name)") ]; then
-		echo "No bastion host available with the name ${BASTION_HOST_NAME}.  Skipping bastion host deletion."
+##########################################################
+#Delete the Digikube bastion host
+if [[ ${delete_bastion_host} ]]; then
+	echo "Attempting to delete bastion host for Digikube.  Bastion host name: ${bastion_host_name} in zone ${bastion_host_zone}."
+	if [[ -z $(gcloud compute instances list --filter="name=${bastion_host_name}" --format="value(name)") ]]; then
+		#We are not exiting... will continue to next stage.
+		echo "No bastion host available with the name ${bastion_host_name}.  Skipping bastion host deletion."
 	else
-		gcloud --quiet compute instances delete ${BASTION_HOST_NAME} --zone=${BASTION_HOST_ZONE}
+		gcloud --quiet compute instances delete "${bastion_host_name}" --zone="${bastion_host_zone}"
 		__return_code=$?
-		if [[ __return_code -gt 0 ]]; then
+		if [[ ${__return_code} -gt 0 ]]; then
 			#Unknown error while deleting the bastion host
 			echo "Unable to delete bastion host for DigiKube.  Exiting the DigiKube delete."
 			echo "Manually review and delete DigiKube cloud resources."
 			exit ${__return_code}
 		else
-			echo "Deleted the bastion host: ${BASTION_HOST_NAME}."
+			echo "Deleted the bastion host: ${bastion_host_name}."
 		fi
 	fi
 else
 	echo "Skipping bastion-host deletion."
 fi
-	
-export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
+
+###########################################################
+
+cloud_subnet="${cloud_project}-vpc"
 
 ###########################################################
 #Delete firewall rule for bastion host
 
-if [ "$FLOW_DELETE_BASTION_FIREWALL_RULE" = "$FLOW_OPTION_YES" ]; then
-	export BASTION_HOST_FIREWALL_RULE_NAME="${CLOUD_SUBNET}-allow-bastion-ssh"
-	echo "Attempting to delete firewall rule for bastion host: ${BASTION_HOST_FIREWALL_RULE_NAME}"
-	if [ -z $(gcloud compute firewall-rules list --filter=name=${BASTION_HOST_FIREWALL_RULE_NAME} --format="value(name)") ]; then
-		echo "No firewall rule available with the name ${BASTION_HOST_FIREWALL_RULE_NAME}.  Skipping firewall rule deletion."
+if [[ ${delete_bastion_firewall_rule} ]]; then
+	bastion_firewall_rule_name="${cloud_subnet}-allow-bastion-ssh"
+	echo "Attempting to delete firewall rule for bastion host: ${bastion_firewall_rule_name}"
+	if [[ -z $(gcloud compute firewall-rules list --filter=name=${bastion_firewall_rule_name} --format="value(name)") ]]; then
+		echo "No firewall rule available with the name ${bastion_firewall_rule_name}.  Skipping firewall rule deletion."
 	else
-		gcloud -q compute firewall-rules delete ${BASTION_HOST_FIREWALL_RULE_NAME}
-		if [ $? -gt 0 ]; then
-	    		#Unknown error while deleting the firewall rule.
+		gcloud -q compute firewall-rules delete ${bastion_firewall_rule_name}
+		__return_code=$?
+		if [[ ${__return_code} -gt 0 ]]; then
+			#Unknown error while deleting the firewall rule.
 	    		echo "Unable to delete firewall rule for bastion host.  Exiting the DigiKube delete."
 	    		echo "Manually review and delete DigiKube cloud resources."
-	    		exit 1
+	    		exit ${__return_code}
 	  	else
-	    		echo "Deleted the firewall rule for bastion host: ${BASTION_HOST_FIREWALL_RULE_NAME}."
+	    		echo "Deleted the firewall rule for bastion host: ${bastion_firewall_rule_name}."
 		fi
 	fi
 else
@@ -167,19 +193,20 @@ fi
 
 ###########################################################
 #Delete the network for DigiKube
-if [ "$FLOW_DELETE_VPC" = "$FLOW_OPTION_YES" ]; then
-	echo "Attempting to delete network for Digikube.  Network name: ${CLOUD_SUBNET}."
-	if [ -z $(gcloud compute networks list --filter=name=${CLOUD_SUBNET} --format="value(name)") ]; then
-  		echo "No network available with the name ${CLOUD_SUBNET}.  Skipping network deletion."
+if [[ ${delete_vpc} ]]; then
+	echo "Attempting to delete network for Digikube.  Network name: ${cloud_subnet}."
+	if [[ -z $(gcloud compute networks list --filter=name=${cloud_subnet} --format="value(name)") ]; then
+  		echo "No network available with the name ${cloud_subnet}.  Skipping network deletion."
 	else
-  		gcloud --quiet compute networks delete ${CLOUD_SUBNET}
-	  	if [ $? -gt 0 ]; then
-    			#Unknown error while deleting the network.
+  		gcloud --quiet compute networks delete ${cloud_subnet}
+		__return_code=$?
+		if [[ ${__return_code} -gt 0 ]]; then
+	  		#Unknown error while deleting the network.
 	    		echo "Unable to delete network for DigiKube.  Exiting the DigiKube delete."
     			echo "Manually review and delete DigiKube cloud resources."
-	    		exit 1
+	    		exit ${__return_code}
   		else
-    			echo "Deleted the network ${CLOUD_SUBNET}."
+    			echo "Deleted the network ${cloud_subnet}."
   		fi
 	fi
 else
@@ -188,27 +215,40 @@ fi
 
 ###########################################################
 #Delete the storage bucket for DigiKube
-if [ "$FLOW_DELETE_BUCKET" = "$FLOW_OPTION_YES" ]; then
+if [[ ${delete_bucket} ]]; then
 	
-	CLOUD_BUCKET="${digikube_cloud_admin}-${CLOUD_PROJECT}-bucket"
-	BUCKET_URL="gs://${CLOUD_BUCKET}"
-	echo "Attempting to delete bucket for Digikube.  Bucket name: ${CLOUD_BUCKET}."
+	cloud_bucket="${digikube_cloud_admin}-${cloud_project}-bucket"
+	bucket_url="gs://${cloud_bucket}"
+	echo "Attempting to delete bucket for Digikube.  Bucket name: ${cloud_bucket}."
 	
 	#Check if bucket already exists
-	bucket_list=$(gsutil ls ${BUCKET_URL})
-	if [[ $? -gt 0 ]]; then
-		echo "INFO: You do not have any bucket with this name: ${CLOUD_BUCKET}.  Skipping bucket deletion."
+	bucket_list=$(gsutil ls ${bucket_url})
+	__return_code=$?
+	if [[ ${__return_code} -gt 0 ]]; then
+		#TO DO: Specifically check if the bucket is not available or any other error... currently assuming bucket not available.
+		echo "INFO: You do not have any bucket with this name: ${cloud_bucket}.  Skipping bucket deletion."
 	else
-		gsutil rm -r ${BUCKET_URL}
-		if [ $? -gt 0 ]; then
-    			#Unknown error while deleting the bucket.
+		gsutil rm -r ${bucket_url}
+		if [[ ${__return_code} -gt 0 ]]; then
+			#Unknown error while deleting the bucket.
 	    		echo "Unable to delete bucket for DigiKube.  Exiting the DigiKube delete."
     			echo "Manually review and delete DigiKube cloud resources."
-	    		exit 1
+	    		exit ${__return_code}
   		else
-    			echo "Deleted the bucket ${CLOUD_BUCKET}."
+    			echo "Deleted the bucket ${cloud_bucket}."
   		fi
 	fi
 else
 	echo "Skipping bucket deletion."
 fi
+
+###########################################################
+echo "   "
+echo "   "
+echo "   "
+echo "#####################################################"
+echo "Deleted all resources for DigiKube."
+echo "#####################################################"
+echo "   "
+echo "   "
+echo "   "

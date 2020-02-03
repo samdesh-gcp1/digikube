@@ -19,6 +19,9 @@ else
 		read -p "Enter your choice: " delete_choice
 		export delete_choice=${delete_choice}
 		echo "wget -q --no-cache -O - ${digikube_repo}/cloud-init/gce-cloud-delete.sh | bash"
-		wget -q --no-cache -O - "${digikube_repo}/cloud-init/gce-cloud-delete.sh" | bash
+		tmpFile=/tmp/digikube-${RANDOM}
+		wget -q --no-cache -O ${tmpFile} - "${digikube_repo}/cloud-init/gce-cloud-delete.sh"
+		chmod +x ${tmpFile}
+		${tmpFile} ${delete_choice}
 	fi
 fi

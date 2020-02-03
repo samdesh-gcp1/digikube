@@ -6,7 +6,7 @@ FLOW_OPTION_YES="yes"
 FLOW_OPTION_NO="no"
 
 #DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
-DELETE_CLUSTER_COMMAND="ls"
+DELETE_CLUSTER_COMMAND="ls -l"
 
 function gcloud_ssh_shell {
 

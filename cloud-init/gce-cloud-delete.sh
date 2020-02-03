@@ -111,8 +111,7 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 	echo $(gcloud compute ssh bastion-host-01 --zone=us-central1-c --command=ls)
 	__return_code=$?
 	if [[ __return_code -eq 0 ]]; then
-		echo "Deleted the cluster.  xxxxxxxx"
-		echo "111111"
+		echo "Deleted the cluster."
 	else
 		if [[ __return_code -eq 255 ]]; then
 			echo "Error while executiing remote command on bastion host."
@@ -121,8 +120,6 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 			exit 1
 		fi
 	fi
-	
-	echo "Hi 1234"
 fi
 
 if [[ $FLOW_DELETE_BASTION_HOST == $FLOW_OPTION_YES ]]; then

@@ -107,17 +107,16 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 	fi
 	
 	echo "gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command=${DELETE_CLUSTER_COMMAND}"
-	#echo $(gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}")
-	echo $(gcloud compute ssh bastion-host-01 --zone=us-central1-c --command=ls)
+	gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
 	__return_code=$?
-	if [[ __return_code -eq 0 ]]; then
+	if [[ ${__return_code} -eq 0 ]]; then
 		echo "Deleted the cluster."
 	else
-		if [[ __return_code -eq 255 ]]; then
-			echo "Error while executiing remote command on bastion host."
+		if [[ ${__return_code} -eq 255 ]]; then
+			echo "Error while performing ssh to bastion host."
 		else
 			echo "Error while deleting the cluster."
-			exit 1
+			exit ${__return_code}
 		fi
 	fi
 fi
@@ -127,13 +126,13 @@ if [[ $FLOW_DELETE_BASTION_HOST == $FLOW_OPTION_YES ]]; then
 	if [ -z $(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(name)") ]; then
 		echo "No bastion host available with the name ${BASTION_HOST_NAME}.  Skipping bastion host deletion."
 	else
-		#gcloud --quiet compute instances delete ${BASTION_HOST_NAME} --zone=${BASTION_HOST_ZONE}
-		ls -l
-		if [ $? -gt 0 ]; then
+		gcloud --quiet compute instances delete ${BASTION_HOST_NAME} --zone=${BASTION_HOST_ZONE}
+		__return_code=$?
+		if [[ __return_code -gt 0 ]]; then
 			#Unknown error while deleting the bastion host
 			echo "Unable to delete bastion host for DigiKube.  Exiting the DigiKube delete."
 			echo "Manually review and delete DigiKube cloud resources."
-			exit 1
+			exit ${__return_code}
 		else
 			echo "Deleted the bastion host: ${BASTION_HOST_NAME}."
 		fi

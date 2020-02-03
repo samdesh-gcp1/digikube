@@ -136,7 +136,7 @@ if [[ ${delete_cluster} ]]; then
 			exit 255
 		else
 			echo "Error while deleting the Digikube cluster."
-			exit ${__return_code}
+			#exit ${__return_code}
 		fi
 	fi
 fi

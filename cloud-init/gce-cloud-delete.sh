@@ -120,7 +120,8 @@ if [[ ${delete_cluster} ]]; then
 			echo "Bastion host available.  Tryining to delete cluster through bastion host."
 		else
 			echo "Not able to access bastion host."
-			exit 1
+			#exit 1
+			echo "Hi"
 		fi
 	fi
 	

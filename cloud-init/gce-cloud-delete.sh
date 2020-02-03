@@ -119,6 +119,7 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 	__return_code=$?
 	if [[ __return_code -eq 0 ]]; then
 		echo "Deleted the cluster."
+		echo "111111"
 	else
 		if [[ __return_code -eq 255 ]]; then
 			echo "Error while executiing remote command on bastion host."
@@ -127,6 +128,7 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 			#exit 1
 		fi
 	fi
+	echo "222222"
 fi
 
 echo "Hi 1234"

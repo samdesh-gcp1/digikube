@@ -118,7 +118,7 @@ if [[ "$FLOW_DELETE_CLUSTER" == "$FLOW_OPTION_YES" ]]; then
 	gcloud compute ssh $BASTION_HOST_NAME --zone=$BASTION_HOST_ZONE --command="${DELETE_CLUSTER_COMMAND}"
 	__return_code=$?
 	if [[ __return_code -eq 0 ]]; then
-		echo "Deleted the cluster."
+		echo "Deleted the cluster.  xxxxxxxx"
 		echo "111111"
 	else
 		if [[ __return_code -eq 255 ]]; then

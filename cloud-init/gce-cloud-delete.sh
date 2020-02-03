@@ -1,45 +1,44 @@
 #!/bin/sh
 export digikube_cloud_admin=$(whoami)
 
-FLOW_OPTION_YES="yes"
-FLOW_OPTION_NO="no"
-
 DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
+#TO DO: Pickup the bastion host name from configuration.
+bastion_host_name="bastion-host-01"
 
-BASTION_HOST_NAME="bastion-host-01"
-export BASTION_HOST_ZONE=$(gcloud compute instances list --filter="name=${BASTION_HOST_NAME}" --format="value(zone)")
-if [ $? -gt 0 ]; then
-	echo "Unable to get the cloud zone details.  Exiting the DigiKube delete."
-	echo "Manually review and delete DigiKube cloud resources."
+bastion_host_zone=$(gcloud compute instances list --filter="name=${bastion_host_name}" --format="value(zone)")
+__return_code=$?
+if [[ ${__return_code} -gt 0 ]]; then
+	echo "Unable to get the cloud zone details.  Exiting the Digikube delete."
+	echo "Manually review and delete Digikube cloud resources."
+	exit ${__return_code}
+fi
+
+if [[ -z ${bastion_host_zone} ]]; then
+	echo "Unable to get the cloud zone details.  Exiting the Digikube delete."
+	echo "Manually review and delete Digikube cloud resources."
 	exit 1
 fi
-if [ -z ${BASTION_HOST_ZONE} ]; then
-	echo "Unable to get the cloud zone details.  Exiting the DigiKube delete."
-	echo "Manually review and delete DigiKube cloud resources."
-	exit 1
-fi
-if [ $# -gt 0 ]; then
-	FLOW_DELETE_CHOICE=$1
+
+__command_param_count=$#
+if [[ ${__command_param_count} -gt 0 ]]; then
+	delete_choice=$1
 else
-	if [ -z $FLOW_DELETE_CHOICE_ENV_VAR ]; then
-		echo "No option specified for DigiKube deletion.  Exiting digikube deletion."
+	if [[ -z ${delete_choice} ]]; then
+		echo "No option specified for Digikube deletion.  Exiting digikube deletion."
 		exit 1
-	else
-		FLOW_DELETE_CHOICE=$FLOW_DELETE_CHOICE_ENV_VAR
 	fi
 fi
-if [ -z $FLOW_DELETE_CHOICE ]; then
-	echo "No option specified for DigiKube deletion.  Exiting digikube deletion."
-	exit 1
-else
-	if [[ "$FLOW_DELETE_CHOICE" == "all-with-bucket" ]]; then
-		FLOW_DELETE_CLUSTER=$FLOW_OPTION_YES
-		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
-		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_YES
-		FLOW_DELETE_VPC=$FLOW_OPTION_YES
-		FLOW_DELETE_BUCKET=$FLOW_OPTION_YES
-	fi
-	if [[ "$FLOW_DELETE_CHOICE" == "all" ]]; then
+
+case 
+if [[ "${delete_choice}" == "all-with-bucket" ]]; then
+	delete_cluster=true
+	delete_bastion_host=true
+	delete_bastion_firewall_rule=true
+	delete_vpc=true
+	delete_bucket=true
+fi
+
+if [[ "$FLOW_DELETE_CHOICE" == "all" ]]; then
 		FLOW_DELETE_CLUSTER=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_HOST=$FLOW_OPTION_YES
 		FLOW_DELETE_BASTION_FIREWALL_RULE=$FLOW_OPTION_YES

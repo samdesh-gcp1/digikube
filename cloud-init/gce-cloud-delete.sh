@@ -1,5 +1,4 @@
 #!/bin/sh
-export digikube_cloud_admin=$(whoami)
 
 DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
 
@@ -8,6 +7,7 @@ cloud_type="gce"
 cloud_region="us-central1"
 cloud_zone="us-central1-c"
 bastion_host_name="bastion-host-01"
+digikube_cloud_admin=$(whoami)
 
 bastion_host_zone=$(gcloud compute instances list --filter="name=${bastion_host_name}" --format="value(zone)")
 __return_code=$?

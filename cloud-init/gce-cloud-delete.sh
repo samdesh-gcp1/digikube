@@ -196,7 +196,7 @@ fi
 #Delete the network for DigiKube
 if [[ ${delete_vpc} ]]; then
 	echo "Attempting to delete network for Digikube.  Network name: ${cloud_subnet}."
-	if [[ -z $(gcloud compute networks list --filter=name=${cloud_subnet} --format="value(name)") ]; then
+	if [[ -z $(gcloud compute networks list --filter=name=${cloud_subnet} --format="value(name)") ]]; then
   		echo "No network available with the name ${cloud_subnet}.  Skipping network deletion."
 	else
   		gcloud --quiet compute networks delete ${cloud_subnet}

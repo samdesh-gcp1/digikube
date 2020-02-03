@@ -11,12 +11,7 @@ else
 		echo "wget -q --no-cache -O - ${digikube_repo}/cloud-init/gce-cloud-init.sh | bash"
 		wget -q --no-cache -O - "${digikube_repo}/cloud-init/gce-cloud-init.sh" | bash
 	else
-		read -p "Enter delete scope:\n
-					Only K8S Cluster: cluster\n
-					K8S Cluster with bastion host:	bastion-host\n
-					K8S Cluster, bastion-host, cloud-resourses: all\n
-					K8S Cluster, bastion-host, cloud-resources, bucket: all-with-bucket\n
-					>> : " delete_scope	
+		read -p "Enter delete scope: Only K8S Cluster: cluster K8S Cluster with bastion host: bastion-host K8S Cluster bastion-host cloud-resourses: all K8S Cluster bastion-host cloud-resources bucket: all-with-bucket " delete_scope	
 		export FLOW_DELETE_CHOICE_ENV_VAR=${delete_scope}
 		echo "wget -q --no-cache -O - ${digikube_repo}/cloud-init/gce-cloud-delete.sh | bash"
 		wget -q --no-cache -O - "${digikube_repo}/cloud-init/gce-cloud-delete.sh" | bash

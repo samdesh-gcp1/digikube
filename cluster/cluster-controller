@@ -380,6 +380,15 @@ function start-cluster {
 	update-cluster
 }
 
+function reload-cluster {
+	
+	reload_option=$1
+	if [[ "${reload_option}" == "-f" ]]; then
+		rm ~/.digikube-lock
+	fi
+	sudo google_metadata_script_runner --script-type startup --debug
+	
+}
 
 #Shell command option handling
 if [[ $# -gt 0 ]]; then
@@ -399,6 +408,9 @@ if [[ $# -gt 0 ]]; then
 			;;
 		"validate")
 			validate-cluster
+			;;
+		"reload")
+			reload-cluster ${2}
 			;;
 		*)
 	esac

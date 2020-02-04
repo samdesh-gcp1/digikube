@@ -1,11 +1,18 @@
 #!/bin/sh
 
+#TO DO: Pickup the values from config.
 export DIGIKUBE_CLOUD_ADMIN=$(whoami)
-
 export CLOUD_TYPE="gce"
-
 export CLOUD_REGION="us-central1"
 export CLOUD_ZONE="us-central1-c"
+
+if [[ $# -eq 0 ]]; then
+	echo "Command line parameter for git repository url not specified.  Exiting."
+	exit 1
+else
+	#TO DO: Verify the format of the url.
+	digikube_repo=$1
+fi
 
 echo 
 echo
@@ -86,7 +93,6 @@ export BASTION_BOOT_DISK_TYPE="pd-standard"
 export BASTION_LABELS="type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"
 
 #Modify the bastion-init-shell script to get the current user id
-digikube_repo=${digikube_repo}
 f="$(wget -q -O - ${digikube_repo}/cloud-init/gce-bastion-host-init-shell.sh)"
 t="#<placeholder for digikube admin user name>"
 s="export DIGIKUBE_CLOUD_ADMIN=$(whoami)"
@@ -96,19 +102,7 @@ f=$n
 t="#<placeholder for digikube repo url>"
 s="export digikube_repo=${digikube_repo}"
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
-export BASTION_INIT_SCRIPT=$n
-
-#echo $f
-#echo $t
-#echo $s
-#echo $n
-
-# export BASTION_INIT_SCRIPT='#! /bin/bash
-#			# Create a new file in home directory
-#			cd /home/samdesh_gcp1/
-#			touch test1.txt'
-
-#echo $BASTION_INIT_SCRIPT
+BASTION_INIT_SCRIPT=$n
 
 if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --format="value(name)") ]; then
 	

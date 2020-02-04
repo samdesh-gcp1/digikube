@@ -18,6 +18,7 @@ log_it "${__function_name}" "installer" "DEBUG" "1115" "Target version of krew t
 krew_download_url=$(get-config-value "component.krew.url")
 log_it "${__function_name}" "installer" "DEBUG" "1120" "Krew download site is: ${krew_download_url}"
 
+source ~/.bashrc
 krew_existing_version=$(kubectl krew version | grep GitTag | cut -d "v" -f 2)
 __return_code=$?
 echo ${krew_existing_version}

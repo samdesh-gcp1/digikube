@@ -13,12 +13,14 @@ parse_yaml ${digikube_config} "__config_"
 
 function create {
 
-	__function_name="cluster/apps-om/kubectl-apply-om.create"
+	__function_name="cluster/apps-om/kubectl-krew-om.create"
 	
 	app_type="${1}"
 	app_name="${2}"
 	app_command_param="${3}"
-
+	
+	(${appommand_param} | cut -d " " -f 1)
+		
 	#config_file_name=$(get-config-value "cluster.${app_type}.${app_name}.deploymentEngine.configFileName")
 	config_file_name=${app_command_param}
 	config_file_path=${digi_dir}cluster/${app_type}/${app_name}/config/${config_file_name}

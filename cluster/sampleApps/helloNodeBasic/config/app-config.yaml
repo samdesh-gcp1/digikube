@@ -53,4 +53,4 @@ spec:
   selector:
     app: hello-node
   sessionAffinity: None
-  type: ClusterIP
+  type: NodePort

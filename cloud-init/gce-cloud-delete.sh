@@ -194,6 +194,31 @@ else
 fi
 
 ###########################################################
+#Delete firewall rule for nodeport
+
+if [[ ${delete_nodeport_firewall_rule} ]]; then
+	nodeport_firewall_rule_name="${cloud_subnet}-allow-external-to-nodeport"
+	echo "Attempting to delete firewall rule for nodeport: ${nodeport_firewall_rule_name}"
+	if [[ -z $(gcloud compute firewall-rules list --filter=name=${nodeport_firewall_rule_name} --format="value(name)") ]]; then
+		echo "No firewall rule available with the name ${nodeport_firewall_rule_name}.  Skipping firewall rule deletion."
+	else
+		gcloud -q compute firewall-rules delete ${nodeport_firewall_rule_name}
+		__return_code=$?
+		if [[ ${__return_code} -gt 0 ]]; then
+			#Unknown error while deleting the firewall rule.
+	    		echo "Unable to delete firewall rule for nodeport.  Exiting the DigiKube delete."
+	    		echo "Manually review and delete DigiKube cloud resources."
+	    		exit ${__return_code}
+	  	else
+	    		echo "Deleted the firewall rule for nodeport: ${nodeport_firewall_rule_name}."
+		fi
+	fi
+else
+	echo "Skipping nodeport firewall rule deletion."
+fi
+
+
+###########################################################
 #Delete the network for DigiKube
 if [[ ${delete_vpc} ]]; then
 	echo "Attempting to delete network for Digikube.  Network name: ${cloud_subnet}."

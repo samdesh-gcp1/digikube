@@ -23,11 +23,11 @@ krew_existing_version=$(kubectl krew version)
 __return_code=$?
 if [[ __return_code -gt 0 ]]; then
 	echo "Error while checking krew version.  Ignorring."
+else
+	krew_existing_version=$(kubectl krew version | grep GitTag | cut -d "v" -f 2)
+	echo "Krew existing version is : ${krew_existing_version}"
 fi
-echo "Krew existing version is : ${krew_existing_version}"
 
-krew_existing_version=$("${krew_existing_version}" | grep GitTag | cut -d "v" -f 2)
-echo "Krew existing version is : ${krew_existing_version}"
 if [[ -z ${krew_existing_version} ]]; then
 	#set -x
 	cd "$(mktemp -d)"

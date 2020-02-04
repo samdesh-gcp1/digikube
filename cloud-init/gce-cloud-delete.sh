@@ -39,6 +39,7 @@ case ${__option} in
 		delete_cluster=true
 		delete_bastion_host=true
 		delete_bastion_firewall_rule=true
+		delete_nodeport_firewall_rule=true
 		delete_vpc=true
 		delete_bucket=true
 		;;
@@ -46,6 +47,7 @@ case ${__option} in
 		delete_cluster=true
 		delete_bastion_host=true
 		delete_bastion_firewall_rule=true
+		delete_nodeport_firewall_rule=true
 		delete_vpc=true
 		delete_bucket=false
 		;;
@@ -53,6 +55,7 @@ case ${__option} in
 		delete_cluster=true
 		delete_bastion_host=true
 		delete_bastion_firewall_rule=false
+		delete_nodeport_firewall_rule=true
 		delete_vpc=false
 		delete_bucket=false
 		;;
@@ -60,6 +63,7 @@ case ${__option} in
 		delete_cluster=true
 		delete_bastion_host=false
 		delete_bastion_firewall_rule=false
+		delete_nodeport_firewall_rule=true
 		delete_vpc=false
 		delete_bucket=false
 		;;

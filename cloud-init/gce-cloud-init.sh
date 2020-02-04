@@ -182,7 +182,7 @@ if [ -z $(gcloud compute firewall-rules list --filter=name=${NODEPORT_FIREWALL_R
 		--priority=1000 \
 		--network=${CLOUD_SUBNET} \
 		--action=ALLOW \
-		--rules=tcp:22 \
+		--rules=tcp:30000-32767 \
 		--source-ranges=0.0.0.0/0 \
 		--target-tags=c1-${CLOUD_PROJECT}-dev1-k8s-local-k8s-io-role-node
 	

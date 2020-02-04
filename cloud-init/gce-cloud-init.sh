@@ -166,3 +166,31 @@ if [ -z $(gcloud compute firewall-rules list --filter=name=${BASTION_HOST_FIREWA
 else
 	echo "Reusing the exiting bastion host firewall rule.  Bastion host firewall rule: ${BASTION_HOST_FIREWALL_RULE_NAME}."
 fi
+
+####################################################
+#Create firewall rule to allow http/https traffic from internet to NodePort.
+
+export NODEPORT_FIREWALL_RULE_NAME="${CLOUD_SUBNET}-allow-external-to-nodeport"
+
+echo "Attempting to create firewallrule for : ${NODEPORT_FIREWALL_RULE_NAME}"
+if [ -z $(gcloud compute firewall-rules list --filter=name=${NODEPORT_FIREWALL_RULE_NAME} --format="value(name)") ]; then
+
+	gcloud compute firewall-rules create ${NODEPORT_FIREWALL_RULE_NAME} \
+		--project=${CLOUD_PROJECT} \
+		--direction=INGRESS \
+		--priority=1000 \
+		--network=${CLOUD_SUBNET} \
+		--action=ALLOW \
+		--rules=tcp:22 \
+		--source-ranges=0.0.0.0/0 \
+		--target-tags=c1-digikube003-dev1-k8s-local-k8s-io-role-node
+	
+	if [ -z $(gcloud compute firewall-rules list --filter=name=${NODEPORT_FIREWALL_RULE_NAME} --format="value(name)") ]; then
+		echo "Unable to create nodeport firewall rule for DigiKube.  Nodeport firewall rule name: ${NODEPORT_FIREWALL_RULE_NAME}. Nodeport services will not be accessible."
+	else
+		echo "Created nodeport firewall rule for DigiKube.  Nodeport firewall rule name: ${NODEPORT_FIREWALL_RULE_NAME}."
+	fi	
+		
+else
+	echo "Reusing the exiting nodeport firewall rule.  Nodeport firewall rule: ${NODEPORT_FIREWALL_RULE_NAME}."
+fi

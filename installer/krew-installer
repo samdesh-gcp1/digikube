@@ -1,0 +1,36 @@
+#!/bin/bash
+# krew installer
+
+__function_name="installer/krew-installer.sh"
+
+base_dir=~/
+digi_dir=${base_dir}digikube/
+
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
+. ${digi_dir}common/digikube-config.sh
+
+log_it "${__function_name}" "installer" "INFO" "1110" "Started the krew installation process"
+
+krew_download_version=$(get-config-value "component.krew.version")
+log_it "${__function_name}" "installer" "DEBUG" "1115" "Target version of krew to be installed is: $krew_download_version"
+
+krew_download_url=$(get-config-value "component.krew.url")
+log_it "${__function_name}" "installer" "DEBUG" "1120" "Krew download site is: ${krew_download_url}"
+
+
+#TO DO: Externalize the following code to get values from config
+
+set -x
+cd "$(mktemp -d)"
+curl -fsSLO "${krew_download_url}.{tar.gz,yaml}"
+tar zxvf krew.tar.gz
+KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
+"$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
+"$KREW" update
+
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+source ~/.bashrc
+
+log_it "${__function_name}" "installer" "DEBUG" "1120" "Krew installed"

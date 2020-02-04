@@ -53,7 +53,6 @@ function get-cluster-config {
 	kops_node_volume_size=$(get-config-value "cluster.kops.node.volumeSize")
 	kops_node_image=$(get-config-value "cluster.kops.node.image")
 	kops_associate_public_ip=$(get-config-value "cluster.kops.associatePublicIp")
-
 }
 
 function validate-cluster {
@@ -190,16 +189,17 @@ function create-cluster {
 			--master-zones=${kops_master_zones} 				\
 			--zones=${kops_worker_zones}        				\
 			--cloud-labels=${kops_env_type}     				\
-			--master-count=${kops_master_count_min}           	\
+			--master-count=${kops_master_count_min}           		\
 			--master-size=${kops_master_size}   				\
-			--master-volume-size=${kops_master_volume_size}   	\
-			--node-count=${kops_node_count_min}               	\
+			--master-volume-size=${kops_master_volume_size}   		\
+			--node-count=${kops_node_count_min}               		\
 			--node-size=${kops_node_size}       				\
-			--node-volume-size=${kops_node_volume_size}       	\
-			--associate-public-ip=${kops_associate_public_ip} 	\
+			--node-volume-size=${kops_node_volume_size}       		\
+			--associate-public-ip=${kops_associate_public_ip} 		\
 			--api-loadbalancer-type=public      				\
 			--authorization=RBAC                				\
 			--etcd-storage-type=pd-standard     				\
+			--vpc=${kops_vpc}	         				\
 			--state=${kops_state_store}         				\
 			--yes
 

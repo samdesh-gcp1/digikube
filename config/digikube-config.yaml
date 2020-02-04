@@ -33,7 +33,7 @@ component:
     url: "https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl"
     localPath: "/usr/local/bin/kubectl"
   krew:
-    version: "v0.3.3"
+    version: "0.3.3"
     url: "https://github.com/kubernetes-sigs/krew/releases/download/v0.3.3/krew"
     localPath: ""
   kops:

@@ -31,6 +31,11 @@ KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-source ~/.bashrc
+isExported=$(cat ~/.bashrc | grep "export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$PATH")
+echo "${isExported}"
+if [[ -z isExported ]]; then
+  echo 'export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$PATH' >> ~/.bashrc 
+fi
+#source ~/.bashrc
 
 log_it "${__function_name}" "installer" "DEBUG" "1120" "Krew installed"

@@ -18,6 +18,7 @@ log_it "${__function_name}" "installer" "DEBUG" "1115" "Target version of krew t
 krew_download_url=$(get-config-value "component.krew.url")
 log_it "${__function_name}" "installer" "DEBUG" "1120" "Krew download site is: ${krew_download_url}"
 
+PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 krew_existing_version=$(kubectl krew version)
 __return_code=$?
 if [[ __return_code -gt 0 ]]; then
@@ -35,7 +36,6 @@ if [[ -z ${krew_existing_version} ]]; then
 	KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64"
 	"$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
 	"$KREW" update
-	export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 else
 	if [[ "$krew_existing_version" == "$krew_download_version" ]]; then
 		log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing krew version is same as expected target version: ${krew_download_version}. Using the pre-existing kops binary."

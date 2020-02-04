@@ -6,10 +6,13 @@ if [[ $# -lt 2 ]]; then
 else
 	digikube_repo="$1"
 	bootstrap_command="$2"
+	tmpFile=/tmp/digikube-${RANDOM}
 	
 	if [[ "${bootstrap_command}" == "create" ]]; then
-		echo "wget -q --no-cache -O - ${digikube_repo}/cloud-init/gce-cloud-init.sh | bash"
-		wget -q --no-cache -O - "${digikube_repo}/cloud-init/gce-cloud-init.sh" | bash
+		echo "wget -q --no-cache -O ${tmpFile} - ${digikube_repo}/cloud-init/gce-cloud-init.sh"
+		wget -q --no-cache -O ${tmpFile} - "${digikube_repo}/cloud-init/gce-cloud-init.sh" 
+		chmod +x ${tmpFile}
+		${tmpFile} ${digikube_repo}
 	else
 		echo "Please enter delete scope:"
 		echo "            Only K8S Cluster                                   : cluster"
@@ -18,8 +21,7 @@ else
 		echo "            K8S Cluster, bastion-host, cloud-resources, bucket : all-with-bucket"
 		read -p "Enter your choice: " delete_choice
 		export delete_choice=${delete_choice}
-		echo "wget -q --no-cache -O - ${digikube_repo}/cloud-init/gce-cloud-delete.sh | bash"
-		tmpFile=/tmp/digikube-${RANDOM}
+		echo "wget -q --no-cache -O ${tmpFile} - ${digikube_repo}/cloud-init/gce-cloud-delete.sh"
 		wget -q --no-cache -O ${tmpFile} - "${digikube_repo}/cloud-init/gce-cloud-delete.sh"
 		chmod +x ${tmpFile}
 		${tmpFile} ${delete_choice}

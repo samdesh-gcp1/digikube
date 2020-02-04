@@ -38,7 +38,7 @@ if [[ -z ${krew_existing_version} ]]; then
 	"$KREW" update
 else
 	if [[ "$krew_existing_version" == "$krew_download_version" ]]; then
-		log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing krew version is same as expected target version: ${krew_download_version}. Using the pre-existing kops binary."
+		log_it "${__function_name}" "installer" "INFO" "1235" "Pre-existing krew version is same as expected target version: ${krew_download_version}. Using the pre-existing krew binary."
 	else
 		log_it "${__function_name}" "installer" "ERR" "1240" "Pre-existing krew version is: ${krew_existing_version}.  Target version of krew is: ${krew_download_version}. Aborting krew installation.  Remove existing krew binary and rerun the installation."
 		exit 1

@@ -133,6 +133,16 @@ cluster:
         configFileName: ""
         namespace: "mongodb"      
   sampleApps:
+    helloNodeBasic:
+      enabled: "true"
+      omCommands:
+        create: "true"
+        update: "true"
+        delete: "true"
+        validate: "true"
+      deploymentEngine: "kubectl-apply"
+        configFileName: "app-config.yaml"
+        namespace: "sample-apps"
     nodeMongoSample:
       enabled: "true"
       omCommands:

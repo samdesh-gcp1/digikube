@@ -20,6 +20,7 @@ log_it "${__function_name}" "installer" "DEBUG" "1120" "Krew download site is: $
 
 krew_existing_version=$(kubectl krew version | grep GitTag | cut -d "v" -f 2)
 __return_code=$?
+echo ${krew_existing_version}
 if [[ __return_code -gt 0 ]]; then
 	echo "Error while checking krew version.  Ignorring."
 fi

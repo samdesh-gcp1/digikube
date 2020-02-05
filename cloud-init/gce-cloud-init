@@ -1,4 +1,19 @@
 #!/bin/sh
+# Main script to initialize the cloud resources.
+
+tmpExecDir=$(direname $(realpath $0))
+
+function bootstrap_log {
+	# Logging to be done to std out only.
+	
+	#echo
+}
+
+function download_file {
+	source_url=$1	
+	file_name=$2
+	# wget the required file and store in temp dir
+}
 
 #TO DO: Pickup the values from config.
 export DIGIKUBE_CLOUD_ADMIN=$(whoami)

@@ -1,1 +1,19 @@
+#!/bin/bash
+# bootstrap preparation script
 
+repo_url=$1
+
+echo '{"check_jq":"check_jq"}' | jq '.check_jq'
+__returnCode=$?
+if [[ __returnCode -gt 0 ]]; then
+	sudo apt-get install jq
+fi
+
+yaml_2_json_file_url="$repo_url/bin/yaml2json"
+yaml_2_json_file="/usr/local/bin/yaml2json"
+if [[ -f ${yaml_2_json_file} ]]; then
+	echo "file available"
+else
+	sudo wget -q --no-cache -O "$yaml_2_json_file" - "$yaml_2_json_file_url" 
+	sudo chmod +x "$yaml_2_json_file"
+fi

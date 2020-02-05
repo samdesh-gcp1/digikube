@@ -1,7 +1,55 @@
 #!/bin/sh
 # Main script to initialize the cloud resources.
 
+#TO DO: Check url format
+
+function bootstrap_download_file {
+	local __fn_name="cloud-init/gce-cloud-init"
+	__fn_msg=""
+	__fn_err_msg=""
+	
+	source_url=$1
+	target=$2
+	isExecutable=$3
+	
+	wget -q --no-cache -O "$target" - $source_url
+	if [[ -f $target ]]; then
+		if [[ isExecutable ]]; then
+			chmod +x $target
+		fi
+		__fn_msg="Successfully downloaded the file: $source_url at $target."
+		return 0
+	else
+		__fn_err_msg="Error: Not able to download file"
+		return 1
+	fi
+}
+
 tmpExecDir=$(direname $(realpath $0))
+echo "Temporary execution directory is: $tmpExecDir"
+
+digikube_code_repo_url=$1
+
+# Download and execute cloud-init/init-prep script
+bootstrap_download_file "$digikube_code_repo_url/cloud-init/init-prep" "$tmpExecDir/init-prep" true
+$tmpExecDir/init-prep $digikube_code_repo_url
+
+# Download the config/digikube-config.yaml file
+bootstrap_download_file "$digikube_repo_url/config/digikube-config.yaml" "$tmpExecDir/digikube-config.yaml" false
+
+
+
+. ${digi_dir}utility/general.sh
+
+base_dir=~/
+digi_dir=${base_dir}digikube/
+
+. ${digi_dir}utility/general.sh
+. ${digi_dir}utility/log.sh
+. ${digi_dir}common/digikube-config.sh
+
+
+
 
 function bootstrap_log {
 	# Logging to be done to std out only.
@@ -9,11 +57,7 @@ function bootstrap_log {
 	#echo
 }
 
-function download_file {
-	source_url=$1	
-	file_name=$2
-	# wget the required file and store in temp dir
-}
+
 
 #TO DO: Pickup the values from config.
 export DIGIKUBE_CLOUD_ADMIN=$(whoami)

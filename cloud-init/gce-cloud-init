@@ -1,124 +1,162 @@
 #!/bin/sh
 # Main script to initialize the cloud resources.
+# Input parameters
+#	$1 => digikube code repository url
+#	$2 => digikube config file (either url or local file)
 
-#TO DO: Check url format
+digikube_code_repo_url=${1}
+digikube_config_file_ref=${2}
+
+function bootstrap_is_valid_url {
+	local __fn_name="cloud-init/gce-cloud-init.is_valid_url"
+	regex='^(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]\.[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]$'
+	url="${1}"
+	if [[ ${url} =~ ${regex} ]]; then 
+    	return 0
+	else
+		return 1
+    fi
+}
+
+function bootstrap_get_config_value {
+	value=$( echo ${digikube_json_config_set} | jq ".${1}")
+}
 
 function bootstrap_download_file {
-	local __fn_name="cloud-init/gce-cloud-init"
+	local __fn_name="cloud-init/gce-cloud-init.bootstrap_download_file"
 	__fn_msg=""
 	__fn_err_msg=""
 	
-	source_url=$1
-	target=$2
-	isExecutable=$3
+	source_url=${1}
+	target=${2}
+	is_executable=${3}
 	
-	wget -q --no-cache -O "$target" - $source_url
-	if [[ -f $target ]]; then
-		if [[ isExecutable ]]; then
-			chmod +x $target
+	wget -q --no-cache -O "${target}" - ${source_url}
+	if [[ -f ${target} ]]; then
+		if [[ "${is_executable}" == "yes" ]]; then
+			chmod +x ${target}
 		fi
-		__fn_msg="Successfully downloaded the file: $source_url at $target."
+		__fn_msg="Successfully downloaded the file: ${source_url} at ${target}."
 		return 0
 	else
-		__fn_err_msg="Error: Not able to download file"
+		__fn_err_msg="Error: Not able to download file: ${source_url} at ${target}."
 		return 1
 	fi
 }
 
-tmpExecDir=$(direname $(realpath $0))
-echo "Temporary execution directory is: $tmpExecDir"
 
-digikube_code_repo_url=$1
+# Directory to get all the files required for cloud initialization.
+tmp_exec_dir=$(direname $(realpath $0))
+echo "Temporary execution directory is: ${tmp_exec_dir}"
+
+# Check the Digikube code repository url.
+if [[ $(is_valid_url ${digikube_code_repo_url}) -gt 0 ]]; then
+	echo "Invalid Digikube repository url provided: ${digikube_code_repo_url}.  Exiting..."
+	exit 1
+fi
 
 # Download and execute cloud-init/init-prep script
-bootstrap_download_file "$digikube_code_repo_url/cloud-init/init-prep" "$tmpExecDir/init-prep" true
-$tmpExecDir/init-prep $digikube_code_repo_url
-
-# Download the config/digikube-config.yaml file
-bootstrap_download_file "$digikube_repo_url/config/digikube-config.yaml" "$tmpExecDir/digikube-config.yaml" false
-
-
-
-. ${digi_dir}utility/general.sh
-
-base_dir=~/
-digi_dir=${base_dir}digikube/
-
-. ${digi_dir}utility/general.sh
-. ${digi_dir}utility/log.sh
-. ${digi_dir}common/digikube-config.sh
-
-
-
-
-function bootstrap_log {
-	# Logging to be done to std out only.
-	
-	#echo
-}
-
-
-
-#TO DO: Pickup the values from config.
-export DIGIKUBE_CLOUD_ADMIN=$(whoami)
-export CLOUD_TYPE="gce"
-export CLOUD_REGION="us-central1"
-export CLOUD_ZONE="us-central1-c"
-
-if [[ $# -eq 0 ]]; then
-	echo "Command line parameter for git repository url not specified.  Exiting."
+if [[ $(bootstrap_download_file "${digikube_code_repo_url}/cloud-init/init-prep" "${tmp_exec_dir}/init-prep" "yes") -gt 0 ]]; then
+	echo ${__fn_err_msg}
 	exit 1
 else
-	#TO DO: Verify the format of the url.
-	digikube_repo=$1
-fi
-
-echo 
-echo
-echo "############################################"
-echo "Using gce as the cloud provider for DigiKube."
-echo
-
-###################################################
-#Get cloud project details
-export CLOUD_PROJECT="$(gcloud info |tr -d '[]' | awk '/project:/ {print $2}')"
-if [ $? -gt 0 ]; then
-	echo "Unable to get cloud project details for DigiKube.  Exiting DigiKube initialization."
-	echo "Run the DigiKube delete scripts to clear partially created resources."
-	exit 1
-fi
-if [ -z ${CLOUD_PROJECT} ]; then
-	echo "Unable to get cloud project details for DigiKube.  Exiting DigiKube initialization."
-	echo "Run the DigiKube delete scripts to clear partially created resources."
-	exit 1
-fi
-echo "Cloud project to be used for DigiKube: ${CLOUD_PROJECT}."
-
-###################################################
-echo "Creating the DigiKube environment"
-
-###################################################
-#Create the VPC for DigiKube
-export CLOUD_SUBNET="${CLOUD_PROJECT}-vpc"
-echo "Attempting to create network: ${CLOUD_SUBNET}"
-
-if [ -z $(gcloud compute networks list --filter=name=${CLOUD_SUBNET} --format="value(name)") ]; then
-	gcloud compute networks create ${CLOUD_SUBNET} \
-	       	--project=${CLOUD_PROJECT} \
-        	--subnet-mode=auto
-	if [ -z $(gcloud compute networks list --filter=name=${CLOUD_SUBNET} --format="value(name)") ]; then
-		echo "Unable to create network for DigiKube.  Network name: ${CLOUD_SUBNET}. Exiting DigiKube initialization."
-		echo "Run the DigiKube delete scripts to clear partially created resources."
+	echo "Downloaded the init-prep script."
+	if [[ $(${tmp_exec_dir}/init-prep ${digikube_code_repo_url}) -gt 0 ]]; then
+		echo "Error while running init-prep.  Exiting..."
 		exit 1
 	else
-		echo "Created network for DigiKube.  Network name: ${CLOUD_SUBNET}."
+		echo "Successfully executed init-prep script."
+	fi
+fi
+
+# Check the Digikube config file ref and download/copy the file to target location.
+if [[ $(is_valid_url ${digikube_config_file_ref}) -gt 0 ]]; then
+	if [[ -f ${digikube_config_file_ref} ]]; then
+		# File available for Digikube config.
+		cp ${digikube_config_file_ref} "${tmp_exec_dir}/digikube-config.yaml"
+	else
+		echo "Invalid Digikube config file url or local file: ${digikube_config_file_ref}.  Exiting..."
+		exit 1
 	fi
 else
-	echo "Reusing the exiting network.  Network name: ${CLOUD_SUBNET}."
+	# Download the config/digikube-config.yaml file from url
+	if [[ $(bootstrap_download_file "${digikube_repo_url}/config/digikube-config.yaml" "${tmp_exec_dir}/digikube-config.yaml" "no") -gt 0 ]]; then
+		echo ${__fn_err_msg}
+		echo "Error while downloading Digikube config file from url: ${digikube_repo_url}/config/digikube-config.yaml. Exiting..."
+		exit 1
+	fi
+fi
+
+
+digikube_json_config_set=$(yaml2json "${tmp_exec_dir}/digikube-config.yaml")
+
+#TO DO: Pickup the values from config.
+#export DIGIKUBE_CLOUD_ADMIN=$(whoami)
+#export CLOUD_TYPE="gce"
+#export CLOUD_REGION="us-central1"
+#export CLOUD_ZONE="us-central1-c"
+
+# Check 1: Check if cloud provider is matching
+digikubeCloudProvider=$(bootstrap_get_config_value "cloud.provider")
+currentCloudProvider="gce"
+if [[ "${currentCloudProvider}" == "${digikubeCloudProvider}" ]]; then
+	echo "Using ${digikubeCloudProvider} as the cloud provider for Digikube."
+else
+	echo "Current cloud provider (${currentCloudProvider}) is not same as the name set in config (${digikubeCloudProvider}).  Exiting..."
+	exit 1
+fi
+
+# Check 2: Check the max character length for the cluster name
+
+
+# Check 3: Check if admin users are same.
+digikubeCloudAdminUser=$(bootstrap_get_config_value "cloud.adminUser")
+currentCloudAdminUser=$(whoami)
+if [[ "${currentCloudAdminUser}" == "${digikubeCloudAdminUser}" ]]; then
+	echo "Using ${digikubeCloudAdminUser} identity for installing Digikube."
+else
+	echo "Current user (${currentCloudAdminUser}) is not same as the name set in config (${digikubeCloudAdminUser}).  Exiting..."
+	exit 1
+fi
+
+# Check 4: Check if the cloud project ids match
+digikubeCloudProjectId=$(bootstrap_get_config_value "cloud.project.id")
+currentCloudProjectId="$(gcloud info |tr -d '[]' | awk '/project:/ {print $2}')"
+if [[ ${?} -gt 0 ]] || [[ -z ${currentCloudProjectId} ]] ; then
+	echo "Unable to get current cloud project details.  Exiting..."
+	exit 1
+fi
+if [[ "${currentCloudProjectId}" == "${digikubeCloudProjectId}" ]]; then
+	echo "Using ${digikubeCloudProjectId} as the project id for Digikube."
+else
+	echo "Current cloud project id (${currentCloudProjectId}) do not match with the value set in config (${digikubeCloudProjectId}).  Exiting..."
+	exit 1
+fi
+
+
+###################################################
+#Create the VPC
+digikubeCloudSubnet="${digikubeCloudProjectId}-vpc"
+echo "Attempting to create network: ${digikubeCloudSubnet}"
+
+if [ -z $(gcloud compute networks list --filter=name=${digikubeCloudSubnet} --format="value(name)") ]; then
+	gcloud compute networks create ${digikubeCloudSubnet} \
+	       	--project=${digikubeCloudProjectId} \
+        	--subnet-mode=auto
+	if [ -z $(gcloud compute networks list --filter=name=${digikubeCloudSubnet} --format="value(name)") ]; then
+		echo "Unable to create network for Digikube.  Network name: ${digikubeCloudSubnet}. Exiting..."
+		echo "Run the Digikube delete scripts to clear partially created resources."
+		exit 1
+	else
+		echo "Created network for Digikube.  Network name: ${digikubeCloudSubnet}."
+	fi
+else
+	echo "Reusing the exiting network.  Network name: ${digikubeCloudSubnet}."
 fi
 
 ####################################################
 #Create bucket
+digikubeCloudBucket="${digikubeCloudAdminProjectId}-vpc"
 export CLOUD_BUCKET="${DIGIKUBE_CLOUD_ADMIN}-${CLOUD_PROJECT}-bucket"
 echo "Attempting to create storage bucket: ${CLOUD_BUCKET}"
 

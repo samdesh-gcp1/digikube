@@ -1,4 +1,7 @@
-#All logging to be done to std out.  No log file required.
+#!/bin/bash
+# Generic utility functions
+
+__function_name="utility/general"
 
 function download_file {
 

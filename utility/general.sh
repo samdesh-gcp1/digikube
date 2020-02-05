@@ -136,5 +136,15 @@ function replace_substring {
                 #echo $s
                 n=${f//$t/$s}
                 echo "$n"
-        fi
+	fi
+}
+
+function isValidURL {
+	regex='^(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]\.[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]$'
+	url="$1"
+	if [[ $url =~ $regex ]]; then 
+    	exit 0
+	else
+		exit 1
+    fi		 
 }

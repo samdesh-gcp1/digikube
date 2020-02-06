@@ -9,7 +9,7 @@ cloud:
   bucket:
     class: "STANDARD"
   bastionHost:
-    namePrefix: "bastion-host"
+    name: "bastion-host"
     machineType: "f1-micro"
     networkTier: "STANDARD"
     preemptible: "Yes"

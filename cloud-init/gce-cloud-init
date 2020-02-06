@@ -58,12 +58,14 @@ function downloadFile {
 
 # Directory to get all the files required for cloud initialization.
 tmpExecDir=$(dirname $(realpath $0))
-echo "Temporary execution directory is: ${tmpExecDir}"
+echo "INFO: Temporary execution directory is ${tmpExecDir}"
 
 # Check the Digikube code repository url.
 if [[ $(isValidUrl ${providedDigikubeCodeRawRepoUrl}) -gt 0 ]]; then
 	echo "ERROR: Invalid Digikube repository url provided: ${providedDigikubeCodeRawRepoUrl}.  Exiting..."
 	exit 1
+else
+	echo "INFO: Digikube code repository url is ${providedDigikubeCodeRawRepoUrl}"
 fi
 
 # Download and execute cloud-init/init-prep script
@@ -71,7 +73,7 @@ if [[ $(downloadFile "${providedDigikubeCodeRawRepoUrl}/cloud-init/init-prep" "$
 	echo ${__fnErrMsg}
 	exit 1
 else
-	echo "Downloaded the init-prep script."
+	echo "INFO: Downloaded the init-prep script."
 	if [[ $(${tmpExecDir}/init-prep ${providedDigikubeCodeRawRepoUrl}) -gt 0 ]]; then
 		echo "ERROR: Error while running init-prep.  Exiting..."
 		exit 1
@@ -85,6 +87,7 @@ if [[ $(isValidUrl ${providedDigikubeConfigFileRef}) -gt 0 ]]; then
 	if [[ -f ${providedDigikubeConfigFileRef} ]]; then
 		# File available for Digikube config.
 		cp ${providedDigikubeConfigFileRef} "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}"
+		echo "INFO: Successfully coppied Digikube config file."
 	else
 		echo "ERROR: Invalid Digikube config file url or local file: ${providedDigikubeConfigFileRef}.  Exiting..."
 		exit 1
@@ -95,6 +98,8 @@ else
 		echo ${__fnErrMsg}
 		echo "ERROR: Error while downloading Digikube config file from url: ${providedDigikubeConfigFileRef}. Exiting..."
 		exit 1
+	else
+		echo "INFO: Successfully downloaded Digikube config file."
 	fi
 fi
 
@@ -103,7 +108,8 @@ fi
 #----------------------------------------------------------------
 
 # Read and parse the config.yaml and populate json config set
-digikubeJsonConfigSet=$(yaml2json "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}")
+digikubeJsonConfigSet=$(cat "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}" | yaml2json)
+echo "Digikube json config set is ${digikubeJsonConfigSet}"
 
 #----------------------------------------------------------------
 # Check 1: Check if the git Digikube code repo matches

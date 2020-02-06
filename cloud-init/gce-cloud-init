@@ -226,11 +226,11 @@ if [[ -z ${digikubeClusterIdentityDomain} ]]; then
 	echo "ERROR: Cluster identity domain not specified in config.  Exiting..."
 	exit 1
 fi
-digikubeClusterFullName="${digikubeClusterIdentityNamePrefix}-${digikubeClusterIdentityEnv}-${digikubeCloudProjectId}.${digikubeClusterIdentityDomain}
+digikubeClusterFullName="${digikubeClusterIdentityNamePrefix}-${digikubeClusterIdentityEnv}-${digikubeCloudProjectId}.${digikubeClusterIdentityDomain}"
 echo "The propossed Digikube cluster name is ${digikubeClusterFullName}"
 clusterNameLength=${#digikubeClusterFullName}
 if [[ ${clusterNameLength} -gt ${MAX_LENGTH_CLUSTER_NAME} ]]; then
-	echo "The propossed Digikube cluster name \(${digikubeClusterFullName}\) exceeds the max length allowed \(${MAX_LENGTH_CLUSTER_NAME}\).  Exiting..."
+	echo "The propossed Digikube cluster name (${digikubeClusterFullName}) exceeds the max length allowed (${MAX_LENGTH_CLUSTER_NAME}).  Exiting..."
 fi
 
 #----------------------------------------------------------------

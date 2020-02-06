@@ -437,7 +437,7 @@ targetTags="${digikubeClusterFullName}"
 targetTags="${targetTags//\./-}"
 targetTags="${targetTags}-k8s-io-role-node"
 
-if [ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]]; then
+if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]]; then
 
 	gcloud compute firewall-rules create ${firewallRule} 	\
 		--project=${digikubeCloudProjectId} 				\

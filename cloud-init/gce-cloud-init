@@ -4,8 +4,6 @@
 #	$1 => digikube code repository url
 #	$2 => digikube config file (either url or local file)
 
-
-
 providedDigikubeCodeRawRepoUrl=${1}
 providedDigikubeConfigFileRef=${2}
 
@@ -324,7 +322,7 @@ if [[ $? -gt 0 ]]; then
 	echo "INFO: You do not have any bucket with this name: ${digikubeCloudBucketUrl}.  Creating new bucket."
 	gsutil mb -p ${digikubeCloudProjectId} -c ${digikubeCloudBucketClass} -l ${digikubeCloudProjectRegion} ${digikubeCloudBucketUrl}
 else
-	echo "INFO: A bucket with this name: ${digikubeCloudBucket} already exists.  Reusing the existing bucket."
+	echo "INFO: Reusing the existing bucket (${digikubeCloudBucket})"
 fi
 
 #----------------------------------------------------------------
@@ -394,7 +392,7 @@ if [[ -z $(gcloud compute instances list --filter=name=${digikubeBastionHostName
 	
 else
 	# TO DO: Need to update configuration of bastion host based on config values."
-	echo "INFO: Reusing the exiting bastion host.  Bastion host name: (${digikubeBastionHostName})."
+	echo "INFO: Reusing the exiting bastion host (${digikubeBastionHostName})."
 fi
 
 #----------------------------------------------------------------
@@ -416,16 +414,16 @@ if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --fo
 		--source-ranges=0.0.0.0/0 								\
 		--target-tags="${digikubeBastionHostTagIdentifier}"
 	
-	if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]; then
+	if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]]; then
 		echo "ERROR: Unable to create bastion host firewall rule ("${firewallRule}") for Digikube.  Exiting..."
 		echo "ERROR: Run the Digikube delete scripts to clear partially created resources."
 		exit 1
 	else
-		echo "INFO: Created bastion host firewall rule  ("${firewallRule}") for DigiKube."
+		echo "INFO: Created bastion host firewall rule  ("${firewallRule}") for DigiKube"
 	fi	
 		
 else
-	echo "INFO: Reusing the exiting bastion host firewall rule ("${firewallRule}") for DigiKube."
+	echo "INFO: Reusing the exiting bastion host firewall rule ("${firewallRule}")"
 fi
 
 #----------------------------------------------------------------
@@ -439,7 +437,7 @@ targetTags="${digikubeClusterFullName}"
 targetTags="${targetTags//\./-}"
 targetTags="${targetTags}-k8s-io-role-node"
 
-if [ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]; then
+if [ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]]; then
 
 	gcloud compute firewall-rules create ${firewallRule} 	\
 		--project=${digikubeCloudProjectId} 				\
@@ -454,9 +452,9 @@ if [ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --for
 	if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]]; then
 		echo "ERROR: Unable to create nodeport ingress firewall rule ("${firewallRule}") for Digikube.  Nodeport services will not be accessible."
 	else
-		echo "INFO: Created nodeport firewall rule for Digikube.  Nodeport firewall rule name: ${NODEPORT_FIREWALL_RULE_NAME}."
+		echo "INFO: Created nodeport firewall rule for Digikube.  Nodeport firewall rule name: ${NODEPORT_FIREWALL_RULE_NAME}"
 	fi	
 		
 else
-	echo "INFO: Reusing the exiting nodeport firewall rule.  Nodeport firewall rule: ${NODEPORT_FIREWALL_RULE_NAME}."
+	echo "INFO: Reusing the exiting nodeport firewall rule.  Nodeport firewall rule: ${NODEPORT_FIREWALL_RULE_NAME}"
 fi

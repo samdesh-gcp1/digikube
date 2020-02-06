@@ -7,6 +7,21 @@
 digikube_code_repo_url=${1}
 digikube_config_file_ref=${2}
 
+DIGIKUBE_BASE_CONFIG="digikube-base-config.yaml"
+
+digikubeCloudProvider=""
+digikubeCloudAdminUser=""
+digikubeCloudProjectId=""
+digikubeCloudSubnet=""
+digikubeCloudBucket=""
+
+
+
+
+#################################################################
+# Some utility functions
+#----------------------------------------------------------------
+
 function bootstrap_is_valid_url {
 	local __fn_name="cloud-init/gce-cloud-init.is_valid_url"
 	regex='^(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]\.[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]$'
@@ -45,6 +60,10 @@ function bootstrap_download_file {
 }
 
 
+#################################################################
+# Load pre-requisits
+#----------------------------------------------------------------
+
 # Directory to get all the files required for cloud initialization.
 tmp_exec_dir=$(direname $(realpath $0))
 echo "Temporary execution directory is: ${tmp_exec_dir}"
@@ -73,32 +92,40 @@ fi
 if [[ $(is_valid_url ${digikube_config_file_ref}) -gt 0 ]]; then
 	if [[ -f ${digikube_config_file_ref} ]]; then
 		# File available for Digikube config.
-		cp ${digikube_config_file_ref} "${tmp_exec_dir}/digikube-config.yaml"
+		cp ${digikube_config_file_ref} "${tmp_exec_dir}/${DIGIKUBE_BASE_CONFIG}"
 	else
 		echo "Invalid Digikube config file url or local file: ${digikube_config_file_ref}.  Exiting..."
 		exit 1
 	fi
 else
 	# Download the config/digikube-config.yaml file from url
-	if [[ $(bootstrap_download_file "${digikube_repo_url}/config/digikube-config.yaml" "${tmp_exec_dir}/digikube-config.yaml" "no") -gt 0 ]]; then
+	if [[ $(bootstrap_download_file "${digikube_repo_url}/config/digikube-config.yaml" "${tmp_exec_dir}/${DIGIKUBE_BASE_CONFIG}" "no") -gt 0 ]]; then
 		echo ${__fn_err_msg}
-		echo "Error while downloading Digikube config file from url: ${digikube_repo_url}/config/digikube-config.yaml. Exiting..."
+		echo "Error while downloading Digikube config file from url: ${digikube_repo_url}/config/${DIGIKUBE_BASE_CONFIG}. Exiting..."
 		exit 1
 	fi
 fi
 
+#################################################################
+# Verify the config, perform pre-installation checks
+#----------------------------------------------------------------
 
-digikube_json_config_set=$(yaml2json "${tmp_exec_dir}/digikube-config.yaml")
+# Read and parse the config.yaml and populate json config set
+digikube_json_config_set=$(yaml2json "${tmp_exec_dir}/${DIGIKUBE_BASE_CONFIG}")
 
-#TO DO: Pickup the values from config.
-#export DIGIKUBE_CLOUD_ADMIN=$(whoami)
-#export CLOUD_TYPE="gce"
-#export CLOUD_REGION="us-central1"
-#export CLOUD_ZONE="us-central1-c"
-
-# Check 1: Check if cloud provider is matching
+#----------------------------------------------------------------
+# Check 1: Check if cloud provider
 digikubeCloudProvider=$(bootstrap_get_config_value "cloud.provider")
-currentCloudProvider="gce"
+if [[ -z ${digikubeCloudProvider} ]]; then
+	echo "Cloud provider not specified in config.  Exiting..."
+	exit 1
+else
+	if [[ ${digikubeCloudProvider} != "gce" ]] && [[ ${digikubeCloudProvider} != "aws" ]] && [[ ${digikubeCloudProvider} != "azure" ]]; then
+		echo "Invalid cloud provider (${digikubeCloudProvider}) specified in config.  Exiting..."
+		exit 1
+	fi
+fi
+currentCloudProvider="gce"			#TO DO: Auto detect current cloud provider
 if [[ "${currentCloudProvider}" == "${digikubeCloudProvider}" ]]; then
 	echo "Using ${digikubeCloudProvider} as the cloud provider for Digikube."
 else
@@ -106,61 +133,102 @@ else
 	exit 1
 fi
 
-# Check 2: Check the max character length for the cluster name
+#----------------------------------------------------------------
+# Check 2: Verify the mandatory config values
+# TO DO: Verify other config values.
 
 
+#----------------------------------------------------------------
 # Check 3: Check if admin users are same.
 digikubeCloudAdminUser=$(bootstrap_get_config_value "cloud.adminUser")
-currentCloudAdminUser=$(whoami)
-if [[ "${currentCloudAdminUser}" == "${digikubeCloudAdminUser}" ]]; then
-	echo "Using ${digikubeCloudAdminUser} identity for installing Digikube."
-else
-	echo "Current user (${currentCloudAdminUser}) is not same as the name set in config (${digikubeCloudAdminUser}).  Exiting..."
+if [[ -z ${digikubeCloudAdminUser} ]]; then
+	echo "Cloud admin user not specified in config.  Exiting..."
 	exit 1
+else
+	currentCloudAdminUser=$(whoami)
+	if [[ "${currentCloudAdminUser}" == "${digikubeCloudAdminUser}" ]]; then
+		echo "Using ${digikubeCloudAdminUser} identity for installing Digikube."
+	else
+		echo "Current user (${currentCloudAdminUser}) is not same as the name set in config (${digikubeCloudAdminUser}).  Exiting..."
+		exit 1
+	fi
 fi
 
+#----------------------------------------------------------------
 # Check 4: Check if the cloud project ids match
 digikubeCloudProjectId=$(bootstrap_get_config_value "cloud.project.id")
-currentCloudProjectId="$(gcloud info |tr -d '[]' | awk '/project:/ {print $2}')"
-if [[ ${?} -gt 0 ]] || [[ -z ${currentCloudProjectId} ]] ; then
-	echo "Unable to get current cloud project details.  Exiting..."
+if [[ -z ${digikubeCloudProjectId} ]]; then
+	echo "Cloud project id not specified in config.  Exiting..."
 	exit 1
-fi
-if [[ "${currentCloudProjectId}" == "${digikubeCloudProjectId}" ]]; then
-	echo "Using ${digikubeCloudProjectId} as the project id for Digikube."
 else
-	echo "Current cloud project id (${currentCloudProjectId}) do not match with the value set in config (${digikubeCloudProjectId}).  Exiting..."
-	exit 1
+	currentCloudProjectId="$(gcloud info |tr -d '[]' | awk '/project:/ {print $2}')"  # TO DO: Leverage cloud utility script for getting current cloud project.
+	if [[ ${?} -gt 0 ]] || [[ -z ${currentCloudProjectId} ]] ; then
+		echo "Unable to get current cloud project details.  Exiting..."
+		exit 1
+	fi
+	if [[ "${currentCloudProjectId}" == "${digikubeCloudProjectId}" ]]; then
+		echo "Using ${digikubeCloudProjectId} as the project id for Digikube."
+	else
+		echo "Current cloud project id (${currentCloudProjectId}) do not match with the value set in config (${digikubeCloudProjectId}).  Exiting..."
+		exit 1
+	fi
 fi
 
+#----------------------------------------------------------------
+# Check 4: Check if the cloud project region specified
+digikubeCloudProjectRegion=$(bootstrap_get_config_value "cloud.project.region")
+if [[ -z ${digikubeCloudProjectRegion} ]]; then
+	echo "Cloud project region not specified in config.  Exiting..."
+	exit 1
+else
+	# TO DO: Validate if the cloud region is valid for the cloud provider selected.
+	echo "Using ${digikubeCloudProjectId} as the project id for Digikube."
+fi
 
-###################################################
+#----------------------------------------------------------------
+# Check 5: Check bucket config
+digikubeCloudBucketClass=$(bootstrap_get_config_value "cloud.bucket.class")
+if [[ -z ${digikubeCloudBucketClass} ]]; then
+	echo "Cloud bucket class not specified in config.  Exiting..."
+	exit 1
+else
+	if [[ ${digikubeCloudBucketClass} != "STANDARD" ]] && [[ ${digikubeCloudBucketClass} != "PREMIUM" ]]; then
+		echo "Invalid cloud bucket class (${digikubeCloudBucketClass}) specified in config.  Exiting..."
+		exit 1
+	fi
+fi
+
+###########################################################################
+# Start installation
+#----------------------------------------------------------------
+
 #Create the VPC
+
 digikubeCloudSubnet="${digikubeCloudProjectId}-vpc"
 echo "Attempting to create network: ${digikubeCloudSubnet}"
 
-if [ -z $(gcloud compute networks list --filter=name=${digikubeCloudSubnet} --format="value(name)") ]; then
+if [[ -z $(gcloud compute networks list --filter=name=${digikubeCloudSubnet} --format="value(name)") ]]; then
 	gcloud compute networks create ${digikubeCloudSubnet} \
 	       	--project=${digikubeCloudProjectId} \
         	--subnet-mode=auto
-	if [ -z $(gcloud compute networks list --filter=name=${digikubeCloudSubnet} --format="value(name)") ]; then
-		echo "Unable to create network for Digikube.  Network name: ${digikubeCloudSubnet}. Exiting..."
-		echo "Run the Digikube delete scripts to clear partially created resources."
+	if [[ -z $(gcloud compute networks list --filter=name=${digikubeCloudSubnet} --format="value(name)") ]]; then
+		echo "Unable to create network (${digikubeCloudSubnet}) for Digikube.  Exiting..."
+		echo "Run the Digikube delete script to clear partially created resources."
 		exit 1
 	else
-		echo "Created network for Digikube.  Network name: ${digikubeCloudSubnet}."
+		echo "Created network (${digikubeCloudSubnet}) for Digikube."
 	fi
 else
-	echo "Reusing the exiting network.  Network name: ${digikubeCloudSubnet}."
+	echo "Reusing the exiting network (${digikubeCloudSubnet})."
 fi
 
-####################################################
+#----------------------------------------------------------------
 #Create bucket
-digikubeCloudBucket="${digikubeCloudAdminProjectId}-vpc"
-export CLOUD_BUCKET="${DIGIKUBE_CLOUD_ADMIN}-${CLOUD_PROJECT}-bucket"
-echo "Attempting to create storage bucket: ${CLOUD_BUCKET}"
 
-export BUCKET_CLASS="STANDARD"
+digikubeCloudBucket="${digikubeCloudAdminUser}-${digikubeCloudProjectId}-bucket"
+echo "Attempting to create storage bucket (${digikubeCloudBucket})."
+
+digikubeCloudBucketClass
 export BUCKET_LOCATION="${CLOUD_REGION}"
 export BUCKET_URL="gs://${CLOUD_BUCKET}"
 
@@ -172,6 +240,15 @@ if [[ $? -gt 0 ]]; then
 else
 	echo "INFO: A bucket with this name: ${CLOUD_BUCKET} already exists.  Reusing the existing bucket"
 fi
+
+
+
+#TO DO: Pickup the values from config.
+#export DIGIKUBE_CLOUD_ADMIN=$(whoami)
+#export CLOUD_TYPE="gce"
+#export CLOUD_REGION="us-central1"
+#export CLOUD_ZONE="us-central1-c"
+####################################################
 
 ####################################################
 #Create bastion host for DigiKube

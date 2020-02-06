@@ -110,7 +110,7 @@ fi
 
 # Read and parse the config.yaml and populate json config set
 digikubeJsonConfigSet=$(cat "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}" | yaml2json)
-echo "Digikube json config set is ${digikubeJsonConfigSet}"
+echo "INFO: Digikube json config set is ${digikubeJsonConfigSet}"
 
 #----------------------------------------------------------------
 # Check 1: Check if the git Digikube code repo matches
@@ -227,10 +227,10 @@ if [[ -z ${digikubeClusterIdentityDomain} ]]; then
 	exit 1
 fi
 digikubeClusterFullName="${digikubeClusterIdentityNamePrefix}-${digikubeClusterIdentityEnv}-${digikubeCloudProjectId}.${digikubeClusterIdentityDomain}"
-echo "The propossed Digikube cluster name is ${digikubeClusterFullName}"
+echo "INFO: The propossed Digikube cluster name is ${digikubeClusterFullName}"
 clusterNameLength=${#digikubeClusterFullName}
 if [[ ${clusterNameLength} -gt ${MAX_LENGTH_CLUSTER_NAME} ]]; then
-	echo "The propossed Digikube cluster name (${digikubeClusterFullName}) exceeds the max length allowed (${MAX_LENGTH_CLUSTER_NAME}).  Exiting..."
+	echo "INFO: The propossed Digikube cluster name (${digikubeClusterFullName}) exceeds the max length allowed (${MAX_LENGTH_CLUSTER_NAME}).  Exiting..."
 fi
 
 #----------------------------------------------------------------
@@ -259,6 +259,7 @@ else
 	digikubeBastionHostPreemptible=$(getConfigValue "cloud.bastionHost.preemptible")
 	digikubeBastionHostTagIdentifier=$(getConfigValue "cloud.bastionHost.tagIdentifier")
 	digikubeBastionHostTags="${digikubeBastionTagIdentifier},http-server,https-server"
+	echo "INFO: Bastion host tags are ${digikubeBastionHostTags}"
 	digikubeBastionHostImage=$(getConfigValue "cloud.bastionHost.image")
 	digikubeBastionHostImageProject=$(getConfigValue "cloud.bastionHost.imageProject")
 	digikubeBastionHostBootDiskSize=$(getConfigValue "cloud.bastionHost.bootDiskSize")
@@ -337,6 +338,7 @@ bastionHostInitScript=$n
 if [[ -z $(gcloud compute instances list --filter=name=${digikubeBastionHostName} --format="value(name)") ]]; then
 	
 	if [[ "${digikubeBastionHostPreemptible}" == "yes" ]]; then
+		echo "INFO: Bastion host will be preeemptible."
 		gcloud beta compute instances create "${digikubeBastionHostName}"	\
         	--project="${digikubeCloudProjectId}"							\
         	--zone="${digikubeCloudProjectZone}"							\
@@ -353,6 +355,7 @@ if [[ -z $(gcloud compute instances list --filter=name=${digikubeBastionHostName
         	--labels="${digikubeBastionHostLabels}"							\
 			--metadata startup-script="${bastionHostInitScript}"
 	else
+		echo "Bastion host will be non preemptible."
 		gcloud beta compute instances create "${digikubeBastionHostName}"	\
         	--project="${digikubeCloudProjectId}"							\
         	--zone="${digikubeCloudProjectZone}"							\

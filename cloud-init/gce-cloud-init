@@ -26,7 +26,8 @@ function isValidUrl {
 }
 
 function getConfigValue {
-	echo ${digikubeJsonConfigSet} | jq ".${1}"
+	value=$(echo ${digikubeJsonConfigSet} | jq ".${1}")
+	echo "${value//\"/}"
 }
 
 function downloadFile {

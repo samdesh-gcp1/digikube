@@ -3,14 +3,15 @@
 
 repo_url=$1
 
-#echo '{"check_jq":"check_jq"}' | jq '.check_jq'
-#__returnCode=$?
-#if [[ __returnCode -gt 0 ]]; then
-#	echo "jq command not available.  Installing..."
+var1='{"check_jq":"check_jq"}'
+var2=$(echo $var1 | jq '.check_jq')
+__returnCode=$?
+if [[ __returnCode -gt 0 ]]; then
+	echo "jq command not available.  Installing..."
 	sudo apt-get install jq
-#else
-#	echo "jq command already installed."
-#fi
+else
+	echo "jq command already installed."
+fi
 
 yaml2json_file_url="$repo_url/bin/yaml2json"
 yaml2json_file="/usr/local/bin/yaml2json"

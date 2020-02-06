@@ -19,4 +19,3 @@ cloud:
     imageProject: "ubuntu-os-cloud"
     bootDiskSize: "10GB"
     bootDiskType: "pd-standard"
-    labels: "type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"

@@ -19,8 +19,30 @@ cloud:
     imageProject: "ubuntu-os-cloud"
     bootDiskSize: "10GB"
     bootDiskType: "pd-standard"
-git:
+gitConfig:
   digikubeCode:
-    cloneRepoUrl: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master"
-    rawRepoUrl: ""
-    user: "samdesh.gcp1@gmail.com"
+    cloneRepoUrl: "https://github.com/samdesh-gcp1/digikube.git"
+    rawRepoUrl: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master"
+cluster:
+  identity:
+    env: "dev1"
+    namePrefix: "c1" 
+    domain: "k8s.local"
+  master:
+    countMin: 1
+    countMax: 1
+    zone: "us-central1-c"
+    size: "g1-small"
+    volumeSize: 10
+    image: "cos-cloud/cos-stable-65-10323-99-0"
+  node:
+    countMin: 2
+    countMax: 2
+    zone: "us-central1-c"
+    size: "g1-small"
+    volumeSize: 10
+    image: "cos-cloud/cos-stable-65-10323-99-0"
+  kopsFlags:
+    featureFlags: "AlphaAllowGCE"
+    associatePublicIp: "false"  
+    preemptible: "true"

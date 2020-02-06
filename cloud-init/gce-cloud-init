@@ -57,7 +57,7 @@ function downloadFile {
 #----------------------------------------------------------------
 
 # Directory to get all the files required for cloud initialization.
-tmpExecDir=$(direname $(realpath $0))
+tmpExecDir=$(dirname $(realpath $0))
 echo "Temporary execution directory is: ${tmpExecDir}"
 
 # Check the Digikube code repository url.

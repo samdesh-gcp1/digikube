@@ -91,9 +91,9 @@ if [[ $(isValidUrl ${providedDigikubeConfigFileRef}) -gt 0 ]]; then
 	fi
 else
 	# Download the config/digikube-config.yaml file from url
-	if [[ $(downloadFile "${providedDigikubeCodeRawRepoUrl}/config/default-${DIGIKUBE_BASE_CONFIG}" "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}" "no") -gt 0 ]]; then
+	if [[ $(downloadFile "${providedDigikubeConfigFileRef}" "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}" "no") -gt 0 ]]; then
 		echo ${__fnErrMsg}
-		echo "ERROR: Error while downloading Digikube config file from url: ${providedDigikubeCodeRawRepoUrl}/config/default-${DIGIKUBE_BASE_CONFIG}. Exiting..."
+		echo "ERROR: Error while downloading Digikube config file from url: ${providedDigikubeConfigFileRef}. Exiting..."
 		exit 1
 	fi
 fi

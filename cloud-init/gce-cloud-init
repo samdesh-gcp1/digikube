@@ -67,7 +67,7 @@ if [[ $(isValidUrl ${providedDigikubeCodeRawRepoUrl}) -gt 0 ]]; then
 fi
 
 # Download and execute cloud-init/init-prep script
-if [[ $(downloadFile "${providedDigikubeCodeRawRepoUrl}/cloud-init/init-prep" "${tmp_exec_dir}/init-prep" "yes") -gt 0 ]]; then
+if [[ $(downloadFile "${providedDigikubeCodeRawRepoUrl}/cloud-init/init-prep" "${tmpExecDir}/init-prep" "yes") -gt 0 ]]; then
 	echo ${__fnErrMsg}
 	exit 1
 else

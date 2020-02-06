@@ -452,9 +452,8 @@ if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --fo
 	if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]]; then
 		echo "ERROR: Unable to create nodeport ingress firewall rule ("${firewallRule}") for Digikube.  Nodeport services will not be accessible."
 	else
-		echo "INFO: Created nodeport firewall rule for Digikube.  Nodeport firewall rule name: ${NODEPORT_FIREWALL_RULE_NAME}"
-	fi	
-		
+		echo "INFO: Created nodeport firewall rule (${firewallRule})"
+	fi
 else
-	echo "INFO: Reusing the exiting nodeport firewall rule.  Nodeport firewall rule: ${NODEPORT_FIREWALL_RULE_NAME}"
+	echo "INFO: Reusing the exiting nodeport firewall rule (${firewallRule})"
 fi

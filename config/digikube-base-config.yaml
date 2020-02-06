@@ -19,3 +19,8 @@ cloud:
     imageProject: "ubuntu-os-cloud"
     bootDiskSize: "10GB"
     bootDiskType: "pd-standard"
+git:
+  digikubeCode:
+    cloneRepoUrl: "https://raw.githubusercontent.com/samdesh-gcp1/digikube/master"
+    rawRepoUrl: ""
+    user: "samdesh.gcp1@gmail.com"

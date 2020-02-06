@@ -249,22 +249,32 @@ fi
 #----------------------------------------------------------------
 # Check 8: Check bastion host config
 digikubeBastionHostName=$(getConfigValue "cloud.bastionHost.name")
+echo "INFO: Bastion host name is ${digikubeBastionHostName}"
 if [[ -z ${digikubeBastionHostName} ]]; then
 	echo "ERROR: Bastion host name not specified in config.  Exiting..."
 	exit 1
 else
 	# TO DO: Verify the correctness of the following config values for bastion host.
 	digikubeBastionHostMachineType=$(getConfigValue "cloud.bastionHost.machineType")
+	echo "INFO: Bastion host machine type is ${digikubeBastionHostMachineType}"
 	digikubeBastionHostNetworkTier=$(getConfigValue "cloud.bastionHost.networkTier")
+	echo "INFO: Bastion host network tier is ${digikubeBastionHostNetworkTier}"
 	digikubeBastionHostPreemptible=$(getConfigValue "cloud.bastionHost.preemptible")
+	echo "INFO: Bastion host preemptibility is ${digikubeBastionHostPreemptible}"
 	digikubeBastionHostTagIdentifier=$(getConfigValue "cloud.bastionHost.tagIdentifier")
+	echo "INFO: Bastion host tag identifier is ${digikubeBastionHostTagIdentifier}"
 	digikubeBastionHostTags="${digikubeBastionTagIdentifier},http-server,https-server"
 	echo "INFO: Bastion host tags are ${digikubeBastionHostTags}"
 	digikubeBastionHostImage=$(getConfigValue "cloud.bastionHost.image")
+	echo "INFO: Bastion host image is ${digikubeBastionHostImage}"
 	digikubeBastionHostImageProject=$(getConfigValue "cloud.bastionHost.imageProject")
+	echo "INFO: Bastion host image project is ${digikubeBastionHostImageProject}"
 	digikubeBastionHostBootDiskSize=$(getConfigValue "cloud.bastionHost.bootDiskSize")
+	echo "INFO: Bastion host boot disk size is ${digikubeBastionHostBootDiskSize}"
 	digikubeBastionHostBootDiskType=$(getConfigValue "cloud.bastionHost.bootDiskType")
+	echo "INFO: Bastion host boot disk type is ${digikubeBastionHostBootDiskType}"
 	digikubeBastionHostLabels="type=${digikubeBastionHostTagIdentifier},creator=digikube"
+	echo "INFO: Bastion host labels are ${digikubeBastionHostLabels}"
 fi
 
 #################################################################

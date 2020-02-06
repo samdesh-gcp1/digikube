@@ -263,7 +263,7 @@ else
 	echo "INFO: Bastion host preemptibility is ${digikubeBastionHostPreemptible}"
 	digikubeBastionHostTagIdentifier=$(getConfigValue "cloud.bastionHost.tagIdentifier")
 	echo "INFO: Bastion host tag identifier is ${digikubeBastionHostTagIdentifier}"
-	digikubeBastionHostTags="${digikubeBastionTagIdentifier},http-server,https-server"
+	digikubeBastionHostTags="${digikubeBastionHostTagIdentifier},http-server,https-server"
 	echo "INFO: Bastion host tags are ${digikubeBastionHostTags}"
 	digikubeBastionHostImage=$(getConfigValue "cloud.bastionHost.image")
 	echo "INFO: Bastion host image is ${digikubeBastionHostImage}"

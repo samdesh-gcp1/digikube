@@ -12,7 +12,7 @@ cloud:
     name: "bastion-host"
     machineType: "f1-micro"
     networkTier: "STANDARD"
-    preemptible: "Yes"
+    preemptible: "yes"
     tagIdentifier: "bastion-host"
     tags: "http-server,https-server"
     image: "ubuntu-1804-bionic-v20191211"

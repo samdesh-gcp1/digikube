@@ -4,26 +4,18 @@
 #	$1 => digikube code repository url
 #	$2 => digikube config file (either url or local file)
 
-digikube_code_repo_url=${1}
-digikube_config_file_ref=${2}
+providedDigikubeCodeRawRepoUrl=${1}
+providedDigikubeConfigFileRef=${2}
 
 DIGIKUBE_BASE_CONFIG="digikube-base-config.yaml"
-
-digikubeCloudProvider=""
-digikubeCloudAdminUser=""
-digikubeCloudProjectId=""
-digikubeCloudSubnet=""
-digikubeCloudBucket=""
-
-
-
+MAX_LENGTH_CLUSTER_NAME=35
 
 #################################################################
 # Some utility functions
 #----------------------------------------------------------------
 
-function bootstrap_is_valid_url {
-	local __fn_name="cloud-init/gce-cloud-init.is_valid_url"
+function isValidUrl {
+	local __fnName="cloud-init/gce-cloud-init.isValidUrl"
 	regex='^(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]\.[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]$'
 	url="${1}"
 	if [[ ${url} =~ ${regex} ]]; then 
@@ -33,28 +25,28 @@ function bootstrap_is_valid_url {
     fi
 }
 
-function bootstrap_get_config_value {
-	value=$( echo ${digikube_json_config_set} | jq ".${1}")
+function getConfigValue {
+	value=$( echo ${digikubeJsonConfigSet} | jq ".${1}")
 }
 
-function bootstrap_download_file {
-	local __fn_name="cloud-init/gce-cloud-init.bootstrap_download_file"
-	__fn_msg=""
-	__fn_err_msg=""
+function downloadFile {
+	local __fnName="cloud-init/gce-cloud-init.downloadFile"
+	__fnMsg=""
+	__fnErrMsg=""
 	
-	source_url=${1}
+	sourceUrl=${1}
 	target=${2}
-	is_executable=${3}
+	isExecutable=${3}
 	
-	wget -q --no-cache -O "${target}" - ${source_url}
+	wget -q --no-cache -O "${target}" - ${sourceUrl}
 	if [[ -f ${target} ]]; then
-		if [[ "${is_executable}" == "yes" ]]; then
+		if [[ "${isExecutable}" == "yes" ]]; then
 			chmod +x ${target}
 		fi
-		__fn_msg="Successfully downloaded the file: ${source_url} at ${target}."
+		__fnMsg="DEBUG: Successfully downloaded the file: ${sourceUrl} at ${target}."
 		return 0
 	else
-		__fn_err_msg="Error: Not able to download file: ${source_url} at ${target}."
+		__fnErrMsg="ERROR: Not able to download file: ${sourceUrl} at ${target}."
 		return 1
 	fi
 }
@@ -65,43 +57,43 @@ function bootstrap_download_file {
 #----------------------------------------------------------------
 
 # Directory to get all the files required for cloud initialization.
-tmp_exec_dir=$(direname $(realpath $0))
-echo "Temporary execution directory is: ${tmp_exec_dir}"
+tmpExecDir=$(direname $(realpath $0))
+echo "Temporary execution directory is: ${tmpExecDir}"
 
 # Check the Digikube code repository url.
-if [[ $(is_valid_url ${digikube_code_repo_url}) -gt 0 ]]; then
-	echo "Invalid Digikube repository url provided: ${digikube_code_repo_url}.  Exiting..."
+if [[ $(isValidUrl ${providedDigikubeCodeRawRepoUrl}) -gt 0 ]]; then
+	echo "ERROR: Invalid Digikube repository url provided: ${providedDigikubeCodeRawRepoUrl}.  Exiting..."
 	exit 1
 fi
 
 # Download and execute cloud-init/init-prep script
-if [[ $(bootstrap_download_file "${digikube_code_repo_url}/cloud-init/init-prep" "${tmp_exec_dir}/init-prep" "yes") -gt 0 ]]; then
-	echo ${__fn_err_msg}
+if [[ $(downloadFile "${providedDigikubeCodeRawRepoUrl}/cloud-init/init-prep" "${tmp_exec_dir}/init-prep" "yes") -gt 0 ]]; then
+	echo ${__fnErrMsg}
 	exit 1
 else
 	echo "Downloaded the init-prep script."
-	if [[ $(${tmp_exec_dir}/init-prep ${digikube_code_repo_url}) -gt 0 ]]; then
-		echo "Error while running init-prep.  Exiting..."
+	if [[ $(${tmpExecDir}/init-prep ${providedDigikubeCodeRawRepoUrl}) -gt 0 ]]; then
+		echo "ERROR: Error while running init-prep.  Exiting..."
 		exit 1
 	else
-		echo "Successfully executed init-prep script."
+		echo "INFO: Successfully executed init-prep script."
 	fi
 fi
 
 # Check the Digikube config file ref and download/copy the file to target location.
-if [[ $(is_valid_url ${digikube_config_file_ref}) -gt 0 ]]; then
-	if [[ -f ${digikube_config_file_ref} ]]; then
+if [[ $(isValidUrl ${providedDigikubeConfigFileRef}) -gt 0 ]]; then
+	if [[ -f ${providedDigikubeConfigFileRef} ]]; then
 		# File available for Digikube config.
-		cp ${digikube_config_file_ref} "${tmp_exec_dir}/${DIGIKUBE_BASE_CONFIG}"
+		cp ${providedDigikubeConfigFileRef} "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}"
 	else
-		echo "Invalid Digikube config file url or local file: ${digikube_config_file_ref}.  Exiting..."
+		echo "ERROR: Invalid Digikube config file url or local file: ${providedDigikubeConfigFileRef}.  Exiting..."
 		exit 1
 	fi
 else
 	# Download the config/digikube-config.yaml file from url
-	if [[ $(bootstrap_download_file "${digikube_repo_url}/config/digikube-config.yaml" "${tmp_exec_dir}/${DIGIKUBE_BASE_CONFIG}" "no") -gt 0 ]]; then
-		echo ${__fn_err_msg}
-		echo "Error while downloading Digikube config file from url: ${digikube_repo_url}/config/${DIGIKUBE_BASE_CONFIG}. Exiting..."
+	if [[ $(downloadFile "${providedDigikubeCodeRawRepoUrl}/config/default-${DIGIKUBE_BASE_CONFIG}" "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}" "no") -gt 0 ]]; then
+		echo ${__fnErrMsg}
+		echo "ERROR: Error while downloading Digikube config file from url: ${providedDigikubeCodeRawRepoUrl}/config/default-${DIGIKUBE_BASE_CONFIG}. Exiting..."
 		exit 1
 	fi
 fi
@@ -111,25 +103,39 @@ fi
 #----------------------------------------------------------------
 
 # Read and parse the config.yaml and populate json config set
-digikube_json_config_set=$(yaml2json "${tmp_exec_dir}/${DIGIKUBE_BASE_CONFIG}")
+digikubeJsonConfigSet=$(yaml2json "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}")
 
 #----------------------------------------------------------------
-# Check 1: Check if cloud provider
-digikubeCloudProvider=$(bootstrap_get_config_value "cloud.provider")
-if [[ -z ${digikubeCloudProvider} ]]; then
-	echo "Cloud provider not specified in config.  Exiting..."
+# Check 1: Check if the git Digikube code repo matches
+digikubeCodeRawRepoUrl=$(getConfigValue "gitConfig.digikubeCode.rawRepoUrl")
+if [[ -z ${digikubeCodeRawRepoUrl} ]]; then
+	echo "ERROR: Digikube git raw repo url not specified in config.  Exiting..."
 	exit 1
 else
-	if [[ ${digikubeCloudProvider} != "gce" ]] && [[ ${digikubeCloudProvider} != "aws" ]] && [[ ${digikubeCloudProvider} != "azure" ]]; then
-		echo "Invalid cloud provider (${digikubeCloudProvider}) specified in config.  Exiting..."
+	if [[ "${digikubeCodeRawRepoUrl}" != "${providedDigikubeCodeRawRepoUrl}" ]]; then
+		echo "ERROR: The provided Digikube code repo url (${providedDigikubeCodeRawRepoUrl}) is not same as the one set in config (${digikubeCodeRawRepoUrl}).  Exiting..."
+		exit 1
+	fi
+fi
+
+#----------------------------------------------------------------
+# Check 2: Check if cloud provider
+digikubeCloudProvider=$(getConfigValue "cloud.provider")
+if [[ -z ${digikubeCloudProvider} ]]; then
+	echo "ERROR: Cloud provider not specified in config.  Exiting..."
+	exit 1
+else
+	# TO DO: This has to be restructured for each of the cloud provider.
+	if [[ "${digikubeCloudProvider}" != "gce" ]] && [[ "${digikubeCloudProvider}" != "aws" ]] && [[ "${digikubeCloudProvider}" != "azure" ]]; then
+		echo "ERROR: Invalid cloud provider (${digikubeCloudProvider}) specified in config.  Exiting..."
 		exit 1
 	fi
 fi
 currentCloudProvider="gce"			#TO DO: Auto detect current cloud provider
 if [[ "${currentCloudProvider}" == "${digikubeCloudProvider}" ]]; then
-	echo "Using ${digikubeCloudProvider} as the cloud provider for Digikube."
+	echo "INFO: Using ${digikubeCloudProvider} as the cloud provider for Digikube."
 else
-	echo "Current cloud provider (${currentCloudProvider}) is not same as the name set in config (${digikubeCloudProvider}).  Exiting..."
+	echo "ERROR: Current cloud provider (${currentCloudProvider}) is not same as the name set in config (${digikubeCloudProvider}).  Exiting..."
 	exit 1
 fi
 
@@ -140,232 +146,295 @@ fi
 
 #----------------------------------------------------------------
 # Check 3: Check if admin users are same.
-digikubeCloudAdminUser=$(bootstrap_get_config_value "cloud.adminUser")
+digikubeCloudAdminUser=$(getConfigValue "cloud.adminUser")
 if [[ -z ${digikubeCloudAdminUser} ]]; then
-	echo "Cloud admin user not specified in config.  Exiting..."
+	echo "ERROR: Cloud admin user not specified in config.  Exiting..."
 	exit 1
 else
 	currentCloudAdminUser=$(whoami)
 	if [[ "${currentCloudAdminUser}" == "${digikubeCloudAdminUser}" ]]; then
-		echo "Using ${digikubeCloudAdminUser} identity for installing Digikube."
+		echo "INFO: Using ${digikubeCloudAdminUser} identity for installing Digikube."
 	else
-		echo "Current user (${currentCloudAdminUser}) is not same as the name set in config (${digikubeCloudAdminUser}).  Exiting..."
+		echo "ERROR: Current user (${currentCloudAdminUser}) is not same as the name set in config (${digikubeCloudAdminUser}).  Exiting..."
 		exit 1
 	fi
 fi
 
 #----------------------------------------------------------------
 # Check 4: Check if the cloud project ids match
-digikubeCloudProjectId=$(bootstrap_get_config_value "cloud.project.id")
+digikubeCloudProjectId=$(getConfigValue "cloud.project.id")
 if [[ -z ${digikubeCloudProjectId} ]]; then
-	echo "Cloud project id not specified in config.  Exiting..."
+	echo "ERROR: Cloud project id not specified in config.  Exiting..."
 	exit 1
 else
 	currentCloudProjectId="$(gcloud info |tr -d '[]' | awk '/project:/ {print $2}')"  # TO DO: Leverage cloud utility script for getting current cloud project.
 	if [[ ${?} -gt 0 ]] || [[ -z ${currentCloudProjectId} ]] ; then
-		echo "Unable to get current cloud project details.  Exiting..."
+		echo "ERROR: Unable to get current cloud project details.  Exiting..."
 		exit 1
 	fi
 	if [[ "${currentCloudProjectId}" == "${digikubeCloudProjectId}" ]]; then
-		echo "Using ${digikubeCloudProjectId} as the project id for Digikube."
+		echo "INFO: Using ${digikubeCloudProjectId} as the project id for Digikube."
 	else
-		echo "Current cloud project id (${currentCloudProjectId}) do not match with the value set in config (${digikubeCloudProjectId}).  Exiting..."
+		echo "ERROR: Current cloud project id (${currentCloudProjectId}) do not match with the value set in config (${digikubeCloudProjectId}).  Exiting..."
 		exit 1
 	fi
 fi
 
 #----------------------------------------------------------------
-# Check 4: Check if the cloud project region specified
-digikubeCloudProjectRegion=$(bootstrap_get_config_value "cloud.project.region")
+# Check 5: Check if the cloud project region specified
+digikubeCloudProjectRegion=$(getConfigValue "cloud.project.region")
 if [[ -z ${digikubeCloudProjectRegion} ]]; then
-	echo "Cloud project region not specified in config.  Exiting..."
+	echo "ERROR: Cloud project region not specified in config.  Exiting..."
 	exit 1
 else
 	# TO DO: Validate if the cloud region is valid for the cloud provider selected.
-	echo "Using ${digikubeCloudProjectId} as the project id for Digikube."
+	echo "INFO: Using ${digikubeCloudProjectRegion} as the default region for Digikube."
 fi
 
 #----------------------------------------------------------------
-# Check 5: Check bucket config
-digikubeCloudBucketClass=$(bootstrap_get_config_value "cloud.bucket.class")
-if [[ -z ${digikubeCloudBucketClass} ]]; then
-	echo "Cloud bucket class not specified in config.  Exiting..."
+# Check 6: Check if the cloud project zone specified
+digikubeCloudProjectZone=$(getConfigValue "cloud.project.zone")
+if [[ -z ${digikubeCloudProjectZone} ]]; then
+	echo "ERROR: Cloud project zone not specified in config.  Exiting..."
 	exit 1
 else
-	if [[ ${digikubeCloudBucketClass} != "STANDARD" ]] && [[ ${digikubeCloudBucketClass} != "PREMIUM" ]]; then
-		echo "Invalid cloud bucket class (${digikubeCloudBucketClass}) specified in config.  Exiting..."
+	# TO DO: Validate if the cloud zone is valid for the cloud provider selected.  Also check if the zone corresponds to the region selected.
+	echo "INFO: Using ${digikubeCloudProjectZone} as the default zone for Digikube."
+fi
+
+#----------------------------------------------------------------
+# Check 7: Validate cluster name
+digikubeClusterIdentityNamePrefix=$(getConfigValue "cluster.identity.namePrefix")
+if [[ -z ${digikubeClusterIdentityNamePrefix} ]]; then
+	echo "ERROR: Cluster identity name prefix not specified in config.  Exiting..."
+	exit 1
+fi
+digikubeClusterIdentityEnv=$(getConfigValue "cluster.identity.env")
+if [[ -z ${digikubeClusterIdentityEnv} ]]; then
+	echo "ERROR: Cluster identity environment not specified in config.  Exiting..."
+	exit 1
+fi
+digikubeClusterIdentityDomain=$(getConfigValue "cluster.identity.domain")
+if [[ -z ${digikubeClusterIdentityDomain} ]]; then
+	echo "ERROR: Cluster identity domain not specified in config.  Exiting..."
+	exit 1
+fi
+digikubeClusterFullName="${digikubeClusterIdentityNamePrefix}-${digikubeClusterIdentityEnv}-${digikubeCloudProjectId}.${digikubeClusterIdentityDomain}
+echo "The propossed Digikube cluster name is ${digikubeClusterFullName}"
+clusterNameLength=${#digikubeClusterFullName}
+if [[ ${clusterNameLength} -gt ${MAX_LENGTH_CLUSTER_NAME} ]]; then
+	echo "The propossed Digikube cluster name (${digikubeClusterFullName}) exceeds the max length allowed (${MAX_LENGTH_CLUSTER_NAME}).  Exiting..."
+fi
+
+#----------------------------------------------------------------
+# Check 7: Check bucket config
+digikubeCloudBucketClass=$(getConfigValue "cloud.bucket.class")
+if [[ -z ${digikubeCloudBucketClass} ]]; then
+	echo "ERROR: Cloud bucket class not specified in config.  Exiting..."
+	exit 1
+else
+	if [[ "${digikubeCloudBucketClass}" != "STANDARD" ]] && [[ "${digikubeCloudBucketClass}" != "PREMIUM" ]]; then
+		echo "ERROR: Invalid cloud bucket class (${digikubeCloudBucketClass}) specified in config.  Exiting..."
 		exit 1
 	fi
 fi
 
-###########################################################################
+#----------------------------------------------------------------
+# Check 8: Check bastion host config
+digikubeBastionHostName=$(getConfigValue "cloud.bastionHost.name")
+if [[ -z ${digikubeBastionHostName} ]]; then
+	echo "ERROR: Bastion host name not specified in config.  Exiting..."
+	exit 1
+else
+	# TO DO: Verify the correctness of the following config values for bastion host.
+	digikubeBastionHostMachineType=$(getConfigValue "cloud.bastionHost.machineType")
+	digikubeBastionHostNetworkTier=$(getConfigValue "cloud.bastionHost.networkTier")
+	digikubeBastionHostPreemptible=$(getConfigValue "cloud.bastionHost.preemptible")
+	digikubeBastionHostTagIdentifier=$(getConfigValue "cloud.bastionHost.tagIdentifier")
+	digikubeBastionHostTags="${digikubeBastionTagIdentifier},http-server,https-server"
+	digikubeBastionHostImage=$(getConfigValue "cloud.bastionHost.image")
+	digikubeBastionHostImageProject=$(getConfigValue "cloud.bastionHost.imageProject")
+	digikubeBastionHostBootDiskSize=$(getConfigValue "cloud.bastionHost.bootDiskSize")
+	digikubeBastionHostBootDiskType=$(getConfigValue "cloud.bastionHost.bootDiskType")
+	digikubeBastionHostLabels="type=${digikubeBastionHostTagIdentifier},creator=digikube"
+fi
+
+#################################################################
 # Start installation
 #----------------------------------------------------------------
 
-#Create the VPC
+# Create the VPC
+# ==============
 
 digikubeCloudSubnet="${digikubeCloudProjectId}-vpc"
-echo "Attempting to create network: ${digikubeCloudSubnet}"
+echo "INFO: Attempting to create network: ${digikubeCloudSubnet}"
 
 if [[ -z $(gcloud compute networks list --filter=name=${digikubeCloudSubnet} --format="value(name)") ]]; then
 	gcloud compute networks create ${digikubeCloudSubnet} \
 	       	--project=${digikubeCloudProjectId} \
         	--subnet-mode=auto
 	if [[ -z $(gcloud compute networks list --filter=name=${digikubeCloudSubnet} --format="value(name)") ]]; then
-		echo "Unable to create network (${digikubeCloudSubnet}) for Digikube.  Exiting..."
-		echo "Run the Digikube delete script to clear partially created resources."
+		echo "ERROR: Unable to create network (${digikubeCloudSubnet}) for Digikube.  Exiting..."
+		echo "ERROR: Run the Digikube delete script to clear partially created resources."
 		exit 1
 	else
-		echo "Created network (${digikubeCloudSubnet}) for Digikube."
+		echo "INFO: Created network (${digikubeCloudSubnet}) for Digikube."
 	fi
 else
-	echo "Reusing the exiting network (${digikubeCloudSubnet})."
+	echo "INFO: Reusing the exiting network (${digikubeCloudSubnet})."
 fi
 
 #----------------------------------------------------------------
-#Create bucket
+# Create bucket
+# ==============
 
 digikubeCloudBucket="${digikubeCloudAdminUser}-${digikubeCloudProjectId}-bucket"
-echo "Attempting to create storage bucket (${digikubeCloudBucket})."
+echo "INFO: Attempting to create storage bucket (${digikubeCloudBucket})."
 
-digikubeCloudBucketClass
-export BUCKET_LOCATION="${CLOUD_REGION}"
-export BUCKET_URL="gs://${CLOUD_BUCKET}"
+if [[ "${digikubeCloudProvider}" == "gce" ]]; then
+	digikubeCloudBucketUrl="gs://${digikubeCloudBucket}"
+else
+	echo "ERROR: Not yet defined for cloud providers other than 'gce'.  Exiting..."  # TO DO: Placeholder for other cloud definitions.
+	exit 1
+fi
 
-#Check if bucket already exists
-bucket_list=$(gsutil ls ${BUCKET_URL})
+# Check if bucket already exists
+bucketList=$(gsutil ls ${digikubeCloudBucketUrl})
 if [[ $? -gt 0 ]]; then
-	echo "INFO: You do not have any bucket with this name: ${CLOUD_BUCKET}.  Creating new bucket"
-	gsutil mb -p ${CLOUD_PROJECT} -c ${BUCKET_CLASS} -l ${BUCKET_LOCATION} ${BUCKET_URL}
+	echo "INFO: You do not have any bucket with this name: ${digikubeCloudBucketUrl}.  Creating new bucket."
+	gsutil mb -p ${digikubeCloudProjectId} -c ${digikubeCloudBucketClass} -l ${digikubeCloudProjectRegion} ${digikubeCloudBucketUrl}
 else
-	echo "INFO: A bucket with this name: ${CLOUD_BUCKET} already exists.  Reusing the existing bucket"
+	echo "INFO: A bucket with this name: ${digikubeCloudBucket} already exists.  Reusing the existing bucket."
 fi
 
+#----------------------------------------------------------------
+# Create bastion host for Digikube
+# ================================
 
+echo "INFO: Attempting to create bastion host: ${digikubeBastionHostName}"
 
-#TO DO: Pickup the values from config.
-#export DIGIKUBE_CLOUD_ADMIN=$(whoami)
-#export CLOUD_TYPE="gce"
-#export CLOUD_REGION="us-central1"
-#export CLOUD_ZONE="us-central1-c"
-####################################################
-
-####################################################
-#Create bastion host for DigiKube
-echo "Attempting to create bastion host: ${BASTION_HOST_NAME}"
-
-export BASTION_HOST_NAME="bastion-host-01"
-export BASTION_MACHINE_TYPE="f1-micro"
-export BASTION_NETWORK_TIER="STANDARD"
-export BASTION_PREEMPTIBLE="Yes"
-export BASTION_TAG_IDENTIFIER="bastion-host"
-export BASTION_TAGS="${BASTION_TAG_IDENTIFIER},http-server,https-server"
-export BASTION_IMAGE="ubuntu-1804-bionic-v20191211"
-export BASTION_IMAGE_PROJECT="ubuntu-os-cloud"
-export BASTION_BOOT_DISK_SIZE="10GB"
-export BASTION_BOOT_DISK_TYPE="pd-standard"
-export BASTION_LABELS="type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"
-
+#----------------------------------------------------------------
 #Modify the bastion-init-shell script to get the current user id
-f="$(wget -q -O - ${digikube_repo}/cloud-init/gce-bastion-host-init-shell.sh)"
-t="#<placeholder for digikube admin user name>"
-s="export DIGIKUBE_CLOUD_ADMIN=$(whoami)"
-[ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
 
-f=$n
-t="#<placeholder for digikube repo url>"
-s="export digikube_repo=${digikube_repo}"
-[ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"
-BASTION_INIT_SCRIPT=$n
+f="$(wget -q -O - ${digikubeCodeRawRepoUrl}/cloud-init/gce-bastion-host-init-shell.sh)"		# Script file
+t="#<placeholder for digikube admin user name>"												# Line to be replaced in the script file
+s="digikubeCloudAdminUser=$(whoami)"														# The replacement text
+[ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"											# Updated script
 
-if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --format="value(name)") ]; then
+f=$n																						# Script file
+t="#<placeholder for digikube repo url>"													# Line to be replaced in the script file
+s="digikubeCodeRawRepoUrl=${digikubeCodeRawRepoUrl}"										# The replacement text
+[ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"											# The replacement text
+bastionHostInitScript=$n															
+
+if [[ -z $(gcloud compute instances list --filter=name=${digikubeBastionHostName} --format="value(name)") ]]; then
 	
-	gcloud beta compute instances create $BASTION_HOST_NAME \
-        	--project=$CLOUD_PROJECT \
-        	--zone=$CLOUD_ZONE \
-        	--machine-type=$BASTION_MACHINE_TYPE \
-        	--subnet=$CLOUD_SUBNET \
-        	--network-tier=$BASTION_NETWORK_TIER \
-        	--preemptible \
-        	--scopes=https://www.googleapis.com/auth/cloud-platform \
-        	--tags=$BASTION_TAGS \
-        	--image=$BASTION_IMAGE \
-        	--image-project=$BASTION_IMAGE_PROJECT \
-        	--boot-disk-size=$BASTION_BOOT_DISK_SIZE \
-        	--boot-disk-type=$BASTION_BOOT_DISK_TYPE \
-        	--labels=$BASTION_LABELS \
-		--metadata startup-script="$BASTION_INIT_SCRIPT"
-#		--metadata startup-script='#! /bin/bash
-#			# Create a new file in home directory
-#			cd /home/samdesh_gcp1/
-#			touch test1.txt'
-	
-	if [ -z $(gcloud compute instances list --filter=name=${BASTION_HOST_NAME} --format="value(name)") ]; then
-		echo "Unable to create bastion host for DigiKube.  Bastion host name: ${BASTION_HOST_NAME}. Exiting DigiKube initialization."
-		echo "Run the DigiKube delete scripts to clear partially created resources."
-		exit 1
+	if [[ "${digikubeBastionHostPreemptible}" == "yes" ]]; then
+		gcloud beta compute instances create "${digikubeBastionHostName}"	\
+        	--project="${digikubeCloudProjectId}"							\
+        	--zone="${digikubeCloudProjectZone}"							\
+        	--machine-type="${digikubeBastionHostMachineType}"				\
+        	--subnet="${digikubeCloudSubnet}"								\
+        	--network-tier="${digikubeBastionHostNetworkTier}"				\
+        	--preemptible 													\
+        	--scopes=https://www.googleapis.com/auth/cloud-platform 		\
+        	--tags="${digikubeBastionHostTags}"								\
+        	--image="${digikubeBastionHostImage}"	 						\
+        	--image-project="${digikubeBastionHostImageProject}"			\
+        	--boot-disk-size="${digikubeBastionHostBootDiskSize}"			\
+        	--boot-disk-type="${digikubeBastionHostBootDiskType}"			\
+        	--labels="${digikubeBastionHostLabels}"							\
+			--metadata startup-script="${bastionHostInitScript}"
 	else
-		echo "Created bastion host for DigiKube.  Bastion host name: ${BASTION_HOST_NAME}."
+		gcloud beta compute instances create "${digikubeBastionHostName}"	\
+        	--project="${digikubeCloudProjectId}"							\
+        	--zone="${digikubeCloudProjectZone}"							\
+        	--machine-type="${digikubeBastionHostMachineType}"				\
+        	--subnet="${digikubeCloudSubnet}"								\
+        	--network-tier="${digikubeBastionHostNetworkTier}"				\
+        	--scopes=https://www.googleapis.com/auth/cloud-platform 		\
+        	--tags="${digikubeBastionHostTags}"								\
+        	--image="${digikubeBastionHostImage}"	 						\
+        	--image-project="${digikubeBastionHostImageProject}"			\
+        	--boot-disk-size="${digikubeBastionHostBootDiskSize}"			\
+        	--boot-disk-type="${digikubeBastionHostBootDiskType}"			\
+        	--labels="${digikubeBastionHostLabels}"							\
+			--metadata startup-script="${bastionHostInitScript}"
 	fi
-else
-	echo "Reusing the exiting bastion host.  Bastion host name: ${BASTION_HOST_NAME}."
-fi
-
-####################################################
-#Create firewall rule to allow ssh to bastion host for DigiKube.
-
-export BASTION_HOST_FIREWALL_RULE_NAME="${CLOUD_SUBNET}-allow-bastion-ssh"
-
-echo "Attempting to create firewallrule for bastion host: ${BASTION_HOST_FIREWALL_RULE_NAME}"
-if [ -z $(gcloud compute firewall-rules list --filter=name=${BASTION_HOST_FIREWALL_RULE_NAME} --format="value(name)") ]; then
-
-	gcloud compute firewall-rules create ${BASTION_HOST_FIREWALL_RULE_NAME} \
-		--project=${CLOUD_PROJECT} \
-		--direction=INGRESS \
-		--priority=1000 \
-		--network=${CLOUD_SUBNET} \
-		--action=ALLOW \
-		--rules=tcp:22 \
-		--source-ranges=0.0.0.0/0 \
-		--target-tags=${BASTION_TAG_IDENTIFIER}
 	
-	if [ -z $(gcloud compute firewall-rules list --filter=name=${BASTION_HOST_FIREWALL_RULE_NAME} --format="value(name)") ]; then
-		echo "Unable to create bastion host firewall rule for DigiKube.  Bastion host firewall rule name: ${BASTION_HOST_FIREWALL_RULE_NAME}. Exiting DigiKube initialization."
-		echo "Run the DigiKube delete scripts to clear partially created resources."
+	if [[ -z $(gcloud compute instances list --filter=name=${digikubeBastionHostName} --format="value(name)") ]]; then
+		echo "ERROR: Unable to create bastion host (${digikubeBastionHostName}) for Digikube.  Exiting..."
+		echo "ERROR: Run the Digikube delete script to clear partially created resources."
 		exit 1
 	else
-		echo "Created bastion host firewall rule for DigiKube.  Bastion host name: ${BASTION_HOST_FIREWALL_RULE_NAME}."
-	fi	
-		
+		echo "INFO: Created bastion host (${digikubeBastionHostName}) for Digikube."
+	fi
+	
 else
-	echo "Reusing the exiting bastion host firewall rule.  Bastion host firewall rule: ${BASTION_HOST_FIREWALL_RULE_NAME}."
+	# TO DO: Need to update configuration of bastion host based on config values."
+	echo "INFO: Reusing the exiting bastion host.  Bastion host name: (${digikubeBastionHostName})."
 fi
 
-####################################################
-#Create firewall rule to allow http/https traffic from internet to NodePort.
+#----------------------------------------------------------------
+# Create firewall rule to allow ssh to bastion host.
+# ===============================================================
 
-export NODEPORT_FIREWALL_RULE_NAME="${CLOUD_SUBNET}-allow-external-to-nodeport"
+firewallRule="${digikubeCloudSubnet}-allow-bastion-ssh-ingress"
 
-echo "Attempting to create firewallrule for : ${NODEPORT_FIREWALL_RULE_NAME}"
-if [ -z $(gcloud compute firewall-rules list --filter=name=${NODEPORT_FIREWALL_RULE_NAME} --format="value(name)") ]; then
+echo "INFO: Attempting to create firewall rule (${firewallRule}) for bastion host."
+if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]]; then
 
-	#TO DO: target-tags is hard coded.  Need to externalize from config 
-	gcloud compute firewall-rules create ${NODEPORT_FIREWALL_RULE_NAME} \
-		--project=${CLOUD_PROJECT} \
-		--direction=INGRESS \
-		--priority=1000 \
-		--network=${CLOUD_SUBNET} \
-		--action=ALLOW \
-		--rules=tcp:30000-32767 \
-		--source-ranges=0.0.0.0/0 \
-		--target-tags=c1-${CLOUD_PROJECT}-dev1-k8s-local-k8s-io-role-node
+	gcloud compute firewall-rules create "${firewallRule}" 		\
+		--project="${digikubeCloudProjectId}"	 				\
+		--direction=INGRESS 									\
+		--priority=1000 										\
+		--network="${digikubeCloudSubnet}"						\
+		--action=ALLOW 											\
+		--rules=tcp:22 											\
+		--source-ranges=0.0.0.0/0 								\
+		--target-tags="${digikubeBastionHostTagIdentifier}"
 	
-	if [ -z $(gcloud compute firewall-rules list --filter=name=${NODEPORT_FIREWALL_RULE_NAME} --format="value(name)") ]; then
-		echo "Unable to create nodeport firewall rule for DigiKube.  Nodeport firewall rule name: ${NODEPORT_FIREWALL_RULE_NAME}. Nodeport services will not be accessible."
+	if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]; then
+		echo "ERROR: Unable to create bastion host firewall rule ("${firewallRule}") for Digikube.  Exiting..."
+		echo "ERROR: Run the Digikube delete scripts to clear partially created resources."
+		exit 1
 	else
-		echo "Created nodeport firewall rule for DigiKube.  Nodeport firewall rule name: ${NODEPORT_FIREWALL_RULE_NAME}."
+		echo "INFO: Created bastion host firewall rule  ("${firewallRule}") for DigiKube."
 	fi	
 		
 else
-	echo "Reusing the exiting nodeport firewall rule.  Nodeport firewall rule: ${NODEPORT_FIREWALL_RULE_NAME}."
+	echo "INFO: Reusing the exiting bastion host firewall rule ("${firewallRule}") for DigiKube."
+fi
+
+#----------------------------------------------------------------
+# Create firewall rule to allow http/https traffic from internet to NodePort.
+# ===============================================================
+
+firewallRule="${digikubeCloudSubnet}-allow-nodeport-ingress"
+echo "INFO: Attempting to create firewall rule for : ${firewallRule}"
+
+targetTags="${digikubeClusterFullName}"
+targetTags="${targetTags//\./-}"
+targetTags="${targetTags}-k8s-io-role-node"
+
+if [ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]; then
+
+	gcloud compute firewall-rules create ${firewallRule} 	\
+		--project=${digikubeCloudProjectId} 				\
+		--direction=INGRESS 								\
+		--priority=1000 									\
+		--network=${digikubeCloudSubnet}					\
+		--action=ALLOW 										\
+		--rules=tcp:30000-32767 							\
+		--source-ranges=0.0.0.0/0 							\
+		--target-tags=${targetTags}
+	
+	if [[ -z $(gcloud compute firewall-rules list --filter=name=${firewallRule} --format="value(name)") ]]; then
+		echo "ERROR: Unable to create nodeport ingress firewall rule ("${firewallRule}") for Digikube.  Nodeport services will not be accessible."
+	else
+		echo "INFO: Created nodeport firewall rule for Digikube.  Nodeport firewall rule name: ${NODEPORT_FIREWALL_RULE_NAME}."
+	fi	
+		
+else
+	echo "INFO: Reusing the exiting nodeport firewall rule.  Nodeport firewall rule: ${NODEPORT_FIREWALL_RULE_NAME}."
 fi

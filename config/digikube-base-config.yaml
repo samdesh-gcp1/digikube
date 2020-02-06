@@ -1,1 +1,23 @@
-
+# Base configuration for the Digikube
+cloud:
+  provider: "gce"
+  adminUser: "samdesh_gcp1"
+  project:
+    id: "digikube003"
+    region: "us-central1"
+    zone: "us-central1-c"
+  bucket:
+    nameSuffix: "bucket"
+    class: "STANDARD"
+  bastionHost:
+    namePrefix: "bastion-host"
+    machineType: "f1-micro"
+    networkTier: "STANDARD"
+    preemptible: "Yes"
+    tagIdentifier: "bastion-host"
+    tags: "http-server,https-server"
+    image: "ubuntu-1804-bionic-v20191211"
+    imageProject: "ubuntu-os-cloud"
+    bootDiskSize: "10GB"
+    bootDiskType: "pd-standard"
+    labels: "type=${BASTION_TAG_IDENTIFIER},creator=cloud-init"

@@ -266,7 +266,7 @@ echo "INFO: Bastion host name is ${digikubeBastionHostName}"
 if [[ -z ${digikubeBastionHostName} ]]; then
 	echo "ERROR: Bastion host name not specified in config.  Exiting..."
 	exit 1
-else
+#else
 	# TO DO: Verify the correctness of the following config values for bastion host.
 	#digikubeBastionHostMachineType=$(getConfigValue "cloud.bastionHost.machineType")
 	#echo "INFO: Bastion host machine type is ${digikubeBastionHostMachineType}"

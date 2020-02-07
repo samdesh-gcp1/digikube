@@ -447,10 +447,10 @@ fi
 
 if [[ "${deleteBastionFirewallRule}" == "yes" ]]; then
 
-	bastionFirewallRuleName="${cloud_subnet}-allow-bastion-ssh"
+	bastionFirewallRuleName="${digikubeCloudSubnet}-allow-bastion-ssh"
 	echo "INFO: Attempting to delete firewall rule (${bastionFirewallRuleName})"
 	if [[ -z $(gcloud compute firewall-rules list --filter=name=${bastionFirewallRuleName} --format="value(name)") ]]; then
-		echo "INFO: Bastion host firewall rule (${bastion_firewall_rule_name}) not available.  Skipping firewall rule deletion."
+		echo "INFO: Bastion host firewall rule (${bastionFirewallRuleName}) not available.  Skipping firewall rule deletion."
 	else
 		gcloud -q compute firewall-rules delete ${bastionFirewallRuleName}
 		__returnCode=$?

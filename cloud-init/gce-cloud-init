@@ -336,7 +336,7 @@ echo "INFO: Attempting to create bastion host: ${digikubeBastionHostName}"
 
 f="$(wget -q -O - ${digikubeCodeRawRepoUrl}/cloud-init/gce-bastion-host-init-shell.sh)"		# Script file
 t="#<placeholder for digikube admin user name>"												# Line to be replaced in the script file
-s="digikubeCloudAdminUser=$(whoami)"														# The replacement text
+s="digikubeCloudAdminUser=$(digikubeCloudAdminUser)"														# The replacement text
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"											# Updated script
 
 f=$n																						# Script file

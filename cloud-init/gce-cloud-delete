@@ -352,7 +352,7 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 	__returnCode=$?
 	if [[ ${__returnCode} -gt 0 ]]; then
 		echo "ERROR: Error while checking the bastion host status.  Error code: ${__returnCode}"
-		if [[ "${isForced}" != "yes" ]]; then
+		if [[ "${isForced}" != "forced" ]]; then
 			echo "Exiting Digikube deletion..."
 			exit ${__returnCode}
 		fi
@@ -367,7 +367,7 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 			__returnCode=$?
 			if [[ ${__returnCode} -gt 0 ]]; then
 				echo "ERROR: Error while starting bastion host.   Error code: ${__returnCode}"
-				if [[ "${isForced}" != "yes" ]]; then
+				if [[ "${isForced}" != "forced" ]]; then
 					echo "Exiting Digikube deletion..."
 					exit ${__returnCode}
 				fi
@@ -376,7 +376,7 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 				__returnCode=$?
 				if [[ ${__returnCode} -gt 0 ]]; then
 					echo "ERROR: Error while checking the bastion host status.  Error code: ${__returnCode}"
-					if [[ "${isForced}" != "yes" ]]; then
+					if [[ "${isForced}" != "forced" ]]; then
 						echo "Exiting Digikube deletion..."
 						exit ${__returnCode}
 					fi
@@ -386,7 +386,7 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 						canSshBastionHost="yes"
 					else
 						echo "ERROR: Not able to access bastion host ${bastionHostName}.  The current status is ${bastionStatus}"
-						if [[ "${isForced}" != "yes" ]]; then
+						if [[ "${isForced}" != "forced" ]]; then
 							echo "Exiting Digikube deletion..."
 							exit ${__returnCode}
 						fi
@@ -405,7 +405,7 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 		else
 			if [[ ${__returnCode} -eq 255 ]]; then
 				echo "ERROR: Error while performing ssh on bastion host.  Error code: ${__returnCode}"
-				if [[ "${isForced}" != "yes" ]]; then
+				if [[ "${isForced}" != "forced" ]]; then
 					echo "Exiting Digikube deletion..."
 					exit ${__returnCode}
 				else
@@ -413,7 +413,7 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 				fi
 			else
 				echo "ERROR: Error while deleting the Digikube cluster.  Error code: ${__returnCode}"
-				if [[ "${isForced}" != "yes" ]]; then
+				if [[ "${isForced}" != "forced" ]]; then
 					echo "Exiting Digikube deletion..."
 					exit ${__returnCode}
 				else

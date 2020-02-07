@@ -458,18 +458,18 @@ fi
 
 if [[ "${deleteBastionHost}" == "yes" ]]; then
 
-	echo "INFO: Attempting to delete bastion host (${bastionHostName}) in zone (${digikubeCloudProjectZone})"
-	if [[ -z $(gcloud compute instances list --filter="name=${bastionHostName}" --format="value(name)") ]]; then
-		echo "INFO: Bastion host (${bastionHostName}) not available.  Skipping bastion host deletion."
+	echo "INFO: Attempting to delete bastion host (${digikubeBastionHostName}) in zone (${digikubeCloudProjectZone})"
+	if [[ -z $(gcloud compute instances list --filter="name=${digikubeBastionHostName}" --format="value(name)") ]]; then
+		echo "INFO: Bastion host (${digikubeBastionHostName}) not available.  Skipping bastion host deletion."
 	else
-		gcloud --quiet compute instances delete "${bastionHostName}" --zone="${digikubeCloudProjectZone}"
+		gcloud --quiet compute instances delete "${digikubeBastionHostName}" --zone="${digikubeCloudProjectZone}"
 		__returnCode=$?
 		if [[ ${__returnCode} -gt 0 ]]; then
 			#Unknown error while deleting the bastion host
-			echo "ERROR: Not able to delete bastion host (${bastionHostName}).  Exiting..."
+			echo "ERROR: Not able to delete bastion host (${digikubeBastionHostName}).  Exiting..."
 			exit ${__returnCode}
 		else
-			echo "INFO: Deleted the bastion host (${bastionHostName})"
+			echo "INFO: Deleted the bastion host (${digikubeBastionHostName})"
 		fi
 	fi
 else

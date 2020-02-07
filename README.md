@@ -20,9 +20,9 @@
 
       #Replace the repo url by the repo you have created (by cloning digikube)
       
-      digikube_code_repo="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master";
-      digikube_config_file="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/config/templates/digikube-base-config-template.yaml";	
-      bootstrap_shell="/tmp/digikube-${RANDOM}";
-      wget -q --no-cache -O ${bootstrap_shell} - "${digikube_code_repo}/cloud-init/bootstrap";
-      chmod +x ${bootstrap_shell};
-      . ${bootstrap_shell} ${digikube_code_repo} ${digikube_config_file} delete 
+      digikubeCodeRepo="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master";
+      digikubeConfigFile="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master/config/templates/digikube-base-config-template.yaml";
+      bootstrapShell="/tmp/digikube-${RANDOM}";
+      wget -q --no-cache -O ${bootstrapShell} - "${digikubeCodeRepo}/cloud-init/bootstrap";
+      chmod +x ${bootstrapShell};
+      . ${bootstrapShell} ${digikubeCodeRepo} ${digikubeConfigFile} delete 

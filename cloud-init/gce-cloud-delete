@@ -18,6 +18,7 @@ providedDigikubeCodeRawRepoUrl=${1}
 providedDigikubeConfigFileRef=${2}
 deleteChoice=${3}
 
+DIGIKUBE_BASE_CONFIG="digikube-base-config.yaml"
 DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
 
 #################################################################

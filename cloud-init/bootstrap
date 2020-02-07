@@ -2,7 +2,7 @@
 # bootstrap script
 # Input parameters
 #	$1 => digikube code repository url
-#	$2 => digikube config file (either url or local file)
+#	$2 => digikube instance repository url
 #	$3 => command (either create or delete)
 #	$4 => forced (only in case of delete...)
 
@@ -13,7 +13,7 @@ if [[ ${#} -lt 4 ]]; then
 	exit 1
 else
 	digikubeCodeRepo="${1}"
-	digikubeConfigFileRef="${2}"
+	digikubeInstanceRepo="${2}"
 	bootstrapCommand="${3}"
 	isForced="${4}"
 	
@@ -22,7 +22,7 @@ else
 	if [[ "${bootstrapCommand}" == "create" ]]; then
 		wget -q --no-cache -O "${tmpExecDir}/gce-cloud-init" - "${digikubeCodeRepo}/cloud-init/gce-cloud-init" 
 		chmod +x "${tmpExecDir}/gce-cloud-init"
-		"${tmpExecDir}/gce-cloud-init" "${digikubeCodeRepo}" "${digikubeConfigFileRef}"
+		"${tmpExecDir}/gce-cloud-init" "${digikubeCodeRepo}" "${digikubeInstanceRepo}"
 	else
 		echo "Please enter delete scope:"
 		echo "            Only K8S Cluster                                   : cluster"
@@ -33,6 +33,6 @@ else
 		read -p "Enter your choice: " deleteChoice
 		wget -q --no-cache -O "${tmpExecDir}/gce-cloud-delete" - "${digikubeCodeRepo}/cloud-init/gce-cloud-delete"
 		chmod +x "${tmpExecDir}/gce-cloud-delete"
-		"${tmpExecDir}/gce-cloud-delete" "${digikubeCodeRepo}" "${digikubeConfigFileRef}" "${deleteChoice}" "${isForced}"
+		"${tmpExecDir}/gce-cloud-delete" "${digikubeCodeRepo}" "${digikubeInstanceRepo}" "${deleteChoice}" "${isForced}"
 	fi
 fi

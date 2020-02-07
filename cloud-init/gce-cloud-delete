@@ -290,6 +290,8 @@ if [[ -z ${digikubeBastionHostName} ]]; then
 	#echo "INFO: Bastion host labels are ${digikubeBastionHostLabels}"
 fi
 
+digikubeCloudSubnet="${digikubeCloudProjectId}-vpc"
+
 #################################################################
 # Start deletion
 #----------------------------------------------------------------
@@ -339,7 +341,7 @@ esac
 # Delete Digikube k8s cluster
 # ===========================
 
-if [[ "${delete_cluster}" = "yes" ]]; then
+if [[ "${deleteCluster}" = "yes" ]]; then
 	
 	echo "INFO: Attempting to delete kubernetes cluster (${digikubeClusterFullName})"
 	bastionStatus=$(gcloud compute instances describe ${digikubeBastionHostName} --zone=${digikubeCloudProjectZone} | grep "status: RUNNING")
@@ -442,8 +444,6 @@ fi
 
 # Delete firewall rule for bastion host
 # =====================================
-
-digikubeCloudSubnet="${digikubeCloudProjectId}-vpc"
 
 if [[ "${deleteBastionFirewallRule}" == "yes" ]]; then
 

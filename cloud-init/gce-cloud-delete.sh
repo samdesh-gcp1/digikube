@@ -6,7 +6,7 @@
 #	$3 => command choice 
 #		Only K8S Cluster									: cluster
 #		K8S Cluster with bastion host						: bastion-host
-#		K8S Cluster, bastion-host, cloud-resourses	    	: all
+#		K8S Cluster, bastion-host, cloud-resourses			: all
 #		K8S Cluster, bastion-host, cloud-resources, bucket	: all-with-bucket
 
 if [[ ${#} -lt 3 ]]; then

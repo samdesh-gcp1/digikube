@@ -28,5 +28,5 @@
       bootstrapShell="${tmpExecDir}/bootstrap";
       wget -q --no-cache -O ${bootstrapShell} - "${digikubeCodeRawRepoUrl}/cloud-init/bootstrap";
       chmod +x ${bootstrapShell};
-      ${bootstrapShell} ${digikubeCodeRawRepoUrl} ${digikubeInstanceRawRepoUrl} delete --forced,
+      ${bootstrapShell} ${digikubeCodeRawRepoUrl} ${digikubeInstanceRawRepoUrl} delete --forced;
       rm -rf "${tmpExecDir}"

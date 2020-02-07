@@ -5,30 +5,32 @@
 #	$2 => digikube config file (either url or local file)
 #	$3 => command (either create or delete)
 
+clear
+
 if [[ ${#} -lt 3 ]]; then
-	echo "Insufficient input parameters provided."
+	echo "ERROR: Insufficient input parameters provided."
+	exit 1
 else
-	digikube_code_repo="${1}"
-	digikube_config_file_ref="${2}"
-	bootstrap_command="${3}"
+	digikubeCodeRepo="${1}"
+	digikubeConfigFileRef="${2}"
+	bootstrapCommand="${3}"
 	
-	tmp_exec_dir=$(mktemp -d --suffix="-digikube")
+	tmpExecDir=$(mktemp -d --suffix="-digikube")
 	
-	if [[ "${bootstrap_command}" == "create" ]]; then
-		echo "wget -q --no-cache -O ${tmp_exec_dir}/gce-cloud-init - ${digikube_code_repo}/cloud-init/gce-cloud-init"
-		wget -q --no-cache -O "${tmp_exec_dir}/gce-cloud-init" - "${digikube_code_repo}/cloud-init/gce-cloud-init" 
-		chmod +x "${tmp_exec_dir}/gce-cloud-init"
-		"${tmp_exec_dir}/gce-cloud-init" "${digikube_code_repo}" "${digikube_config_file_ref}"
+	if [[ "${bootstrapCommand}" == "create" ]]; then
+		wget -q --no-cache -O "${tmpExecDir}/gce-cloud-init" - "${digikubeCodeRepo}/cloud-init/gce-cloud-init" 
+		chmod +x "${tmpExecDir}/gce-cloud-init"
+		"${tmpExecDir}/gce-cloud-init" "${digikubeCodeRepo}" "${digikubeConfigFileRef}"
 	else
 		echo "Please enter delete scope:"
 		echo "            Only K8S Cluster                                   : cluster"
 		echo "            K8S Cluster with bastion host                      : bastion-host"
 		echo "            K8S Cluster, bastion-host, cloud-resourses         : all"
 		echo "            K8S Cluster, bastion-host, cloud-resources, bucket : all-with-bucket"
-		read -p "Enter your choice: " delete_choice
-		echo "wget -q --no-cache -O ${tmp_exec_dir}/gce-cloud-delete - ${digikube_code_repo}/cloud-init/gce-cloud-delete"
-		wget -q --no-cache -O "${tmp_exec_dir}/gce-cloud-delete" - "${digikube_code_repo}/cloud-init/gce-cloud-delete"
-		chmod +x "${tmp_exec_dir}/gce-cloud-delete"
-		"${tmp_exec_dir}/gce-cloud-delete" "${digikube_code_repo}" "${digikube_config_file_ref}" "${delete_choice}"
+		
+		read -p "Enter your choice: " deleteChoice
+		wget -q --no-cache -O "${tmpExecDir}/gce-cloud-delete" - "${digikubeCodeRepo}/cloud-init/gce-cloud-delete"
+		chmod +x "${tmpExecDir}/gce-cloud-delete"
+		"${tmpExecDir}/gce-cloud-delete" "${digikubeCodeRepo}" "${digikubeConfigFileRef}" "${deleteChoice}"
 	fi
 fi

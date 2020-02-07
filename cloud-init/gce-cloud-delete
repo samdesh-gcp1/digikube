@@ -410,6 +410,7 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 				fi
 			else
 				echo "ERROR: Not able to delete Digikube cluster.  Error code: ${__returnCode}"
+				echo "${isForced} ${FORCED}"
 				if [[ "${isForced}" != "${FORCED}" ]]; then
 					echo "Exiting Digikube deletion..."
 					exit ${__returnCode}

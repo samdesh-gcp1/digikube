@@ -10,10 +10,12 @@
 
       digikubeCodeRepo="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master";
       digikubeInstanceRepo="https://raw.githubusercontent.com/samdesh-gcp1/c1-dev1/master";
-      bootstrapShell="/tmp/digikube-${RANDOM}";
+      tmpExecDir=$(mktemp -d --suffix="-digikube");
+      bootstrapShell="${tmpExecDir}/bootstrap";
       wget -q --no-cache -O ${bootstrapShell} - "${digikubeCodeRepo}/cloud-init/bootstrap";
       chmod +x ${bootstrapShell};
-      ${bootstrapShell} ${digikubeCodeRepo} ${digikubeConfigFile} create
+      ${bootstrapShell} ${digikubeCodeRepo} ${digikubeConfigFile} create;
+      rm -rf "${tmpExecDir}"
   
   
 6. Execute the following command to delete Digikube on GCE
@@ -22,7 +24,9 @@
       
       digikubeCodeRepo="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master";
       digikubeInstanceRepo="https://raw.githubusercontent.com/samdesh-gcp1/c1-dev1/master";
-      bootstrapShell="/tmp/digikube-${RANDOM}";
+      tmpExecDir=$(mktemp -d --suffix="-digikube");
+      bootstrapShell="${tmpExecDir}/bootstrap";
       wget -q --no-cache -O ${bootstrapShell} - "${digikubeCodeRepo}/cloud-init/bootstrap";
       chmod +x ${bootstrapShell};
-      . ${bootstrapShell} ${digikubeCodeRepo} ${digikubeConfigFile} delete 
+      ${bootstrapShell} ${digikubeCodeRepo} ${digikubeConfigFile} delete --forced,
+      rm -rf "${tmpExecDir}"

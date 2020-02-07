@@ -8,31 +8,45 @@
 
 clear
 
-if [[ ${#} -lt 4 ]]; then
+if [[ ${#} -lt 3 ]]; then
 	echo "ERROR: Insufficient input parameters provided."
 	exit 1
 else
 	digikubeCodeRepo="${1}"
 	digikubeInstanceRepo="${2}"
 	bootstrapCommand="${3}"
-	isForced="${4}"
-	
-	tmpExecDir=$(mktemp -d --suffix="-digikube")
-	
 	if [[ "${bootstrapCommand}" == "create" ]]; then
+		
+		tmpExecDir=$(mktemp -d --suffix="-digikube")
 		wget -q --no-cache -O "${tmpExecDir}/gce-cloud-init" - "${digikubeCodeRepo}/cloud-init/gce-cloud-init" 
 		chmod +x "${tmpExecDir}/gce-cloud-init"
 		"${tmpExecDir}/gce-cloud-init" "${digikubeCodeRepo}" "${digikubeInstanceRepo}"
-	else
-		echo "Please enter delete scope:"
-		echo "            Only K8S Cluster                                   : cluster"
-		echo "            K8S Cluster with bastion host                      : bastion-host"
-		echo "            K8S Cluster, bastion-host, cloud-resourses         : all"
-		echo "            K8S Cluster, bastion-host, cloud-resources, bucket : all-with-bucket"
+		rm -rf "${tmpExecDir}"
 		
-		read -p "Enter your choice: " deleteChoice
-		wget -q --no-cache -O "${tmpExecDir}/gce-cloud-delete" - "${digikubeCodeRepo}/cloud-init/gce-cloud-delete"
-		chmod +x "${tmpExecDir}/gce-cloud-delete"
-		"${tmpExecDir}/gce-cloud-delete" "${digikubeCodeRepo}" "${digikubeInstanceRepo}" "${deleteChoice}" "${isForced}"
+	else
+		if [[ "${bootstrapCommand}" == "delete" ]]; then
+			if [[ ${#} -lt 4 ]] then
+				echo "ERROR: Insufficient input parameters provided."
+				exit 1
+			else
+		
+				isForced="${4}"	
+				tmpExecDir=$(mktemp -d --suffix="-digikube")
+				echo "Please enter delete scope:"
+				echo "            Only K8S Cluster                                   : cluster"
+				echo "            K8S Cluster with bastion host                      : bastion-host"
+				echo "            K8S Cluster, bastion-host, cloud-resourses         : all"
+				echo "            K8S Cluster, bastion-host, cloud-resources, bucket : all-with-bucket"
+				read -p "Enter your choice: " deleteChoice
+				wget -q --no-cache -O "${tmpExecDir}/gce-cloud-delete" - "${digikubeCodeRepo}/cloud-init/gce-cloud-delete"
+				chmod +x "${tmpExecDir}/gce-cloud-delete"
+				"${tmpExecDir}/gce-cloud-delete" "${digikubeCodeRepo}" "${digikubeInstanceRepo}" "${deleteChoice}" "${isForced}"		
+				rm -rf "${tmpExecDir}"
+				
+			fi
+		else
+			echo "ERROR: Invalid command option (${bootstrapCommand})"
+			exit 1
+		fi
 	fi
 fi

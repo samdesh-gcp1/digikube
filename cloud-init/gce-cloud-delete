@@ -409,7 +409,7 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 					echo "WARN: Skipping cluster deletion due to error while using the bastion host.  Check and delete the cluster resources manually."
 				fi
 			else
-				echo "ERROR: Error while deleting the Digikube cluster.  Error code: ${__returnCode}"
+				echo "ERROR: Not able to delete Digikube cluster.  Error code: ${__returnCode}"
 				if [[ "${isForced}" != "${FORCED}" ]]; then
 					echo "Exiting Digikube deletion..."
 					exit ${__returnCode}
@@ -439,13 +439,17 @@ if [[ "${deleteNodePortFirewallRule}" == "yes" ]]; then
 		__returnCode=$?
 		if [[ ${__returnCode} -gt 0 ]]; then
 			#Unknown error while deleting the firewall rule.
-			echo "ERROR: Not able to delete NodePort ingress firewall rule (${nodeportFirewallRuleName}).  Exiting..."
-			exit ${__returnCode}
+			echo "ERROR: Not able to delete NodePort ingress firewall rule (${nodeportFirewallRuleName}).  Error code: ${__returnCode}"
+			if [[ "${isForced}" != "${FORCED}" ]]; then
+				echo "Exiting Digikube deletion..."
+				exit ${__returnCode}
+			else
+				echo "WARN: Skipping NodePort ingress firewall rule deletion due to error.  Check and delete the cluster resources manually."
+			fi
 	  	else
 			echo "INFO: Deleted the NodePort firewall rule (${nodeportFirewallRuleName})"
 		fi
 	fi
-	
 else
 	echo "INFO: NodePort firewall rule not to be deleted"
 fi
@@ -463,8 +467,13 @@ if [[ "${deleteBastionHost}" == "yes" ]]; then
 		__returnCode=$?
 		if [[ ${__returnCode} -gt 0 ]]; then
 			#Unknown error while deleting the bastion host
-			echo "ERROR: Not able to delete bastion host (${digikubeBastionHostName}).  Exiting..."
-			exit ${__returnCode}
+			echo "ERROR: Not able to delete bastion host (${digikubeBastionHostName}).  Error code: ${__returnCode}"
+			if [[ "${isForced}" != "${FORCED}" ]]; then
+				echo "Exiting Digikube deletion..."
+				exit ${__returnCode}
+			else
+				echo "WARN: Skipping bastion host deletion due to error.  Check and delete the cluster resources manually."
+			fi
 		else
 			echo "INFO: Deleted the bastion host (${digikubeBastionHostName})"
 		fi
@@ -487,8 +496,13 @@ if [[ "${deleteBastionFirewallRule}" == "yes" ]]; then
 		__returnCode=$?
 		if [[ ${__returnCode} -gt 0 ]]; then
 			#Unknown error while deleting the firewall rule.
-			echo "ERROR: Not able to delete bastion host firewall rule (${bastionFirewallRuleName}).  Exiting Digikube delete."
-			exit ${__returnCode}
+			echo "ERROR: Not able to delete bastion host firewall rule (${bastionFirewallRuleName}).  Error code: ${__returnCode}"
+			if [[ "${isForced}" != "${FORCED}" ]]; then
+				echo "Exiting Digikube deletion..."
+				exit ${__returnCode}
+			else
+				echo "WARN: Skipping bastion host firewall rule deletion due to error.  Check and delete the cluster resources manually."
+			fi
 	  	else
 			echo "INFO: Deleted bastion host firewall rule (${bastionFirewallRuleName})"
 		fi
@@ -511,10 +525,15 @@ if [[ "${deleteSubnet}" == "yes" ]]; then
 		__returnCode=$?
 		if [[ ${__returnCode} -gt 0 ]]; then
 	  		#Unknown error while deleting the network.
-			echo "ERROR: Unable to delete subnet (${digikubeCloudSubnet}).  Exiting the DigiKube delete."
-			exit ${__returnCode}
+			echo "ERROR: Not able to delete subnet (${digikubeCloudSubnet}).  Error code: ${__returnCode}"
+			if [[ "${isForced}" != "${FORCED}" ]]; then
+				echo "Exiting Digikube deletion..."
+				exit ${__returnCode}
+			else
+				echo "WARN: Skipping subnet deletion due to error.  Check and delete the cluster resources manually."
+			fi
   		else
-			echo "INFO: Deleted the network (${digikubeCloudSubnet})"
+			echo "INFO: Deleted the subnet (${digikubeCloudSubnet})"
   		fi
 	fi
 else
@@ -540,10 +559,15 @@ if [[ "${deleteBucket}" == "yes" ]]; then
 		gsutil rm -r ${bucketUrl}
 		if [[ ${__returnCode} -gt 0 ]]; then
 			#Unknown error while deleting the bucket.
-	    		echo "ERROR: Unable to delete bucket (${digikubeCloudBucket}).  Exiting the Digikube delete."
-    			exit ${__returnCode}
+	    	echo "ERROR: Not able to delete bucket (${digikubeCloudBucket}).  Error code: ${__returnCode}"
+    		if [[ "${isForced}" != "${FORCED}" ]]; then
+				echo "Exiting Digikube deletion..."
+				exit ${__returnCode}
+			else
+				echo "WARN: Skipping bucket deletion due to error.  Check and delete the cluster resources manually."
+			fi
   		else
-    			echo "INFO: Deleted the bucket (${digikubeCloudBucket})"
+    		echo "INFO: Deleted the bucket (${digikubeCloudBucket})"
   		fi
 	fi
 else

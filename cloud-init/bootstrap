@@ -4,16 +4,18 @@
 #	$1 => digikube code repository url
 #	$2 => digikube config file (either url or local file)
 #	$3 => command (either create or delete)
+#	$4 => forced (only in case of delete...)
 
 clear
 
-if [[ ${#} -lt 3 ]]; then
+if [[ ${#} -lt 4 ]]; then
 	echo "ERROR: Insufficient input parameters provided."
 	exit 1
 else
 	digikubeCodeRepo="${1}"
 	digikubeConfigFileRef="${2}"
 	bootstrapCommand="${3}"
+	isForced="${4}"
 	
 	tmpExecDir=$(mktemp -d --suffix="-digikube")
 	
@@ -31,6 +33,6 @@ else
 		read -p "Enter your choice: " deleteChoice
 		wget -q --no-cache -O "${tmpExecDir}/gce-cloud-delete" - "${digikubeCodeRepo}/cloud-init/gce-cloud-delete"
 		chmod +x "${tmpExecDir}/gce-cloud-delete"
-		"${tmpExecDir}/gce-cloud-delete" "${digikubeCodeRepo}" "${digikubeConfigFileRef}" "${deleteChoice}"
+		"${tmpExecDir}/gce-cloud-delete" "${digikubeCodeRepo}" "${digikubeConfigFileRef}" "${deleteChoice}" "${isForced}"
 	fi
 fi

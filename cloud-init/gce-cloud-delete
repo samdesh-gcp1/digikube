@@ -410,7 +410,6 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 				fi
 			else
 				echo "ERROR: Not able to delete Digikube cluster.  Error code: ${__returnCode}"
-				echo "${isForced} ${FORCED}"
 				if [[ "${isForced}" != "${FORCED}" ]]; then
 					echo "Exiting Digikube deletion..."
 					exit ${__returnCode}
@@ -488,7 +487,7 @@ fi
 
 if [[ "${deleteBastionFirewallRule}" == "yes" ]]; then
 
-	bastionFirewallRuleName="${digikubeCloudSubnet}-allow-bastion-ssh"
+	bastionFirewallRuleName="${digikubeCloudSubnet}-allow-bastion-ssh-ingress"
 	echo "INFO: Attempting to delete firewall rule (${bastionFirewallRuleName})"
 	if [[ -z $(gcloud compute firewall-rules list --filter=name=${bastionFirewallRuleName} --format="value(name)") ]]; then
 		echo "INFO: Bastion host firewall rule (${bastionFirewallRuleName}) not available.  Skipping firewall rule deletion."

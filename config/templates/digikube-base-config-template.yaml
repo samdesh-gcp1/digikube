@@ -3,7 +3,7 @@ cloud:
   provider: "gce"
   adminUser: "samdesh_gcp1"
   project:
-    id: "digikube003"
+    id: "dkube1"
     region: "us-central1"
     zone: "us-central1-c"
   bucket:

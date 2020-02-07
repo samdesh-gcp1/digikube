@@ -2,7 +2,7 @@
 # Main script to delete the cloud resources.
 # Input parameters
 #	$1 => digikube code repository url
-#	$2 => digikube config file (either url or local file)
+#	$2 => digikube instance repository url
 #	$3 => command choice 
 #		Only K8S Cluster									: cluster
 #		K8S Cluster with bastion host						: bastion-host
@@ -17,11 +17,10 @@ if [[ ${#} -lt 4 ]]; then
 fi
 
 providedDigikubeCodeRawRepoUrl=${1}
-providedDigikubeConfigFileRef=${2}
+providedDigikubeInstanceRawRepoUrl=${2}
 deleteChoice=${3}
 isForced=${4}
 
-DIGIKUBE_BASE_CONFIG="digikube-base-config.yaml"
 DELETE_CLUSTER_COMMAND="~/digikube/cluster/digiops cluster delete"
 
 #################################################################
@@ -76,15 +75,24 @@ echo "INFO: Temporary execution directory is ${tmpExecDir}"
 
 # Check the Digikube code repository url.
 if [[ $(isValidUrl ${providedDigikubeCodeRawRepoUrl}) -gt 0 ]]; then
-	echo "ERROR: Invalid Digikube repository url provided: ${providedDigikubeCodeRawRepoUrl}.  Exiting..."
+	echo "ERROR: Invalid Digikube code repository url provided: ${providedDigikubeCodeRawRepoUrl}.  Exiting..."
 	exit 1
 else
 	echo "INFO: Digikube code repository url is ${providedDigikubeCodeRawRepoUrl}"
 fi
 
+# Check the Digikube instance repository url.
+if [[ $(isValidUrl ${providedDigikubeInstanceRawRepoUrl}) -gt 0 ]]; then
+	echo "ERROR: Invalid Digikube instance repository url provided: ${providedDigikubeInstanceRawRepoUrl}.  Exiting..."
+	exit 1
+else
+	echo "INFO: Digikube instance repository url is ${providedDigikubeInstanceRawRepoUrl}"
+fi
+
 # Download and execute cloud-init/init-prep script
 if [[ $(downloadFile "${providedDigikubeCodeRawRepoUrl}/cloud-init/init-prep" "${tmpExecDir}/init-prep" "yes") -gt 0 ]]; then
 	echo ${__fnErrMsg}
+	echo "ERROR: Error while downloading Digikube init-prep file from url: ${providedDigikubeCodeRawRepoUrl}. Exiting..."
 	exit 1
 else
 	echo "INFO: Downloaded the init-prep script."
@@ -96,25 +104,13 @@ else
 	fi
 fi
 
-# Check the Digikube config file ref and download/copy the file to target location.
-if [[ $(isValidUrl ${providedDigikubeConfigFileRef}) -gt 0 ]]; then
-	if [[ -f ${providedDigikubeConfigFileRef} ]]; then
-		# File available for Digikube config.
-		cp ${providedDigikubeConfigFileRef} "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}"
-		echo "INFO: Successfully coppied Digikube config file."
-	else
-		echo "ERROR: Invalid Digikube config file url or local file: ${providedDigikubeConfigFileRef}.  Exiting..."
-		exit 1
-	fi
+# Download the config/digikube-base-config.yaml file from url
+if [[ $(downloadFile "${providedDigikubeInstanceRawRepoUrl}/config/digikube-base-config.yaml" "${tmpExecDir}/digikube-base-config.yaml" "no") -gt 0 ]]; then
+	echo ${__fnErrMsg}
+	echo "ERROR: Error while downloading Digikube config file from url: ${providedDigikubeConfigFileRef}. Exiting..."
+	exit 1
 else
-	# Download the config/digikube-config.yaml file from url
-	if [[ $(downloadFile "${providedDigikubeConfigFileRef}" "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}" "no") -gt 0 ]]; then
-		echo ${__fnErrMsg}
-		echo "ERROR: Error while downloading Digikube config file from url: ${providedDigikubeConfigFileRef}. Exiting..."
-		exit 1
-	else
-		echo "INFO: Successfully downloaded Digikube config file."
-	fi
+	echo "INFO: Successfully downloaded Digikube config file."
 fi
 
 #################################################################
@@ -122,7 +118,7 @@ fi
 #----------------------------------------------------------------
 
 # Read and parse the config.yaml and populate json config set
-digikubeJsonConfigSet=$(cat "${tmpExecDir}/${DIGIKUBE_BASE_CONFIG}" | yaml2json)
+digikubeJsonConfigSet=$(cat "${tmpExecDir}/digikube-base-config.yaml" | yaml2json)
 echo "INFO: Digikube json config set is ${digikubeJsonConfigSet}"
 
 #----------------------------------------------------------------

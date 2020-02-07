@@ -336,12 +336,12 @@ s="digikubeCloudAdminUser=$(digikubeCloudAdminUser)"														# The replacem
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"											# Updated script
 
 f=$n																						# Script file
-t="#<placeholder for digikube code repo url>"													# Line to be replaced in the script file
+t="#<placeholder for digikube code raw repo url>"													# Line to be replaced in the script file
 s="digikubeCodeRawRepoUrl=${digikubeCodeRawRepoUrl}"										# The replacement text
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"											# The replacement text
 
 f=$n																						# Script file
-t="#<placeholder for digikube instance repo url>"													# Line to be replaced in the script file
+t="#<placeholder for digikube instance raw repo url>"													# Line to be replaced in the script file
 s="digikubeInstanceRawRepoUrl=${digikubeInstanceRawRepoUrl}"										# The replacement text
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"											# The replacement text
 

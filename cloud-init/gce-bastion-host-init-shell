@@ -3,7 +3,8 @@
 
 #Do not change the bellow line -- will be replaced at runtime
 #<placeholder for digikube admin user name>
-#<placeholder for digikube repo url>
+#<placeholder for digikube code raw repo url>
+#<placeholder for digikube instance raw repo url>
 
 BASE_DIR=~/
 

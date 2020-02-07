@@ -109,14 +109,27 @@ digikubeJsonConfigSet=$(cat "${tmpExecDir}/digikube-base-config.yaml" | yaml2jso
 echo "INFO: Digikube json config set is ${digikubeJsonConfigSet}"
 
 #----------------------------------------------------------------
-# Check 1: Check if the git Digikube code repo matches
+# Check 1: Check if the git Digikube code raw repo matches
 digikubeCodeRawRepoUrl=$(getConfigValue "gitConfig.digikubeCode.rawRepoUrl")
 if [[ -z ${digikubeCodeRawRepoUrl} ]]; then
-	echo "ERROR: Digikube git raw repo url not specified in config.  Exiting..."
+	echo "ERROR: Digikube code raw repo url not specified in config.  Exiting..."
 	exit 1
 else
 	if [[ "${digikubeCodeRawRepoUrl}" != "${providedDigikubeCodeRawRepoUrl}" ]]; then
-		echo "ERROR: The provided Digikube code repo url (${providedDigikubeCodeRawRepoUrl}) is not same as the one set in config (${digikubeCodeRawRepoUrl}).  Exiting..."
+		echo "ERROR: The provided Digikube code raw repo url (${providedDigikubeCodeRawRepoUrl}) is not same as the one set in config (${digikubeCodeRawRepoUrl}).  Exiting..."
+		exit 1
+	fi
+fi
+
+#----------------------------------------------------------------
+# Check 1: Check if the git Digikube instance raw repo matches
+digikubeInstanceRawRepoUrl=$(getConfigValue "gitConfig.digikubeInstance.rawRepoUrl")
+if [[ -z ${digikubeInstanceRawRepoUrl} ]]; then
+	echo "ERROR: Digikube instance raw repo url not specified in config.  Exiting..."
+	exit 1
+else
+	if [[ "${digikubeInstanceRawRepoUrl}" != "${providedDigikubeInstanceRawRepoUrl}" ]]; then
+		echo "ERROR: The provided Digikube instance raw  repo url (${providedDigikubeCodeRawRepoUrl}) is not same as the one set in config (${digikubeCodeRawRepoUrl}).  Exiting..."
 		exit 1
 	fi
 fi
@@ -332,7 +345,7 @@ echo "INFO: Attempting to create bastion host: ${digikubeBastionHostName}"
 
 f="$(wget -q -O - ${digikubeCodeRawRepoUrl}/cloud-init/gce-bastion-host-init-shell)"		# Script file
 t="#<placeholder for digikube admin user name>"												# Line to be replaced in the script file
-s="digikubeCloudAdminUser=$(digikubeCloudAdminUser)"										# The replacement text
+s="digikubeCloudAdminUser=${digikubeCloudAdminUser}"										# The replacement text
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"											# Updated script
 
 f=$n																						# Script file
@@ -346,8 +359,8 @@ s="digikubeInstanceRawRepoUrl=${digikubeInstanceRawRepoUrl}"								# The replac
 [ "${f%$t*}" != "$f" ] && n="${f%$t*}$s${f#*$t}"											
 
 bastionHostInitScript=$n															
-
 echo "${bastionHostInitScript}"
+
 if [[ -z $(gcloud compute instances list --filter=name=${digikubeBastionHostName} --format="value(name)") ]]; then
 	
 	if [[ "${digikubeBastionHostPreemptible}" == "yes" ]]; then

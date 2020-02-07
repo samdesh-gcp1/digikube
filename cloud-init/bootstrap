@@ -31,7 +31,6 @@ else
 		read -p "Enter your choice: " deleteChoice
 		wget -q --no-cache -O "${tmpExecDir}/gce-cloud-delete" - "${digikubeCodeRepo}/cloud-init/gce-cloud-delete"
 		chmod +x "${tmpExecDir}/gce-cloud-delete"
-		echo "${tmpExecDir}/gce-cloud-delete ${digikubeCodeRepo} ${digikubeConfigFileRef} ${deleteChoice}"
 		"${tmpExecDir}/gce-cloud-delete" "${digikubeCodeRepo}" "${digikubeConfigFileRef}" "${deleteChoice}"
 	fi
 fi

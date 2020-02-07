@@ -1,0 +1,23 @@
+#!/bin/bash
+# Init script
+
+#Do not change the bellow line -- will be replaced at runtime
+#<placeholder for digikube admin user name>
+#<placeholder for digikube repo url>
+
+BASE_DIR=~/
+
+tmpExecDir=$(dirname $(realpath $0))
+echo "INFO: Temporary execution directory is ${tmpExecDir}"
+
+initScriptSource="wget -q --no-cache -O ${tmpExecDir}/gce-bastion-host-init - ${digikubeCodeRawRepoUrl}/cloud-init/gce-bastion-host-init"
+
+su - "${digikubeCloudAdminUser}" --preserve-environment -c "${initScriptSource}"
+
+su - "${digikubeCloudAdminUser}" --preserve-environment -c "chmod +x ${tmpExecDir}/gce-bastion-host-init"
+
+su - "${digikubeCloudAdminUser}" --preserve-environment -c "${tmpExecDir}/gce-bastion-host-init"
+
+su - "${digikubeCloudAdminUser}" --preserve-environment -c "rm -rf ${tmpExecDir}"
+
+#su - "${digikubeCloudAdminUser}" --preserve-environment -c "touch ${digikube_init_lock}"

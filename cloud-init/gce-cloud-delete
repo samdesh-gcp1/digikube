@@ -394,8 +394,8 @@ if [[ "${deleteCluster}" = "yes" ]]; then
 	fi
 	
 	if [[ "${canSshBastionHost}" == "yes" ]]; then
-		echo "gcloud --quiet compute ssh ${bastionHostName} --zone=${digikubeCloudProjectZone} --command=${DELETE_CLUSTER_COMMAND}"
-		gcloud --quiet compute ssh ${bastionHostName} --zone=${digikubeCloudProjectZone} --command="${DELETE_CLUSTER_COMMAND}"
+		echo "gcloud --quiet compute ssh ${digikubeBastionHostName} --zone=${digikubeCloudProjectZone} --command=${DELETE_CLUSTER_COMMAND}"
+		gcloud --quiet compute ssh ${digikubeBastionHostName} --zone=${digikubeCloudProjectZone} --command="${DELETE_CLUSTER_COMMAND}"
 		__returnCode=$?
 		if [[ ${__returnCode} -eq 0 ]]; then
 			echo "INFO: Deleted the Digikube cluster."

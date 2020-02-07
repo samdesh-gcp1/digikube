@@ -25,7 +25,7 @@ else
 		
 	else
 		if [[ "${bootstrapCommand}" == "delete" ]]; then
-			if [[ ${#} -lt 4 ]] then
+			if [[ ${#} -lt 4 ]]; then
 				echo "ERROR: Insufficient input parameters provided."
 				exit 1
 			else

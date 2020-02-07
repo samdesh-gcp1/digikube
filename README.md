@@ -8,13 +8,13 @@
   
       #Replace the repo url by the repo you have created (by cloning digikube)
 
-      digikubeCodeRepo="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master";
-      digikubeInstanceRepo="https://raw.githubusercontent.com/samdesh-gcp1/c1-dev1/master";
+      digikubeCodeRawRepoUrl="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master";
+      digikubeInstanceRawRepoUrl="https://raw.githubusercontent.com/samdesh-gcp1/c1-dev1/master";
       tmpExecDir=$(mktemp -d --suffix="-digikube");
       bootstrapShell="${tmpExecDir}/bootstrap";
-      wget -q --no-cache -O ${bootstrapShell} - "${digikubeCodeRepo}/cloud-init/bootstrap";
+      wget -q --no-cache -O ${bootstrapShell} - "${digikubeCodeRawRepoUrl}/cloud-init/bootstrap";
       chmod +x ${bootstrapShell};
-      ${bootstrapShell} ${digikubeCodeRepo} ${digikubeConfigFile} create;
+      ${bootstrapShell} ${digikubeCodeRawRepoUrl} ${digikubeInstanceRawRepoUrl} create;
       rm -rf "${tmpExecDir}"
   
   
@@ -22,11 +22,11 @@
 
       #Replace the repo url by the repo you have created (by cloning digikube)
       
-      digikubeCodeRepo="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master";
-      digikubeInstanceRepo="https://raw.githubusercontent.com/samdesh-gcp1/c1-dev1/master";
+      digikubeCodeRawRepoUrl="https://raw.githubusercontent.com/samdesh-gcp1/digikube/master";
+      digikubeInstanceRawRepoUrl="https://raw.githubusercontent.com/samdesh-gcp1/c1-dev1/master";
       tmpExecDir=$(mktemp -d --suffix="-digikube");
       bootstrapShell="${tmpExecDir}/bootstrap";
-      wget -q --no-cache -O ${bootstrapShell} - "${digikubeCodeRepo}/cloud-init/bootstrap";
+      wget -q --no-cache -O ${bootstrapShell} - "${digikubeCodeRawRepoUrl}/cloud-init/bootstrap";
       chmod +x ${bootstrapShell};
-      ${bootstrapShell} ${digikubeCodeRepo} ${digikubeConfigFile} delete --forced,
+      ${bootstrapShell} ${digikubeCodeRawRepoUrl} ${digikubeInstanceRawRepoUrl} delete --forced,
       rm -rf "${tmpExecDir}"

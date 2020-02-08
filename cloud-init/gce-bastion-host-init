@@ -14,7 +14,7 @@ DIGIKUBE_CLUSTERS_DIR="/etc/digikube/clusters"
 MAIN_INSTALLER=${DIGIKUBE_CORE_DIR}/installer/main-installer
 
 echo "${DIGIKUBE_BASE_DIR}"
-if [[ -d ${DIGIKUBE_BASE_DIR} ]]; then
+if [ -d ${DIGIKUBE_BASE_DIR} ]; then
 	temp1="temp1"
 else
 	mkdir ${DIGIKUBE_BASE_DIR}

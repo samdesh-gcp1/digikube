@@ -95,8 +95,8 @@ if [[ -d "${DIGIKUBE_CORE_DIR}/.git" ]]; then
 else
 	echo "INFO: Digikube core repository not yet clonned.  Clonning..." >> "${initLog}"
 	cd "${DIGIKUBE_BASE_DIR}"
-	echo "DEBUG: git clone -o digikube-core --branch 0.3 ${providedDigikubeCoreGitRepoUrl} ${DIGIKUBE_CORE_DIR}" >> "${initLog}"
-	git clone -o digikube-core --branch "0.3" -depth=1 "${providedDigikubeCoreGitRepoUrl}" "${DIGIKUBE_CORE_DIR}"
+	echo "DEBUG: git clone -o digikube-core --branch 0.3 --depth=1 ${providedDigikubeCoreGitRepoUrl} ${DIGIKUBE_CORE_DIR}" >> "${initLog}"
+	git clone -o digikube-core --branch "0.3" --depth=1 "${providedDigikubeCoreGitRepoUrl}" "${DIGIKUBE_CORE_DIR}"
 	__returnCode=${?}
 	if [[ ${__returnCode} -gt 0 ]]; then
 		echo "ERROR: Error while clonning Digikube core repository. Exiting..." >> "${initLog}"

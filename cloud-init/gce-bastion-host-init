@@ -72,7 +72,7 @@ echo "DEBUG: Digikube core git repo url is ${providedDigikubeCoreGitRepoUrl}" >>
 echo "DEBUG: Digikube instance git repo url is ${providedDigikubeInstanceGitRepoUrl}" >> "${initLog}"
 
 if [[ -d ${DIGIKUBE_CORE_DIR}/.git ]]; then
-	echo "INFO: Dikiguke core directory ("${DIGIKUBE_CORE_DIR}") exists. Refreshing." >> "${initLog}"
+	echo "INFO: Dikiguke core directory (${DIGIKUBE_CORE_DIR}) exists. Refreshing." >> "${initLog}"
 	cd "${DIGIKUBE_CORE_DIR}"
 	git init
 	__returnCode=${?}

@@ -64,7 +64,8 @@ toBeReplced="raw"
 echo "${toBeReplaced}"
 replacement="github"
 echo "${replacement}"
-providedDigikubeCoreGitRepoUrl=${providedDigikubeCoreRawRepoUrl/$toBeReplaced}
+mystring="rawThere"
+providedDigikubeCoreGitRepoUrl=${mystring/$toBeReplaced}
 echo "${providedDigikubeCoreGitRepoUrl}"
 providedDigikubeCoreGitRepoUrl="${providedDigikubeCoreGitRepoUrl/\/master/\.git}"
 echo "${providedDigikubeCoreGitRepoUrl}"

@@ -71,3 +71,52 @@ toBeReplaced="/master"
 replacement=".git"
 providedDigikubeInstanceGitRepoUrl=${providedDigikubeInstanceGitRepoUrl/${toBeReplaced}/${replacement}}
 echo "DEBUG: Digikube instance git repo url is ${providedDigikubeInstanceGitRepoUrl}" >> "${initLog}"
+
+if [[ -d "${DIGIKUBE_CORE_DIR}/.git" ]]; then
+	echo "INFO: Dikiguke core directory (${DIGIKUBE_CORE_DIR}) exists. Refreshing." >> "${initLog}"
+	cd "${DIGIKUBE_CORE_DIR}"
+	git init
+	__returnCode=${?}
+	if [[ ${__returnCode} -gt 0 ]]; then
+		echo "ERROR: Error while refreshing Digikube core directory. Exiting..." >> "${initLog}"
+		exit 1
+	else
+		echo "INFO: Initalized Digikube core directory." >> "${initLog}"
+		cd ${DIGIKUBE_CORE_DIR}
+		git pull
+		__returnCode=${?}
+		if [[ ${__returnCode} -gt 0 ]]; then
+			echo "ERROR: Error while pulling Digikube core repository.  Exiting..." >> "${initLog}"
+			exit 1
+		else
+			echo "INFO: Pulled Digikube core repository." >> "${initLog}"
+		fi	
+	fi	
+else
+	echo "INFO: Digikube core repository not yet clonned.  Clonning..." >> "${initLog}"
+	cd "${DIGIKUBE_BASE_DIR}"
+	echo "DEBUG: git clone -o digikube-core --branch 0.3 -depth=1 ${providedDigikubeCoreGitRepoUrl} ${DIGIKUBE_CORE_DIR}" >> "${initLog}"
+	git clone -o digikube-core --branch "0.3" -depth=1 "${providedDigikubeCoreGitRepoUrl}" "${DIGIKUBE_CORE_DIR}"
+	__returnCode=${?}
+	if [[ ${__returnCode} -gt 0 ]]; then
+		echo "ERROR: Error while clonning Digikube core repository. Exiting..." >> "${initLog}"
+		exit 1
+	else
+		echo "INFO: Clonned Dikiguke core repository" >> "${initLog}"
+	fi	
+fi
+
+if [[ -e ${MAIN_INSTALLER} ]]; then
+	echo "INFO: Starting digikube main installation." >> "${initLog}"
+	${MAIN_INSTALLER}
+	__returnCode=${?}
+	if [[ ${__returnCode} -gt 0 ]]; then
+		echo "ERROR: Error during Digikube installation.  Please check installation log for details." >> "${initLog}"
+		exit 1
+	else
+		echo "INFO: Completed Digikube installation.  Please check installation log for details." >> "${initLog}"
+	fi
+else
+	echo "ERROR: Digikube main installer not found. Aborting." >> ${INIT_LOG}
+	exit 1
+fi

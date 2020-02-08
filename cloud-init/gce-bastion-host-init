@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Init script
 # Input parameters
@@ -15,39 +15,27 @@ DIGIKUBE_CLUSTERS_DIR="/etc/digikube/clusters"
 MAIN_INSTALLER=${DIGIKUBE_CORE_DIR}/installer/main-installer
 
 echo "${DIGIKUBE_BASE_DIR}"
-if [ -d ${DIGIKUBE_BASE_DIR} ]; then
-	temp1="temp1"
-else
+if [[ !-d ${DIGIKUBE_BASE_DIR} ]]; then
 	mkdir ${DIGIKUBE_BASE_DIR}
 fi
 
-if [ -d ${DIGIKUBE_BASE_DIR}/exec ]; then
-	temp1="temp1"
-else
+if [[ ! -d ${DIGIKUBE_BASE_DIR}/exec ]]; then
 	mkdir ${DIGIKUBE_BASE_DIR}/exec
 fi
 
-if [ -d ${DIGIKUBE_BASE_DIR}/exec/log ]; then
-	temp1="temp1"
-else
+if [[ ! -d ${DIGIKUBE_BASE_DIR}/exec/log ]]; then
 	mkdir ${DIGIKUBE_BASE_DIR}/exec/log
 fi
 
-if [ -d ${DIGIKUBE_BASE_DIR}/exec/lock ]; then
-	temp1="temp1"
-else
+if [[ ! -d ${DIGIKUBE_BASE_DIR}/exec/lock ]]; then
 	mkdir ${DIGIKUBE_BASE_DIR}/exec/lock
 fi
 
-if [ -d ${DIGIKUBE_BASE_DIR}/core ]; then
-	temp1="temp1"
-else
+if [[ ! -d ${DIGIKUBE_BASE_DIR}/core ]]; then
 	mkdir ${DIGIKUBE_BASE_DIR}/core
 fi
 
-if [ -d ${DIGIKUBE_BASE_DIR}/clusters ]; then
-	temp1="temp1"
-else
+if [[ ! -d ${DIGIKUBE_BASE_DIR}/clusters ]]; then
 	mkdir ${DIGIKUBE_BASE_DIR}/clusters
 fi
 
@@ -60,14 +48,28 @@ echo "INFO: Started init script" >> "${initLog}"
 echo "DEBUG: Digikube core raw repo url is ${providedDigikubeCoreRawRepoUrl}" >> "${initLog}"
 echo "DEBUG: Digikube instance raw repo url is ${providedDigikubeInstanceRawRepoUrl}" >> "${initLog}"
 
-part1=$(echo $providedDigikubeCoreRawRepoUrl | cut -d "/" -f 4)
-part2=$(echo $providedDigikubeCoreRawRepoUrl | cut -d "/" -f 5)
-providedDigikubeCoreGitRepoUrl="https://github.com/${part1}/${part2}.git"
+#part1=$(echo $providedDigikubeCoreRawRepoUrl | cut -d "/" -f 4)
+#part2=$(echo $providedDigikubeCoreRawRepoUrl | cut -d "/" -f 5)
+#providedDigikubeCoreGitRepoUrl="https://github.com/${part1}/${part2}.git"
+
+toBeReplaced="raw.githubusercontent"
+replacement="github.com"
+providedDigikubeCoreGitRepoUrl=${providedDigikubeCoreRawRepoUrl/${toBeReplaced}/${replacement}}
+toBeReplaced="/master"
+replacement=".git"
+providedDigikubeCoreGitRepoUrl=${providedDigikubeCoreGitRepoUrl/${toBeReplaced}/${replacement}}
 echo "DEBUG: Digikube core git repo url is ${providedDigikubeCoreGitRepoUrl}" >> "${initLog}"
 
-part1=$(echo $providedDigikubeInstanceRawRepoUrl | cut -d "/" -f 4)
-part2=$(echo $providedDigikubeInstanceRawRepoUrl | cut -d "/" -f 5)
-providedDigikubeInstanceGitRepoUrl="https://github.com/${part1}/${part2}.git"
+#part1=$(echo $providedDigikubeInstanceRawRepoUrl | cut -d "/" -f 4)
+#Epart2=$(echo $providedDigikubeInstanceRawRepoUrl | cut -d "/" -f 5)
+#providedDigikubeInstanceGitRepoUrl="https://github.com/${part1}/${part2}.git"
+
+toBeReplaced="raw.githubusercontent"
+replacement="github.com"
+providedDigikubeInstanceGitRepoUrl=${providedDigikubeInstanceRawRepoUrl/${toBeReplaced}/${replacement}}
+toBeReplaced="/master"
+replacement=".git"
+providedDigikubeInstanceGitRepoUrl=${providedDigikubeInstanceGitRepoUrl/${toBeReplaced}/${replacement}}
 echo "DEBUG: Digikube instance git repo url is ${providedDigikubeInstanceGitRepoUrl}" >> "${initLog}"
 
 if [ -d ${DIGIKUBE_CORE_DIR}/.git ]; then

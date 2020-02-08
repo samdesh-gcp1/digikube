@@ -1,16 +1,18 @@
 #!/bin/bash
 # Init script
 
-echo "DEBUG: Temporary execution directory is ${tmpExecDir}"
+digikubeCloudAdminUser=""		# Will be set dynamically in bellow line
+digikubeCodeRawRepoUrl=""		# Will be set dynamically in bellow line
+digikubeInstanceRawRepoUrl=""		# Will be set dynamically in bellow line
 
 #Do not change the bellow line -- will be replaced at runtime
 #<placeholder for digikube admin user name>
 #<placeholder for digikube code raw repo url>
 #<placeholder for digikube instance raw repo url>
 
-#tmpExecDir=$(dirname $(realpath $0))
 tmpExecDir=$(mktemp -d --suffix="-digikube")
 chown "${digikubeCloudAdminUser}":"${digikubeCloudAdminUser}" "${tmpExecDir}"
+echo "DEBUG: Temporary execution directory is ${tmpExecDir}"
 
 initShellLog="${tmpExecDir}/init-shell.log"
 su - "${digikubeCloudAdminUser}" --preserve-environment -c "touch ${initShellLog}"
@@ -45,7 +47,7 @@ else
 fi
 
 echo "INFO: Attempting to execute init script" >> "${initShellLog}"
-su - "${digikubeCloudAdminUser}" --preserve-environment -c "${tmpExecDir}/gce-bastion-host-init"
+su - "${digikubeCloudAdminUser}" --preserve-environment -c "${tmpExecDir}/gce-bastion-host-init ${digikubeCodeRawRepoUrl} ${digikubeInstanceRawRepoUrl}"
 __returnCode=${?}
 if [[ ${__returnCode} -gt 0 ]]; then
 	echo "ERROR: Error while executing init script.  Error code is ${__returnCode}" >> "${initShellLog}"

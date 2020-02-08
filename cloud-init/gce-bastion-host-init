@@ -16,18 +16,23 @@ MAIN_INSTALLER=${DIGIKUBE_CORE_DIR}/installer/main-installer
 if [[ ! -d "${DIGIKUBE_BASE_DIR}" ]]; then
 	mkdir "${DIGIKUBE_BASE_DIR}"
 fi
+
 if [[ ! -d "${DIGIKUBE_BASE_DIR}/exec" ]]; then
 	mkdir "${DIGIKUBE_BASE_DIR}/exec"
 fi
+
 fi [[ ! -d "${DIGIKUBE_BASE_DIR}/exec/log" ]]; then
 	mkdir "${DIGIKUBE_BASE_DIR}/exec/log"
 fi
+
 fi [[ ! -d "${DIGIKUBE_BASE_DIR}/exec/lock" ]]; then
 	mkdir "${DIGIKUBE_BASE_DIR}/exec/lock"
 fi
+
 fi [[ ! -d "${DIGIKUBE_BASE_DIR}/core" ]]; then
 	mkdir "${DIGIKUBE_BASE_DIR}/core"
 fi
+
 fi [[ ! -d "${DIGIKUBE_BASE_DIR}/clusters" ]]; then
 	mkdir "${DIGIKUBE_BASE_DIR}/clusters"
 fi

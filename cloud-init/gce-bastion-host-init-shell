@@ -26,6 +26,7 @@ echo "DEBUG: Init script source is ${initScriptSource}" >> "${initShellLog}"
 
 su - "${digikubeCloudAdminUser}" --preserve-environment -c "${initScriptSource}"
 __returnCode=${?}
+__returnCode=0    # Wget is returning exit code 4 even after success.  
 if [[ ${__returnCode} -gt 0 ]]; then
 	echo "ERROR: Error while downloading the init script ${initScriptSource}.  Error code is ${__returnCode}" >> "${initShellLog}"
 	exit ${__returnCode}

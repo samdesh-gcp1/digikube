@@ -60,11 +60,11 @@ echo "DEBUG: Digikube core raw repo url is ${providedDigikubeCoreRawRepoUrl}" >>
 echo "DEBUG: Digikube instance raw repo url is ${providedDigikubeInstanceRawRepoUrl}" >> "${initLog}"
 
 echo "${providedDigikubeCoreRawRepoUrl}"
-toBeReplced="raw.githubusercontent.com"
+toBeReplced="raw"
 echo "${toBeReplaced}"
-replacement="github.com"
+replacement="github"
 echo "${replacement}"
-providedDigikubeCoreGitRepoUrl=${providedDigikubeCoreRawRepoUrl/$toBeReplaced/$replacement}
+providedDigikubeCoreGitRepoUrl=${providedDigikubeCoreRawRepoUrl/$toBeReplaced}
 echo "${providedDigikubeCoreGitRepoUrl}"
 providedDigikubeCoreGitRepoUrl="${providedDigikubeCoreGitRepoUrl/\/master/\.git}"
 echo "${providedDigikubeCoreGitRepoUrl}"

@@ -1,6 +1,11 @@
 #!/bin/bash
 # Init script
 
+DIGIKUBE_BASE_DIR="/etc/digikube"
+DIGIKUBE_EXEC_DIR="/etc/digikube/exec"
+DIGIKUBE_CORE_DIR="/etc/digikube/core"
+DIGIKUBE_CLUSTERS_DIR="/etc/digikube/clusters"
+
 digikubeCloudAdminUser=""		# Will be set dynamically in bellow line
 digikubeCodeRawRepoUrl=""		# Will be set dynamically in bellow line
 digikubeInstanceRawRepoUrl=""		# Will be set dynamically in bellow line
@@ -22,13 +27,12 @@ echo "DEBUG: Executing steps with identity of ${digikubeCloudAdminUser}" >> "${i
 echo "DEBUG: Digikube code raw repo url is ${digikubeCodeRawRepoUrl}" >> "${initShellLog}"
 echo "DEBUG: Digikube instance raw repo url is ${digikubeInstanceRawRepoUrl}" >> "${initShellLog}"
 
-digikubeBaseDir="/etc/digikube"
-if [[ -d ${digikubeBaseDir} ]]; then
-	echo "DEBUG: Digikube base directory (${digikubeBaseDir}) already available" >> "${initShellLog}"
+if [[ -d ${DIGIKUBE_BASE_DIR} ]]; then
+	echo "DEBUG: Digikube base directory (${DIGIKUBE_BASE_DIR}) already available" >> "${initShellLog}"
 else
-	mkdir "${digikubeBaseDir}"
-	chown "${digikubeCloudAdminUser}":"${digikubeCloudAdminUser}" "${digikubeBaseDir}"
-	echo "DEBUG: Digikube base directory (${digikubeBaseDir}) created" >> "${initShellLog}"
+	mkdir "${DIGIKUBE_BASE_DIR}"
+	chown "${digikubeCloudAdminUser}":"${digikubeCloudAdminUser}" "${DIGIKUBE_BASE_DIR}"
+	echo "DEBUG: Digikube base directory (${DIGIKUBE_BASE_DIR}) created" >> "${initShellLog}"
 fi
 
 echo "INFO: Attempting to download init script" >> "${initShellLog}"

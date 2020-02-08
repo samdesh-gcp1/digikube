@@ -1,6 +1,8 @@
 #!/bin/bash
 # Init script
 
+echo "DEBUG: Temporary execution directory is ${tmpExecDir}"
+
 #Do not change the bellow line -- will be replaced at runtime
 #<placeholder for digikube admin user name>
 #<placeholder for digikube code raw repo url>
@@ -8,10 +10,10 @@
 
 #tmpExecDir=$(dirname $(realpath $0))
 tmpExecDir=$(mktemp -d --suffix="-digikube")
-echo "DEBUG: Temporary execution directory is ${tmpExecDir}"
+chown "${digikubeCloudAdminUser}":"${digikubeCloudAdminUser}" "${tmpExecDir}
 
 initShellLog="${tmpExecDir}/init-shell.log"
-touch "${initShellLog}"
+su - "${digikubeCloudAdminUser}" --preserve-environment -c "touch ${initShellLog}"
 
 echo "INFO: Started init-shell." >> "${initShellLog}"
 echo "DEBUG: Executing steps with identity of ${digikubeCloudAdminUser}" >> "${initShellLog}"

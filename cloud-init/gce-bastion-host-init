@@ -1,20 +1,35 @@
-#!/bin/bash
+#!/bin/sh
 # Init script
+# Input parameters
+#	$1 => digikube code repository url
+#	$2 => digikube instance repository url
 
-BASE_DIR=~/
+providedDigikubeCodeRawRepoUrl=${1}
+providedDigikubeInstanceRawRepoUrl=${2}
 
-LOG_DIR=${BASE_DIR}digikube-logs/
-if [[ -d ${LOG_DIR} ]]; then
-	echo "Dikiguke log directory exists."
-else
-	echo "Dikiguke log directory not available.  Creating new."
-	mkdir ${LOG_DIR}
-fi
-INIT_LOG=${LOG_DIR}init.log
-INSTALLER_LOG=${LOG_DIR}installer.log
+DIGIKUBE_BASE_DIR="/etc/digikube"
+DIGIKUBE_EXEC_DIR="/etc/digikube/exec"
+DIGIKUBE_CORE_DIR="/etc/digikube/core"
+DIGIKUBE_CLUSTERS_DIR="/etc/digikube/clusters"
 
-touch $INIT_LOG
-date >> $INIT_LOG
+mkdir -p ${DIGIKUBE_BASE_DIR}/{exec/log,core/lock,clusters}
+
+tmpExecDir=$(mktemp -d --suffix="-digikube")
+echo "DEBUG: Temporary execution directory is ${tmpExecDir}"
+
+initLog="${tmpExecDir}/init.log"
+touch "${initLog}"
+
+echo "INFO: Started init script" >> "${initLog}"
+echo "DEBUG: Digikube code raw repo url is ${providedDigikubeCodeRawRepoUrl}" >> "${initLog}"
+echo "DEBUG: Digikube instance raw repo url is ${providedDigikubeInstanceRawRepoUrl}" >> "${initLog}"
+
+providedDigikubeCodeRawRepoUrl=https://raw.githubusercontent.com/samdesh-gcp1/digikube/master
+providedDigikubeCodeGitRepoUrl="${providedDigikubeCodeRawRepoUrl/raw\.githubusercontent\.com/github\.com}"
+providedDigikubeCodeGitRepoUrl="${providedDigikubeCodeGitRepoUrl/\/master/\.git}"
+
+https://github.com/samdesh-gcp1/digikube.git
+
 
 GIT_REPO_URL="https://github.com/samdesh-gcp1/digikube.git"
 DIGI_DIR=${BASE_DIR}digikube/

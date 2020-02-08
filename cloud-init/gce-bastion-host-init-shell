@@ -10,7 +10,7 @@ echo "DEBUG: Temporary execution directory is ${tmpExecDir}"
 
 #tmpExecDir=$(dirname $(realpath $0))
 tmpExecDir=$(mktemp -d --suffix="-digikube")
-chown "${digikubeCloudAdminUser}":"${digikubeCloudAdminUser}" "${tmpExecDir}
+chown "${digikubeCloudAdminUser}":"${digikubeCloudAdminUser}" "${tmpExecDir}"
 
 initShellLog="${tmpExecDir}/init-shell.log"
 su - "${digikubeCloudAdminUser}" --preserve-environment -c "touch ${initShellLog}"

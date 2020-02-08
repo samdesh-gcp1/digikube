@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # Init script
 # Input parameters
 #	$1 => digikube code repository url
@@ -69,7 +70,7 @@ part2=$(echo $providedDigikubeInstanceRawRepoUrl | cut -d "/" -f 5)
 providedDigikubeInstanceGitRepoUrl="https://github.com/${part1}/${part2}.git"
 echo "DEBUG: Digikube instance git repo url is ${providedDigikubeInstanceGitRepoUrl}" >> "${initLog}"
 
-if [[ -d ${DIGIKUBE_CORE_DIR}/.git ]]; then
+if [ -d ${DIGIKUBE_CORE_DIR}/.git ]; then
 	echo "INFO: Dikiguke core directory (${DIGIKUBE_CORE_DIR}) exists. Refreshing." >> "${initLog}"
 	cd "${DIGIKUBE_CORE_DIR}"
 	git init

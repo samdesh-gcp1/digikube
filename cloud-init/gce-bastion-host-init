@@ -59,13 +59,14 @@ echo "INFO: Started init script" >> "${initLog}"
 echo "DEBUG: Digikube core raw repo url is ${providedDigikubeCoreRawRepoUrl}" >> "${initLog}"
 echo "DEBUG: Digikube instance raw repo url is ${providedDigikubeInstanceRawRepoUrl}" >> "${initLog}"
 
-providedDigikubeCoreGitRepoUrl=${providedDigikubeCoreRawRepoUrl/raw\.githubusercontent\.com/github\.com}
-providedDigikubeCoreGitRepoUrl=${providedDigikubeCoreGitRepoUrl/\/master/\.git}
-
-providedDigikubeInstanceGitRepoUrl="${providedDigikubeInstanceRawRepoUrl/raw\.githubusercontent\.com/github\.com}"
-providedDigikubeInstranceGitRepoUrl="${providedDigikubeInstanceGitRepoUrl/\/master/\.git}"
-
+part1=$(echo $providedDigikubeCoreRawRepoUrl | cut -d "/" -f 4)
+part2=$(echo $providedDigikubeCoreRawRepoUrl | cut -d "/" -f 5)
+providedDigikubeCoreGitRepoUrl="https://github.com/${part1}/${part2}.git"
 echo "DEBUG: Digikube core git repo url is ${providedDigikubeCoreGitRepoUrl}" >> "${initLog}"
+
+part1=$(echo $providedDigikubeInstanceRawRepoUrl | cut -d "/" -f 4)
+part2=$(echo $providedDigikubeInstanceRawRepoUrl | cut -d "/" -f 5)
+providedDigikubeInstanceGitRepoUrl="https://github.com/${part1}/${part2}.git"
 echo "DEBUG: Digikube instance git repo url is ${providedDigikubeInstanceGitRepoUrl}" >> "${initLog}"
 
 if [[ -d ${DIGIKUBE_CORE_DIR}/.git ]]; then

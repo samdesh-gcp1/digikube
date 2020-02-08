@@ -6,19 +6,59 @@
 #<placeholder for digikube code raw repo url>
 #<placeholder for digikube instance raw repo url>
 
-BASE_DIR=~/
+#tmpExecDir=$(dirname $(realpath $0))
+tmpExecDir=$(mktemp -d --suffix="-digikube")
+echo "DEBUG: Temporary execution directory is ${tmpExecDir}"
 
-tmpExecDir=$(dirname $(realpath $0))
-echo "INFO: Temporary execution directory is ${tmpExecDir}"
+initShellLog="${tmpExecDir}/init-shell.log"
+touch "${initShellLog}"
 
+echo "INFO: Started init-shell." >> "${initShellLog}"
+echo "DEBUG: Executing steps with identity of ${digikubeCloudAdminUser}" >> "${initShellLog}"
+echo "DEBUG: Digikube code raw repo url is ${digikubeCodeRawRepoUrl}" >> "${initShellLog}"
+echo "DEBUG: Digikube instance raw repo url is ${digikubeInstanceRawRepoUrl}" >> "${initShellLog}"
+
+echo "INFO: Attempting to download init script" >> "${initShellLog}"
 initScriptSource="wget -q --no-cache -O ${tmpExecDir}/gce-bastion-host-init - ${digikubeCodeRawRepoUrl}/cloud-init/gce-bastion-host-init"
+echo "DEBUG: Init script source is ${initScriptSource}" >> "${initShellLog}"
 
 su - "${digikubeCloudAdminUser}" --preserve-environment -c "${initScriptSource}"
+__returnCode=${?}
+if [[ ${__returnCode} -gt 0 ]]; then
+	echo "ERROR: Error while downloading the init script ${initScriptSource}.  Error code is ${__returnCode}" >> "${initShellLog}"
+	exit ${__returnCode}
+else
+	echo "INFO: Download init script" >> "${initShellLog}"
+fi
 
+echo "INFO: Attempting change the permissions on the init script" >> "${initShellLog}"
 su - "${digikubeCloudAdminUser}" --preserve-environment -c "chmod +x ${tmpExecDir}/gce-bastion-host-init"
+__returnCode=${?}
+if [[ ${__returnCode} -gt 0 ]]; then
+	echo "ERROR: Error while changing the permissions of init script.  Error code is ${__returnCode}" >> "${initShellLog}"
+	exit ${__returnCode}
+else
+	echo "INFO: Changed permissions of init script" >> "${initShellLog}"
+fi
 
+echo "INFO: Attempting to execute init script" >> "${initShellLog}"
 su - "${digikubeCloudAdminUser}" --preserve-environment -c "${tmpExecDir}/gce-bastion-host-init"
+__returnCode=${?}
+if [[ ${__returnCode} -gt 0 ]]; then
+	echo "ERROR: Error while executing init script.  Error code is ${__returnCode}" >> "${initShellLog}"
+	exit ${__returnCode}
+else
+	echo "INFO: Executed init script" >> "${initShellLog}"
+fi
 
-su - "${digikubeCloudAdminUser}" --preserve-environment -c "rm -rf ${tmpExecDir}"
+echo "INFO: Attempting to delete temporary execution directory" >> "${initShellLog}"
+rm -rf "${tmpExecDir}"
+__returnCode=${?}
+if [[ ${__returnCode} -gt 0 ]]; then
+	echo "ERROR: Error while deleting temporary execution directory.  Error code is ${__returnCode}" >> "${initShellLog}"
+	exit ${__returnCode}
+else
+	echo "INFO: Executed init script"
+fi
 
 #su - "${digikubeCloudAdminUser}" --preserve-environment -c "touch ${digikube_init_lock}"

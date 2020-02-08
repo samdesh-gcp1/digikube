@@ -59,8 +59,8 @@ echo "INFO: Started init script" >> "${initLog}"
 echo "DEBUG: Digikube core raw repo url is ${providedDigikubeCoreRawRepoUrl}" >> "${initLog}"
 echo "DEBUG: Digikube instance raw repo url is ${providedDigikubeInstanceRawRepoUrl}" >> "${initLog}"
 
-providedDigikubeCoreGitRepoUrl="${providedDigikubeCoreRawRepoUrl/raw\.githubusercontent\.com/github\.com}"
-providedDigikubeCoreGitRepoUrl="${providedDigikubeCoreGitRepoUrl/\/master/\.git}"
+providedDigikubeCoreGitRepoUrl=${providedDigikubeCoreRawRepoUrl/raw\.githubusercontent\.com/github\.com}
+providedDigikubeCoreGitRepoUrl=${providedDigikubeCoreGitRepoUrl/\/master/\.git}
 
 providedDigikubeInstanceGitRepoUrl="${providedDigikubeInstanceRawRepoUrl/raw\.githubusercontent\.com/github\.com}"
 providedDigikubeInstranceGitRepoUrl="${providedDigikubeInstanceGitRepoUrl/\/master/\.git}"

@@ -64,7 +64,7 @@ echo "DEBUG: Digikube core git repo url is ${providedDigikubeCoreGitRepoUrl}" >>
 #Epart2=$(echo $providedDigikubeInstanceRawRepoUrl | cut -d "/" -f 5)
 #providedDigikubeInstanceGitRepoUrl="https://github.com/${part1}/${part2}.git"
 
-toBeReplaced="raw.githubusercontent"
+toBeReplaced="raw.githubusercontent.com"
 replacement="github.com"
 providedDigikubeInstanceGitRepoUrl=${providedDigikubeInstanceRawRepoUrl/${toBeReplaced}/${replacement}}
 toBeReplaced="/master"

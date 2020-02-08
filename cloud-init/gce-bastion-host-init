@@ -13,6 +13,7 @@ DIGIKUBE_CORE_DIR="/etc/digikube/core"
 DIGIKUBE_CLUSTERS_DIR="/etc/digikube/clusters"
 MAIN_INSTALLER=${DIGIKUBE_CORE_DIR}/installer/main-installer
 
+echo "${DIGIKUBE_BASE_DIR}"
 if [[ ! -d "${DIGIKUBE_BASE_DIR}" ]]; then
 	mkdir "${DIGIKUBE_BASE_DIR}"
 fi

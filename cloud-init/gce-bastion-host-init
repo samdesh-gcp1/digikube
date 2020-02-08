@@ -16,9 +16,7 @@ MAIN_INSTALLER=${DIGIKUBE_CORE_DIR}/installer/main-installer
 echo "${DIGIKUBE_BASE_DIR}"
 if [ -d ${DIGIKUBE_BASE_DIR} ]; then
 	temp1="temp1"
-	echo "Exists"
 else
-	echo "not available"
 	mkdir ${DIGIKUBE_BASE_DIR}
 fi
 

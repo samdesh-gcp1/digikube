@@ -13,12 +13,24 @@ DIGIKUBE_CORE_DIR="/etc/digikube/core"
 DIGIKUBE_CLUSTERS_DIR="/etc/digikube/clusters"
 MAIN_INSTALLER=${DIGIKUBE_CORE_DIR}/installer/main-installer
 
-[[ -d "${DIGIKUBE_BASE_DIR}" ]] || mkdir "${DIGIKUBE_BASE_DIR}"
-[[ -d "${DIGIKUBE_BASE_DIR}/exec" ]] || mkdir "${DIGIKUBE_BASE_DIR}/exec"
-[[ -d "${DIGIKUBE_BASE_DIR}/exec/log" ]] || mkdir "${DIGIKUBE_BASE_DIR}/exec/log"
-[[ -d "${DIGIKUBE_BASE_DIR}/exec/lock" ]] || mkdir "${DIGIKUBE_BASE_DIR}/exec/lock"
-[[ -d "${DIGIKUBE_BASE_DIR}/core" ]] || mkdir "${DIGIKUBE_BASE_DIR}/core"
-[[ -d "${DIGIKUBE_BASE_DIR}/clusters" ]] || mkdir "${DIGIKUBE_BASE_DIR}/clusters"
+if [[ ! -d "${DIGIKUBE_BASE_DIR}" ]]; then
+	mkdir "${DIGIKUBE_BASE_DIR}"
+fi
+if [[ ! -d "${DIGIKUBE_BASE_DIR}/exec" ]]; then
+	mkdir "${DIGIKUBE_BASE_DIR}/exec"
+fi
+fi [[ ! -d "${DIGIKUBE_BASE_DIR}/exec/log" ]]; then
+	mkdir "${DIGIKUBE_BASE_DIR}/exec/log"
+fi
+fi [[ ! -d "${DIGIKUBE_BASE_DIR}/exec/lock" ]]; then
+	mkdir "${DIGIKUBE_BASE_DIR}/exec/lock"
+fi
+fi [[ ! -d "${DIGIKUBE_BASE_DIR}/core" ]]; then
+	mkdir "${DIGIKUBE_BASE_DIR}/core"
+fi
+fi [[ ! -d "${DIGIKUBE_BASE_DIR}/clusters" ]]; then
+	mkdir "${DIGIKUBE_BASE_DIR}/clusters"
+fi
 
 echo "DEBUG: Execution directory is ${DIGIKUBE_EXEC_DIR}"
 

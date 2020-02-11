@@ -1,8 +1,18 @@
 # private
 
-1. Clone the Digikube repository
-2. Login to GCP console
-3. Create new project
+1. Clone the digikube-instance repository: https://github.com/samdesh-gcp1/c1-dev1.git
+2. Edit the configurations as per your requirements
+3. Login to GCP console
+4  (If not done already) create master project 'digikube-base' to hold master data across clusters
+		4.a. Secrets: Github.com access token
+		4.b. Master bucket
+		4.c. Master private image registry	
+5. Execute the following command for creating the Digikube cluster invironment
+		5.a. Create new project
+		5.b. Create cluster
+		
+		
+
 4. Start Google Cloud Shell.  If the shell does not start in the newly created project then switch to the newly created project.
 5. Execute the following command to deploy Digikube on GCE
   
